@@ -1,0 +1,46 @@
+<template>
+    <div class="slds-grid slds-wrap slds-box slds-p-around_small slds-theme_default slds-p-around_small">
+        <div class="slds-col slds-size_12-of-12 slds-text-heading_medium">{labels.title}</div>
+        <template lwc:if={leadSent}>
+            <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_small slds-align_absolute-center">
+                <div class="slds-text-heading_large slds-text-align_center" style="color: #00c6b7">
+                    {labels.successMessage}
+                </div>
+            </div>
+        </template>
+        <template lwc:else>
+            <template lwc:if={showConsent}>
+                <div class="slds-col slds-size_12-of-12 slds-box slds-p-around_medium slds-m-top_medium">
+                    <lightning-input
+                        type="checkbox"
+                        checked={agree}
+                        onchange={handleCheckbox}
+                        label={labels.disclaimer}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_3-of-12 slds-m-top_x-small">
+                    <lightning-select
+                        label={labels.input2}
+                        options={optionsTimeToContact}
+                        value={time}
+                        name="time"
+                        required
+                        onchange={handleRadio}
+                    ></lightning-select>
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-m-vertical_medium slds-grid slds-grid_align-end">
+                    <div class="slds-col">
+                        <lightning-button
+                            label={labels.button}
+                            onclick={handleClick}
+                            variant="brand"
+                            disabled={disableButton}
+                        ></lightning-button>
+                    </div>
+                </div> </template
+        ></template>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

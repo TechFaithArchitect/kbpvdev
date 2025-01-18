@@ -1,0 +1,157 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <a onclick={handlePrevious} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+                    <h2>{labels.PRODUCT_SELECTION_TITLE}</h2>
+                </div>
+                <template lwc:if={loadingFinished}>
+                    <div
+                        class="slds-grid slds-wrap slds-var-p-around_small slds-var-m-horizontal_large slds-grid_vertical slds-grid_vertical-align-center slds-grid_align-center"
+                    >
+                        <template lwc:if={hasSalesOrProductTypeOptions}>
+                            <div class="group-cards slds-grid slds-wrap">
+                                <template lwc:if={showSalesTypeSelection}>
+                                    <div
+                                        class="slds-col slds-size_1-of-1 slds-align_absolute-center slds-m-bottom_large"
+                                    >
+                                        <div class="card slds-size_1-of-2">
+                                            <div class="card-content">
+                                                <h3>{labels.SALE_TYPE_SELECTION_FIELD_LABEL}</h3>
+
+                                                <lightning-radio-group
+                                                    class="radio-two-options"
+                                                    type="radio"
+                                                    options={promoCodes}
+                                                    value={selectedPromoCode}
+                                                    onchange={handleSaleTypeChange}
+                                                ></lightning-radio-group>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template lwc:if={hasOptions}>
+                                    <div class="slds-col slds-size_1-of-1 slds-align_absolute-center">
+                                        <div class="card slds-size_1-of-2">
+                                            <div class="card-content">
+                                                <h3>{labels.PRODUCT_TYPE_SELECTION_FIELD_LABEL}</h3>
+
+                                                <lightning-radio-group
+                                                    class="radio-two-options"
+                                                    type="radio"
+                                                    options={productsOptions}
+                                                    value={selectedOptionValue}
+                                                    onchange={handleChangeProductType}
+                                                ></lightning-radio-group>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                        <template lwc:if={isResidentialSale}>
+                            <div class="slds-col">
+                                <a onclick={handleBroadbandModal} class="btn-rounded btn-center" style="margin-top: 0">
+                                    {labels.EMAIL_BROADBAND_LABELS_BUTTON_LABEL}
+                                </a>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <div class="page-content width-large">
+                    <template lwc:if={loadingFinished}>
+                        <div class="price-table-comparative">
+                            <template for:each={products} for:item="product">
+                                <div
+                                    class={product.styleClass}
+                                    key={product.Id}
+                                    data-product-id={product.Id}
+                                    onclick={handlePriceChange}
+                                >
+                                    <div class="price-header">
+                                        <p>{product.Name}</p>
+                                        <h2>
+                                            $ {product.Price}
+                                            <span class="inline-price"
+                                                >{product.PriceType}
+                                                <template lwc:if={product.hasTerms}
+                                                    >&nbsp;
+                                                    <a
+                                                        class="hyperlink"
+                                                        onclick={handleDescription}
+                                                        data-id={product.Id}
+                                                        data-terms={product.terms}
+                                                        >{labels.SEE_DETAILS_BUTTON_LABEL}</a
+                                                    >
+                                                </template></span
+                                            >
+                                        </h2>
+                                        <p class="description">{labels.EQUIPMENT_LEASE_FEE_DISCLAIMER}</p>
+                                    </div>
+
+                                    <div class="price-list">
+                                        <p>{labels.INCLUDED_IN_THIS_PLAN_LABEL}</p>
+                                        <ul>
+                                            <template for:each={product.keyFeatures} for:item="feature">
+                                                <li key={feature.Id}>
+                                                    <img src={iconCheckOrange} /> {feature.feature}
+                                                </li>
+                                            </template>
+                                        </ul>
+                                        <template lwc:if={isGuestUser}>
+                                            <div class="broadband-label">
+                                                <template lwc:if={product.broadbandLabel}>
+                                                    <c-poe_lwc-broadband-label
+                                                        class="slds-size_1-of-1"
+                                                        broadband-label={product.broadbandLabel}
+                                                        template="true"
+                                                    >
+                                                    </c-poe_lwc-broadband-label>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template lwc:if={loaderSpinner}>
+                        <div>
+                            <h2 class="slds-text-align_center">{labels.PRODUCTS_LOADING_VERBIAGE}</h2>
+                            <div class="slds-var-p-top_xx-large slds-var-m-top_xx-large">
+                                <lightning-spinner
+                                    variant="brand"
+                                    alternative-text="Loading..."
+                                    size="medium"
+                                ></lightning-spinner>
+                            </div>
+                        </div>
+                    </template>
+                    <template lwc:elseif={noProductsAvailable}>
+                        <div>
+                            <h2 class="slds-text-align_center">{labels.NO_PRODUCTS_FOUND_ERROR_MESSAGE}</h2>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <p class="text-center">
+                            {productSpeedsDisclaimer}
+                        </p>
+                    </template>
+
+                    <a onclick={handleClick} class={nextButtonClass}> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+                </div>
+                <div class="footer-mobile">
+                    <a onclick={handleClick} class={nextButtonClassMobile}> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loadingNextStep}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

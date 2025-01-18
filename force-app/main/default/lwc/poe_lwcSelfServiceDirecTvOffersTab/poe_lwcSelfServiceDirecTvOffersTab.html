@@ -1,0 +1,113 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <h2>{title}</h2>
+                </div>
+
+                <div class="page-content no-padding-top">
+                    <div class="filter-tab filter-show-mobile">
+                        <div class="scroll-bar">
+                            <a class="button-tab selected" onclick={handleTab} data-id="required"> Offers</a>
+                            <template lwc:if={showIncluded}>
+                                <a class="button-tab" onclick={handleTab} data-id="included"> Included</a></template
+                            >
+                            <a class="button-tab" onclick={handleTab} data-id="premium"> Premium </a>
+                            <a class="button-tab" onclick={handleTab} data-id="sports"> Sports </a>
+                            <a class="button-tab" onclick={handleTab} data-id="international"> International</a>
+                            <a class="button-tab" onclick={handleTab} data-id="protection">
+                                {DTVEngaProtectionPlansLabel}</a
+                            >
+                            <template lwc:if={showClosingOffers}>
+                                <a class="button-tab" onclick={handleTab} data-id="closing">Closing Offers</a></template
+                            >
+                        </div>
+                    </div>
+
+                    <div class="group-cards card-three-columns">
+                        <template for:each={offersToShow} for:item="offer">
+                            <div class="card card-add slds-m-around_small" key={offer.name}>
+                                <div class="card-header">
+                                    <template lwc:if={showTab.international}><img src={globeLogo} /></template>
+                                    <template lwc:elseif={showTab.sports}><img src={sportLogo} /></template>
+                                    <template lwc:else> <img src={iconNumberTV} /></template>
+                                    <template lwc:if={offer.isIncluded}>
+                                        <a class="btn-outline btn-added btn-disabled">
+                                            <img align="left" src={iconCheckGreenMin} /> Included
+                                        </a>
+                                    </template>
+                                    <template lwc:else>
+                                        <template lwc:if={offer.required}>
+                                            <template lwc:if={showTab.protection}>
+                                                <a class="btn-outline btn-add btn-disabled" data-id={offer.id}> Add </a>
+                                            </template>
+                                            <template lwc:else>
+                                                <a class="btn-outline btn-added btn-disabled" data-id={offer.id}>
+                                                    <img align="left" src={iconCheckGreenMin} /> Added
+                                                </a></template
+                                            >
+                                        </template>
+                                        <template lwc:elseif={offer.checked}>
+                                            <a
+                                                class="btn-outline btn-added"
+                                                onclick={handleToggleChange}
+                                                data-id={offer.id}
+                                            >
+                                                <img align="left" src={iconCheckGreenMin} /> Added
+                                            </a></template
+                                        ><template lwc:else>
+                                            <a
+                                                class="btn-outline btn-add"
+                                                data-id={offer.id}
+                                                onclick={handleToggleChange}
+                                            >
+                                                Add
+                                            </a>
+                                        </template>
+                                    </template>
+                                </div>
+                                <div class="card-content">
+                                    <h3>
+                                        <lightning-formatted-rich-text
+                                            value={offer.name}
+                                        ></lightning-formatted-rich-text>
+                                    </h3>
+                                    <p>{offer.fee}</p>
+                                </div>
+                                <div class="card-footer">
+                                    <lightning-accordion class="btn-open-included" allow-multiple-sections-open>
+                                        <lightning-accordion-section name="whats-included" label="See what's included">
+                                            <div class="list-with-check">
+                                                <lightning-formatted-rich-text
+                                                    value={offer.description}
+                                                ></lightning-formatted-rich-text>
+                                            </div>
+                                        </lightning-accordion-section>
+                                    </lightning-accordion>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <a onclick={handleNext} class="btn-rounded btn-center hide-mobile"> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <a onclick={handleNext} class="btn-rounded btn-center"> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

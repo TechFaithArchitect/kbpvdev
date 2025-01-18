@@ -1,0 +1,64 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="frontier"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div
+            class="slds-box slds-theme_default slds-m-around_large slds-p-around_large slds-grid slds-wrap slds-grid_vertical slds-grid_vertical-align-center"
+        >
+            <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_small slds-align_absolute-center">
+                <div class="slds-text-heading_large slds-text-align_center" style="color: #00c6b7">
+                    Order Completed Successfully
+                </div>
+                <lightning-icon
+                    icon-name="action:approval"
+                    alternative-text="icon"
+                    size="small"
+                    class="slds-m-horizontal_small"
+                ></lightning-icon>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-text-heading_small slds-text-align_center">
+                <b>Billing Telephone Number:</b> {btn}
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-text-heading_small slds-text-align_center">
+                <b>Quote Number:</b> {quoteNumber}
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-text-heading_small slds-text-align_center">
+                <b>Order Number:</b> {orderNumber}
+            </div>
+            <button
+                class="slds-button slds-m-top_large slds-button_brand slds-button_stretch slds-size_1-of-1 slds-small-size_6-of-12 slds-medium-size_4-of-12 slds-large-size_3-of-12"
+                onclick={newOpportunityHandler}
+            >
+                New Product
+            </button>
+            <button
+                class="slds-button slds-m-top_small slds-button_brand slds-button_stretch slds-size_1-of-1 slds-small-size_6-of-12 slds-medium-size_4-of-12 slds-large-size_3-of-12 slds-m-left_none"
+                onclick={homeHandler}
+            >
+                {homeLabel}
+            </button>
+            <div class="slds-col slds-size_4-of-12 slds-grid_align-center slds-m-vertical_x-small">
+                <c-poe_lwc-buyflow-lead-consent-box
+                    email={email}
+                    record-id={recordId}
+                    phone={phone}
+                ></c-poe_lwc-buyflow-lead-consent-box>
+            </div>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

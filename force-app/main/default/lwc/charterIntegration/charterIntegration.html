@@ -1,0 +1,8 @@
+<template>
+    <div>
+        <iframe name="iFrame" title="iFrame Connection" height="1200px" width="100%" style="overflow: hidden"></iframe>
+    </div>
+    <div lwc:if={isLoading}>
+        <lightning-spinner variant="brand" alternative-text="Loading" size="medium"></lightning-spinner>
+    </div>
+</template>

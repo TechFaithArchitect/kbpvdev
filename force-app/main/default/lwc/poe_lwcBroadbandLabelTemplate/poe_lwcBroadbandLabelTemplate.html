@@ -1,0 +1,261 @@
+<template>
+    <lightning-card>
+        <div class="slds-var-p-horizontal_small">
+            <h1 class="slds-text-heading_medium" slot="title">Broadband Facts</h1>
+            <div
+                class="slds-text-heading_small slds-col slds-size_12-of-12 slds-p-vertical_xxx-small"
+                style="background-color: #000000"
+            ></div>
+        </div>
+        <div class="slds-grid slds-wrap slds-size_12-of-12 slds-m-vertical_xxx-small slds-var-p-horizontal_small">
+            <div class="slds-col slds-size_12-of-12">
+                <h2>{broadbandLabel.providerName}</h2>
+            </div>
+            <div class="slds-col slds-size_12-of-12">
+                <b>{broadbandLabel.speedTier}</b>
+            </div>
+            <div class="slds-col slds-size_12-of-12">
+                <p>{broadbandLabel.wiredOrWireless} Broadband Consumer Disclosure</p>
+            </div>
+        </div>
+        <div>
+            <div class="slds-grid slds-wrap slds-var-p-horizontal_small">
+                <div
+                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-bottom_xx-small slds-p-vertical_xx-small"
+                    style="background-color: #000000"
+                ></div>
+                <div class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                    <h2>Montlhy Price</h2>
+                </div>
+                <div
+                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xxx-small slds-p-vertical_xxx-small"
+                    style="background-color: #000000"
+                ></div>
+                <div class="slds-col slds-size_12-of-12 slds-text-align_left">
+                    {broadbandLabel.monthlyPrice.language}
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-text-align_left slds-m-bottom_xxx-small">
+                    {broadbandLabel.termLanguage} {broadbandLabel.termsURL}
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-border_top">
+                    <div class="slds-col slds-size_12-of-12 slds-text-align_left">
+                        <h3>Additional Charges & Terms</h3>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-text-align_left slds-var-p-left_medium">
+                        Provider Monthly Fees
+                    </div>
+                    <template lwc:if={showMonthlyFees}>
+                        <template for:each={monthlyFees} for:item="monthlyFee">
+                            <div
+                                key={monthlyFee.label}
+                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap slds-m-bottom_xxx-small slds-var-p-left_x-large"
+                            >
+                                <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                    <span>{monthlyFee.label}</span>
+                                </div>
+                                <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_left">
+                                    {monthlyFee.value}
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+                    <template lwc:else>
+                        <div
+                            class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_left slds-m-bottom_xxx-small slds-var-p-left_x-large"
+                        >
+                            None
+                        </div>
+                    </template>
+                    <div class="slds-col slds-size_12-of-12 slds-text-align_left slds-var-p-left_medium">
+                        One-time Fees at the Time of Purchase
+                    </div>
+                    <template lwc:if={showOneTimeFee}>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap slds-var-p-left_x-large"
+                        >
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <span>One Time Fee</span>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_left">
+                                {broadbandLabel.oneTimeFees}
+                            </div>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div
+                            class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_left slds-var-p-left_x-large"
+                        >
+                            None
+                        </div>
+                    </template>
+                    <div
+                        class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap slds-var-p-left_medium"
+                    >
+                        <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">Early Termination Fee</div>
+                        <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_left">
+                            {broadbandLabel.etf.cancPenaltyDesc}
+                        </div>
+                    </div>
+                    <div
+                        class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap slds-var-p-left_medium"
+                    >
+                        <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">Government Taxes</div>
+                        <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_left">
+                            {broadbandLabel.governmentTaxes}
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-p-vertical_xxx-small"
+                    style="background-color: #000000"
+                ></div>
+                <div class="slds-col slds-grid slds-wrap slds-size_12-of-12 slds-m-vertical_xx-small">
+                    <div class="slds-col slds-size_12-of-12 slds-text-align_left">
+                        <h3>Discounts & Bundles</h3>
+                    </div>
+                    <template lwc:if={showDiscountsAndBundles}>
+                        <div class="slds-col slds-size_12-of-12 slds-text-align_left slds-var-p-left_medium">
+                            <span
+                                ><a href={broadbandLabel.discountsAndBundles}>Click Here</a> for available billing
+                                discounts and pricing options for broadband service budnled with other services like
+                                video, phone and wireless service, and use of your equipment like modems and
+                                routers.</span
+                            >
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div class="slds-col slds-size_12-of-12 slds-text-align_left slds-var-p-left_medium">
+                            {broadbandLabel.discountsAndBundles}
+                        </div>
+                    </template>
+                </div>
+                <div class="slds-col slds-grid slds-wrap slds-size_12-of-12 slds-m-vertical_xx-small slds-border_top">
+                    <div class="slds-col slds-size_12-of-12 slds-text-align_left">
+                        <h3>Affordable Connectivity Program (ACP)</h3>
+                    </div>
+                    <div
+                        class="slds-col slds-size_12-of-12 slds-text-align_left slds-m-vertical_xx-small slds-var-p-left_medium"
+                    >
+                        <lightning-formatted-text
+                            linkify
+                            value="The ACP is a government program to help lower the monthly cost of internet service. To learn more about the ACP, including to find out whether you qualify, visit GetInternet.gov"
+                        >
+                        </lightning-formatted-text>
+                    </div>
+                    <div class="slds-col slds-size_9-of-12 slds-var-p-left_x-large">
+                        <b>Participates in the ACP</b>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12 slds-text-align_Left">
+                        <b>No</b>
+                    </div>
+                </div>
+                <div
+                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-p-vertical_xxx-small"
+                    style="background-color: #000000"
+                ></div>
+                <div class="slds-col slds-size_12-of-12 slds-text-align_left">
+                    <h3>Speeds Provided with Plan</h3>
+                </div>
+                <div
+                    class="slds-col slds-grid slds-wrap slds-text-align_left slds-size_12-of-12 slds-m-vertical_xx-small slds-var-p-left_medium"
+                >
+                    <div class="slds-col slds-size_9-of-12">
+                        <span>Typical Download Speed</span>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12">
+                        <b>{broadbandLabel.speedsProvidedWithPlans.download}</b>
+                    </div>
+                    <div class="slds-col slds-size_9-of-12">
+                        <span>Typical Upload Speed</span>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12">
+                        <b>{broadbandLabel.speedsProvidedWithPlans.upload}</b>
+                    </div>
+                    <div class="slds-col slds-size_9-of-12">
+                        <span>Typical Latency</span>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12">
+                        <b>{broadbandLabel.speedsProvidedWithPlans.latency}</b>
+                    </div>
+                </div>
+                <div class="slds-col slds-grid slds-wrap slds-size_12-of-12 slds-m-vertical_xx-small slds-border_top">
+                    <div class="slds-col slds-size_9-of-12">
+                        <h3>Data Included with Monthly Price</h3>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12 slds-text-align_left">
+                        <b>{broadbandLabel.dataIncludedWithMonthlyPrice.data}</b>
+                    </div>
+                    <div class="slds-col slds-grid slds-wrap slds-size_12-of-12 slds-var-p-left_medium">
+                        <div class="slds-col slds-size_9-of-12">
+                            <span>Charges for Additional Data Usage</span>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12 slds-text-align_left">
+                            <b>{broadbandLabel.dataIncludedWithMonthlyPrice.amount}</b>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-p-vertical_xxx-small"
+                    style="background-color: #000000"
+                ></div>
+                <div
+                    class="slds-col slds-grid slds-wrap slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                >
+                    <div class="slds-col slds-size_9-of-12">
+                        <h3>Network Management</h3>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12 slds-text-align_left">
+                        <b><a href={broadbandLabel.networkManagement} target="”_blank”">Read Our Policy</a></b>
+                    </div>
+                    <div class="slds-col slds-size_9-of-12">
+                        <h3>Privacy</h3>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12 slds-text-align_left">
+                        <b><a href={broadbandLabel.privacy} target="”_blank”">Read Our Policy</a></b>
+                    </div>
+                </div>
+                <div
+                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-p-vertical_xx-small"
+                    style="background-color: #000000"
+                ></div>
+                <div class="slds-col slds-size_12-of-12 slds-text-align_left">
+                    <h3>Customer Support</h3>
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-text-align_left slds-p-left_medium">
+                    <span>Contact Us: </span
+                    ><span style="color: red"
+                        ><b
+                            ><a href={broadbandLabel.customerSupport.url} style="overflow-wrap: break-word;" target="”_blank”"
+                                >{broadbandLabel.customerSupport.url}</a
+                            ></b
+                        ></br>
+                        {broadbandLabel.customerSupport.phoneNumber}</span
+                    >
+                </div>
+                <div
+                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-p-vertical_xxx-small"
+                    style="background-color: #000000"
+                ></div>
+                <div
+                    class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_left slds-p-vertical_xxx-small"
+                >
+                    <span
+                        >Learn more about the terms used on this label by visiting the Federal Communications
+                        Commission's Consumer Resource Center.</span
+                    >
+                </div>
+                <div
+                    class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_right slds-m-right_small slds-p-vertical_xxx-small"
+                >
+                    <a href={broadbandLabel.fccURL}>fcc.gov/consumer</a>
+                </div>
+                <div
+                    class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_left slds-p-vertical_xxx-small"
+                    style="color: rgb(255, 0, 0)"
+                >
+                    <span>Unique Plan Identifier {broadbandLabel.uniquePlanIdentifier}</span>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>

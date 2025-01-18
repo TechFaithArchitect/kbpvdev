@@ -1,0 +1,355 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="frontier"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <div class="slds-grid slds-grid_align-spread">
+            <div class="slds-col">
+                <lightning-button
+                    variant="neutral"
+                    label="Quote Assistance"
+                    onclick={handleShowCCQuoteAssistanceModal}
+                ></lightning-button>
+            </div>
+            <template lwc:if={isNotGuestUser}>
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </template>
+        </div>
+        <div class="slds-box slds-theme_default slds-p-around_x-small">
+            <template lwc:if={showSBS}>
+                <c-poe_lwc-buyflow-frontier-s-b-s-button
+                    record-id={recordId}
+                    is-guest-user={isGuestUser}
+                    ongoback={hideSBS}
+                ></c-poe_lwc-buyflow-frontier-s-b-s-button>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_small">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                        <div class="slds-box slds-p-around_x-small">
+                            <div
+                                class="slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                                style="background-color: #ff8200; color: white"
+                            >
+                                Order Configurations
+                            </div>
+                            <div
+                                class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-p-vertical_small slds-p-left_x-small slds-m-horizontal_none"
+                            >
+                                Review Internet Options
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-p-bottom_small">
+                                <div class="slds-box slds-p-around_x-small">
+                                    <div class="slds-text-heading_small">{productName}</div>
+                                    <template lwc:if={showRouters}>
+                                        <lightning-combobox
+                                            name="routerOptions"
+                                            label="Router Options"
+                                            value={routerOption}
+                                            class="slds-m-around_x-small"
+                                            onchange={handleRouter}
+                                            options={routerOptions}
+                                            required
+                                        ></lightning-combobox>
+                                    </template>
+                                    <template lwc:if={showIncludedRouters}>
+                                        <div class="slds-p-vertical_x-small">Included</div>
+                                        <template for:each={includedRouters} for:item="router">
+                                            <div class="slds-size_1-of-1 slds-m-bottom_xx-small" key={router.value}>
+                                                <lightning-input
+                                                    type="checkbox"
+                                                    label={router.label}
+                                                    checked
+                                                    disabled
+                                                ></lightning-input>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
+                            <template lwc:if={hasOffers}>
+                                <div
+                                    class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-p-vertical_small slds-p-left_x-small slds-m-horizontal_none"
+                                >
+                                    Please select one of the following offers
+                                </div>
+                                <template lwc:if={hasYoutube}>
+                                    <div class="slds-col slds-size_1-of-1 slds-m-left">
+                                        <lightning-input
+                                            class="slds-m-around_xx-small slds-m-left_small"
+                                            type="checkbox"
+                                            label={youtubeName}
+                                            onchange={handleYoutube}
+                                            checked={youtubeWanted}
+                                        >
+                                        </lightning-input>
+                                    </div>
+                                </template>
+                                <template lwc:if={hasReward}>
+                                    <div class="slds-col slds-size_1-of-1 slds-m-left">
+                                        <lightning-input
+                                            type="checkbox"
+                                            class="slds-m-around_xx-small slds-m-left_small"
+                                            label={rewardName}
+                                            onchange={handleReward}
+                                            checked={rewardWanted}
+                                        >
+                                        </lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-p-around_small">
+                                        <div class="slds-box slds-p-around_x-small slds-text-body_small">
+                                            After you've been a customer for 90 days and paid your first Frontier bill
+                                            in full, we'll send you an email with redemption instructions for your
+                                            reward card. If you disconnect your internet service in the first year, a
+                                            pro-rated early termination fee up to {rewardValue} will apply.
+                                        </div>
+                                    </div>
+                                </template>
+                            </template>
+                            <div
+                                class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-p-vertical_small slds-p-left_x-small slds-m-horizontal_none"
+                            >
+                                Add Frontier Secure?
+                            </div>
+                            <div class="slds-form-element__control">
+                                <template for:each={secureOptions} for:item="service">
+                                    <span
+                                        key={service.Id}
+                                        class="slds-checkbox slds-p-horizontal_small slds-p-top_xx-small"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            id={service.Id}
+                                            data-id={service.Id}
+                                            value={service.Id}
+                                            name="services"
+                                            checked={service.isChecked}
+                                            disabled={service.required}
+                                            onchange={handleServiceChange}
+                                        />
+                                        <label class="slds-checkbox__label" for={service.Id}>
+                                            <span class="slds-form-element__label">
+                                                <div class="slds-box slds-grid slds-wrap slds-p-around_x-small">
+                                                    <div class="slds-col slds-size_1-of-12 slds-align_absolute-center">
+                                                        <span class="slds-checkbox_faux slds-m-right_none"></span>
+                                                    </div>
+                                                    <div
+                                                        class="slds-col slds-m-vertical_x-small slds-size_10-of-12 slds-small-size_7-of-12 slds-p-left_none"
+                                                    >
+                                                        <div class="slds-text-heading_small">
+                                                            <strong>{service.Name}</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="slds-col slds-grid slds-m-vertical_x-small slds-size_12-of-12 slds-small-size_4-of-12"
+                                                    >
+                                                        <div class="slds-text-heading_small">
+                                                            <strong>$ {service.PromoPrice}/mo</strong>
+                                                        </div>
+                                                        <template lwc:if={service.hasOriginalPrice}>
+                                                            <span style="text-decoration: line-through"
+                                                                >$ {service.Price}</span
+                                                            ></template
+                                                        >
+                                                    </div>
+                                                    <div class="slds-col slds-size_12-of-12 slds-p-around_small">
+                                                        <template lwc:if={service.hasFuturePrice}
+                                                            ><strong
+                                                                >For first&nbsp;{service.Duration}&nbsp;months,
+                                                                ${service.FuturePrice} onwards.</strong
+                                                            ></template
+                                                        ><template lwc:if={service.isIncluded}>
+                                                            <strong>${service.PromoPrice} as long as on Plan.</strong>
+                                                        </template>
+                                                        &nbsp;{service.Description}
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </label>
+                                    </span>
+                                </template>
+                            </div>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-p-vertical_small slds-p-left_x-small slds-m-horizontal_none slds-grid"
+                            >
+                                <div class="slds-text-heading_medium">Add Unlimited Digital Voice?</div>
+                                <div class="slds-text-heading_medium" style="color: #ff8200">
+                                    &nbsp;&nbsp;${voicePrice}/mo
+                                </div>
+                            </div>
+                            <div
+                                class="slds-col slds-size_1-of-1 slds-text-body_small slds-p-vertical_x-small slds-p-left_x-small slds-m-horizontal_none"
+                            >
+                                Add a VoIP (Voice Over Internet Protocol) phone line to your super fast internet service
+                            </div>
+                            <div
+                                class="slds-col slds-size_1-of-1 slds-text-body_small slds-p-vertical_x-small slds-p-left_small slds-m-horizontal_none"
+                            >
+                                <lightning-radio-group
+                                    class="slds-m-left_small"
+                                    name="voipOptions"
+                                    label="Please select an option"
+                                    required="true"
+                                    options={voipOptions}
+                                    value={voipOption}
+                                    type="radio"
+                                    onchange={handleVoip}
+                                ></lightning-radio-group>
+                            </div>
+                            <div
+                                class="slds-col slds-size_1-of-1 slds-text-body_small slds-p-vertical_x-small slds-p-left_x-small slds-m-horizontal_none"
+                            >
+                                <template lwc:if={voiceHasDiscount}>
+                                    <strong
+                                        >Per month for {voiceDuration} months, ${voiceBasePrice} onwards.&nbsp;</strong
+                                    ></template
+                                >{voiceDescription}
+                            </div>
+                            <template lwc:if={voipWanted}>
+                                <div class="slds-col slds-size_1-of-1 slds-text-body_small slds-p-around_medium">
+                                    <div class="slds-box slds-grid slds-wrap slds-p-around_small slds-gutters_x-small">
+                                        <div class="slds-col slds-size_12-of-12">
+                                            <lightning-input
+                                                type="checkbox"
+                                                name="portableWanted"
+                                                label="Keep my Current Non-Frontier Phone Number"
+                                                checked={portableWanted}
+                                                onchange={handlePortableWanted}
+                                            ></lightning-input>
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_12-of-12 slds-text-body_small slds-p-around_small"
+                                        >
+                                            You may keep your current phone number, or you will be assigned a new
+                                            number. Transferring of phone numbers is not guaranteed, and can not be done
+                                            from one state to another. Number must be in service to be ported.
+                                        </div>
+                                        <template lwc:if={portableWanted}>
+                                            <div
+                                                class="slds-col slds-size_12-of-12 slds-text-heading_small slds-p-around_small"
+                                            >
+                                                Frontier needs to check if your current phone number is portable. Please
+                                                enter the number Customer wants to port in.
+                                            </div>
+                                            <div
+                                                class="slds-col slds-size_1-of-1 slds-small-size_7-of-12 slds-medium-size_5-of-12 slds-m-bottom_small"
+                                            >
+                                                <lightning-input
+                                                    type="tel"
+                                                    name="phoneNumber"
+                                                    value={phoneNumber}
+                                                    label="Telephone Number"
+                                                    placeholder="(000) 000-0000"
+                                                    max-length="10"
+                                                    onchange={handlePhone}
+                                                    required="true"
+                                                ></lightning-input>
+                                            </div>
+                                            <div
+                                                class="slds-col slds-small-size_5-of-12 slds-medium-size_7-of-12"
+                                            ></div>
+                                            <div
+                                                class="slds-col slds-size_1-of-1 slds-medium-size_5-of-12 slds-large-size_3-of-12"
+                                            >
+                                                <lightning-button
+                                                    variant="brand"
+                                                    label="Check Number"
+                                                    onclick={handlePortable}
+                                                    disabled={disablePortable}
+                                                ></lightning-button>
+                                            </div>
+                                            <template lwc:if={portableResult}>
+                                                <div
+                                                    class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"
+                                                ></div>
+                                            </template>
+                                            <div
+                                                class="slds-col slds-size_1-of-1 slds-medium-size_7-of-12 slds-large-size_9-of-12 slds-text-heading_small slds-text-align_left"
+                                            >
+                                                {portableResult}
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-frontier-cart cart={cart}> </c-poe_lwc-buyflow-frontier-cart>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    disable-next={disableNext}
+                    show-cancel="true"
+                    oncancel={handleCancel}
+                    onnext={handleClick}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showModal}>
+        <c-poe_lwc-buyflow-frontier-configurations-modal
+            has-phone={voipWanted}
+            freeze-option={localFreezeOption}
+            international-options={internationalConfigurations}
+            freeze-options={localFreezeOptions}
+            additional-listing={additionalListing}
+            listing-options={listingOptions}
+            home-option={homeAddon}
+            listing-option={listingOption}
+            listed-id={listedId}
+            voice-mail-option={voiceMailConfiguration}
+            onconfirm={handleConfirmModal}
+            onclose={hideModal}
+            onlistingselected={handleListingSelection}
+            onadditionalselected={handleAdditionalListingSelection}
+            oninternationalselected={handleInternationalSelection}
+            onmailselected={handleMailSelected}
+            onringselected={handleRingSelected}
+            onhomeselected={handleHomeAddon}
+            onfreezeselected={handleFreezeSelection}
+        ></c-poe_lwc-buyflow-frontier-configurations-modal>
+    </template>
+    <template lwc:if={showCreditCheckQuoteAssistanceModal}>
+        <c-poe_lwc-buyflow-frontier-credit-check-quote-assistance-modal
+            quote-id={quoteId}
+            frontier-user-id={frontierUserId}
+            onclose={handleCloseCCQuoteAssistanceModal}
+            onlogerror={handleLogError}
+        >
+        </c-poe_lwc-buyflow-frontier-credit-check-quote-assistance-modal>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showPosIdModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.posIdMessage}
+            modal-title="Manual Review Pending"
+            onclose={hidePosIdModal}
+            onconfirm={hidePosIdModal}
+            is-rich-text="false"
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

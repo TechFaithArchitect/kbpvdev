@@ -1,0 +1,60 @@
+<template>
+    <lightning-card>
+        <template if:true={showException}>
+        <div class="=slds-grid">
+            <div class="slds-col slds-size slds-size_1-of-1 slds-p-around_small">
+                <c-pv_-multi-select-picklist  options={exceptionTypeOption} onvaluechange={handleValueChange}
+                        label="Select Exception Type"></c-pv_-multi-select-picklist>
+            </div>
+            
+            <div class="slds-col slds-p-around_small slds-size_1-of-1">
+            <lightning-input data-field="tripFees" type="number" class="tripFee" name="tripFee" maxlength="6" label="Trip Fee" onchange={handleChange}></lightning-input>
+            </div>
+
+            <div class="slds-col slds-size slds-size_1-of-1 slds-p-around_small productList">
+                <c-pv_-multi-select-picklist options={customProductList} data-index={index} onvaluechange={handleProductChange}
+                label="Select Product Type" ></c-pv_-multi-select-picklist>
+             </div>
+
+            <div class="slds-col slds-p-around_small slds-size_1-of-1">
+                <lightning-textarea  name="installationIssue" label="Installation Issue" onchange={handleChange}></lightning-textarea>
+            </div>
+            <div class="slds-col slds-p-around_small slds-size_1-of-1">
+            <lightning-textarea name="workPreformed" label="Work Performed" onchange={handleChange}></lightning-textarea>
+            </div>
+            <!-- <lightning-button class="slds-p-around_small" variant="brand" label="Save"
+                onclick={handleCreateRecord}>
+            </lightning-button> -->
+            
+            <div class="slds-col slds-size_1-of-3 ">
+                
+            </div>
+            <div class="slds-col slds-size_1-of-3 ">
+            
+            </div>
+            <div class="slds-col slds-size_1-of-3 ">
+                <lightning-button class="slds-p-around_small"  variant="brand" label="Save"
+                    onclick={handleValidation}>
+                </lightning-button>
+            
+            </div>
+        </div>
+        </template>
+       
+        <template if:true={showSuccess}>
+            <div class="slds-p-around_small">
+                <div class="slds-p-around_small">
+                    <p>Exception Submitted for Approval</p>
+                </div>
+            </div>
+        </template>
+        <template if:true={showExceptionMessage}>
+            <div class="slds-p-around_small"><p>Exception are not available for this work type.</p></div>
+        </template>
+        <template if:true={showExceptionMessageImage}>
+            <div class="slds-p-around_small">
+                <p>Before submitting an exception, kindly upload at least one image.</p>
+            </div>
+        </template>
+    </lightning-card>
+</template>

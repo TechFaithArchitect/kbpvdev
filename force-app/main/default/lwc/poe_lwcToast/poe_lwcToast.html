@@ -1,0 +1,49 @@
+<template>
+    <div class={toastContainerClass}>
+        <div class={variantParams.themeClass} role="status">
+            <span class="slds-assistive-text">{variant}</span>
+            <span 
+                class={variantParams.iconClass}
+                title="Description of icon when needed">
+                <lightning-icon 
+                    size="small"
+                    icon-name={variantParams.iconName}
+                    alternative-text={variantParams.altText}
+                    title={variantParams.altText}
+                    variant={variantParams.variant}
+                >
+                </lightning-icon>
+            </span>
+            <div class="slds-notify__content">
+                <h2 class="slds-text-heading_small">
+                    <lightning-formatted-text value={title}></lightning-formatted-text>
+                </h2>
+                <template lwc:if={message}>
+                    <lightning-formatted-rich-text
+                        value={message}
+                    >
+                    </lightning-formatted-rich-text>
+                </template>
+            </div>
+            <template lwc:if={showClose}>
+                <div class="slds-notify__close">
+                    <button 
+                        class="slds-button slds-button_icon slds-button_icon-inverse" 
+                        title="Close"
+                        onclick={hideToast}
+                    >
+                        <lightning-icon 
+                            size="small"
+                            icon-name="utility:close"
+                            alternative-text="Close"
+                            title="Close"
+                            variant="inverse"
+                        >
+                        </lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

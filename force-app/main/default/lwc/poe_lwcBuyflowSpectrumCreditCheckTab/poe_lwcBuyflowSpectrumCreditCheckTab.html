@@ -1,0 +1,372 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider={labels.CHARTER}
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_medium slds-clearfix">
+            <div class="slds-grid slds-wrap slds-gutters slds-p-around_medium">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                    <div class="slds-grid slds-wrap slds-gutters slds-p-top_xxx-small">
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            {labels.CUSTOMER_INFORMATION}
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small"
+                        >
+                            <lightning-input
+                                type="text"
+                                name="firstName"
+                                value={firstName}
+                                disabled={creditCheckPerformed}
+                                required
+                                onchange={handleChange}
+                                label={labels.FIRST_NAME}
+                            ></lightning-input>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small"
+                        >
+                            <lightning-input
+                                type="text"
+                                name="lastName"
+                                value={lastName}
+                                onchange={handleChange}
+                                disabled={creditCheckPerformed}
+                                required
+                                label={labels.LAST_NAME}
+                            ></lightning-input>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small"
+                        >
+                            <lightning-input
+                                type="email"
+                                name="email"
+                                value={email}
+                                disabled={creditCheckPerformed}
+                                onchange={handleChange}
+                                required
+                                label={labels.EMAIL_ADDRESS}
+                            ></lightning-input>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small"
+                        >
+                            <lightning-input
+                                type="tel"
+                                pattern="[0-9]{10}"
+                                max-length="10"
+                                message-when-pattern-mismatch={labels.INVALID_PHONE_ERROR}
+                                required
+                                onchange={handleChange}
+                                disabled={creditCheckPerformed}
+                                name="phone"
+                                value={phone}
+                                label={labels.PHONE}
+                            ></lightning-input>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small"
+                        >
+                            <lightning-input
+                                type="date"
+                                date-style="short"
+                                label={labels.DATE_OF_BIRTH}
+                                required
+                                class="sensitive-input"
+                                disabled={creditCheckPerformed}
+                                value={ccDOB}
+                                name="DOB"
+                                onchange={handleChange}
+                                data-id="ssnDOB"
+                                min="1901-01-01"
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-p-around_xx-small slds-m-bottom_x-small">
+                            <lightning-radio-group
+                                name="radioGroup"
+                                label={previousAddressLabel}
+                                options={radioOptions}
+                                value={radioOption}
+                                required
+                                onchange={handleChange}
+                                type="radio"
+                            ></lightning-radio-group>
+                        </div>
+                        <template lwc:if={showPreviousAddress}>
+                            <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                <h2>{labels.PREVIOUS_ADDRESS}</h2>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                <lightning-input
+                                    type="text"
+                                    name="previousAddress"
+                                    disabled={creditCheckPerformed}
+                                    value={previousAddress}
+                                    required="true"
+                                    label={labels.ADDRESS_FIELD}
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                <lightning-input
+                                    type="text"
+                                    name="previousApt"
+                                    value={previousApt}
+                                    disabled={creditCheckPerformed}
+                                    label={labels.APT_UNIT}
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                <lightning-input
+                                    type="text"
+                                    name="previousCity"
+                                    value={previousCity}
+                                    label={labels.CITY}
+                                    disabled={creditCheckPerformed}
+                                    required="true"
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                <lightning-combobox
+                                    name="previousState"
+                                    label={labels.STATE}
+                                    value={previousState}
+                                    onchange={handleChange}
+                                    disabled={creditCheckPerformed}
+                                    options={states}
+                                    required
+                                ></lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-m-bottom_small">
+                                <lightning-input
+                                    type="text"
+                                    name="previousZip"
+                                    value={previousZip}
+                                    disabled={creditCheckPerformed}
+                                    label={labels.ZIP}
+                                    required="true"
+                                    max-length="5"
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                        </template>
+                        <div class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-m-bottom_x-small">
+                            <lightning-input
+                                type="checkbox"
+                                checked={billingAddressCheck}
+                                name="billingAddressCheck"
+                                disabled={creditCheckPerformed}
+                                onchange={handleChange}
+                                label={labels.BILLING_ADDRESS_CHECK}
+                            ></lightning-input>
+                        </div>
+                        <template lwc:if={showBillingAddress}>
+                            <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                <h2>{labels.BILLING_ADDRESS}</h2>
+                            </div>
+                            <template lwc:if={isGuestUser}>
+                                <div class="slds-col slds-size_1-of-1">
+                                    <c-poe_lwc-address-field
+                                        options={addressOptions}
+                                        onaddresschange={handleBillingAddressChange}
+                                        onlogerror={handleLogError}
+                                    ></c-poe_lwc-address-field>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingAddress"
+                                        disabled={creditCheckPerformed}
+                                        value={billingAddress}
+                                        required="true"
+                                        label={labels.ADDRESS_FIELD}
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingApt"
+                                        value={billingApt}
+                                        disabled={creditCheckPerformed}
+                                        label={labels.ADDRESS_LINE_2_FIELD}
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingCity"
+                                        value={billingCity}
+                                        label={labels.CITY}
+                                        disabled={creditCheckPerformed}
+                                        required="true"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                    <lightning-combobox
+                                        name="billingState"
+                                        label={labels.STATE}
+                                        value={billingState}
+                                        onchange={handleChange}
+                                        disabled={creditCheckPerformed}
+                                        options={states}
+                                        required
+                                    ></lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-m-bottom_small">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingZip"
+                                        value={billingZip}
+                                        disabled={creditCheckPerformed}
+                                        label={labels.ZIP}
+                                        required="true"
+                                        max-length="5"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                            </template>
+                        </template>
+                        <div class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-m-bottom_x-small">
+                            <div class="slds-p-bottom_xx-small">
+                                <lightning-formatted-rich-text
+                                    value={content.paperlessVerbiage}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <lightning-input
+                                type="checkbox"
+                                checked={paperless}
+                                name="paperless"
+                                disabled={creditCheckPerformed}
+                                onchange={handleChange}
+                                label={content.paperless}
+                            ></lightning-input>
+                        </div>
+                        <template lwc:if={showAutoPayEnrollment}>
+                            <div class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-m-bottom_x-small">
+                                <div class="slds-p-bottom_xx-small">
+                                    <lightning-formatted-rich-text
+                                        value={content.autoPay}
+                                    ></lightning-formatted-rich-text>
+                                </div>
+                                <lightning-input
+                                    type="checkbox"
+                                    checked={autoPay}
+                                    name="autopay"
+                                    disabled={creditCheckPerformed}
+                                    onchange={handleChange}
+                                    label={content.autoPayLabel}
+                                ></lightning-input>
+                            </div>
+                        </template>
+                    </div>
+                    <template lwc:if={showCartPromotions}>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-text-heading_small slds-text-align_center"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            {labels.CART_PROMOTIONS}
+                        </div>
+                        <div class="slds-col slds-size_12-of-12 slds-p-vertical_xx-small slds-m-vertical_small">
+                            <template for:each={cartPromotions} for:item="promotion">
+                                <template lwc:if={promotion.isAuto}>
+                                    <div key={promotion.id} class="slds-p-top_xx-small">
+                                        <lightning-formatted-rich-text
+                                            value={content.autoPay}
+                                        ></lightning-formatted-rich-text>
+                                    </div>
+                                </template>
+                                <lightning-input
+                                    key={promotion.id}
+                                    type="checkbox"
+                                    class="slds-p-vertical_xx-small"
+                                    checked={promotion.selected}
+                                    data-id={promotion.id}
+                                    label={promotion.name}
+                                    onchange={handlePromotion}
+                                ></lightning-input>
+                            </template>
+                        </div>
+                    </template>
+
+                    <div class="slds-size_1-of-1 slds-p-vertical_small">
+                        <lightning-input
+                            type="checkbox"
+                            label={contactConsentLabel}
+                            name="contactConsent"
+                            checked={contactConsent}
+                            onchange={handleConsentChange}
+                        ></lightning-input>
+                    </div>
+                </div>
+                <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-spectrum-cart
+                        cart={cart}
+                        has-phone={hasPhone}
+                        has-mobile={hasMobile}
+                        logo={logo}
+                    >
+                    </c-poe_lwc-buyflow-spectrum-cart>
+                </div>
+            </div>
+            <c-poe_lwc-buyflow-tab-actions
+                show-cancel="true"
+                disable-next={noCompleteInfo}
+                show-previous="true"
+                oncancel={handleCancel}
+                onprevious={handlePrevious}
+                onnext={handleNext}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text={labels.SPINNER_ALT_TEXT} size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={modalBody}
+            modal-title={modalTitle}
+            onclose={hideModal}
+            onconfirm={confirmCreditCheck}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showCapReachedModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.capReachedError}
+            modal-title={labels.LIMIT_REACHED}
+            onconfirm={handleCancel}
+            onclose={handleCancel}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

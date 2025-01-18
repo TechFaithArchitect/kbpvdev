@@ -1,0 +1,18 @@
+<template>
+    <template lwc:if={isHomeConciergeEnabled}>
+        <div class="slds-grid slds-wrap slds-box slds-p-around_small">
+            <div class="slds-col slds-size_12-of-12 text-heading_small">{labels.title}</div>
+            <div class="slds-col slds-size_12-of-12">
+                <lightning-input
+                    type="checkbox"
+                    checked={agree}
+                    onchange={handleCheckbox}
+                    label={labels.disclaimer}
+                ></lightning-input>
+            </div>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </template>
+</template>

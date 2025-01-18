@@ -1,0 +1,400 @@
+<template>
+
+    <template if:true={optionsLoaded}>
+        <template if:true={isCompleted}>
+        <lightning-card title="QA audit" icon-name="standard:account">
+    
+
+    <lightning-accordion allow-multiple-sections-open
+                         onsectiontoggle={handleSectionToggle}
+                         active-section-name={activeSections}>
+  
+                <lightning-accordion-section name="A" label="General Section" >
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                        <template if:true={optionsLoaded}>
+                           <lightning-combobox 
+                            name="On_Site__c"
+                            label="On Site"
+                            value={auditRecords.On_Site__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                        </lightning-combobox>     
+                        </template>
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                            name="Virtual__c"
+                            label="Virtual"
+                            value={auditRecords.Virtual__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                            name="Roof__c"
+                            label="Roof"
+                            value={auditRecords.Roof__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                            name="Stubby__c"
+                            label="Stubby"
+                            value={auditRecords.Stubby__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                            name="Round_Pole__c"
+                            label="Round Pole"
+                            value={auditRecords.Round_Pole__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                            name="S_Mount__c"
+                            label="S-Mount"
+                            value={auditRecords.S_Mount__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                            name="Non_Pen__c"
+                            label="Non-Pen"
+                            value={auditRecords.Non_Pen__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                            name="Hex_Pole__c"
+                            label="Hex Pole"
+                            value={auditRecords.Hex_Pole__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                           name="Undereave__c"
+                            label="Undereave"
+                            value={auditRecords.Undereave__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                           name="Approved_Mount__c"
+                            label="Approved Mount"
+                            value={auditRecords.Approved_Mount__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                           name="Wall__c"
+                            label="Wall"
+                            value={auditRecords.Wall__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                            <div class="slds-form-element">
+                           <lightning-combobox
+                            name="All_Required_Photos__c"
+                            label="All Required Photos"
+                            value={auditRecords.All_Required_Photos__c}
+                            options={options}
+                            onchange={handleChange}
+                            disabled={IsEditable}>            
+                            </lightning-combobox>     
+                            </div>          
+                        </div>
+                      
+                </div>
+                </lightning-accordion-section>
+               
+       
+
+        <lightning-accordion-section name="B" label="Outside Quality Section">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                   <lightning-combobox
+                    name="Antenna_Pointing__c"
+                    label="Antenna Pointing"
+                    value={auditRecords.Antenna_Pointing__c}
+                    options={options}
+                    onchange={handleChange}
+                    disabled={IsEditable}>            
+                    </lightning-combobox>     
+                    </div>          
+                </div>
+                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                   <lightning-combobox
+                    name="Equipment_Cable_ODU__c"
+                    label="Equipment (Cable & ODU)"
+                    value={auditRecords.Equipment_Cable_ODU__c}
+                    options={options}
+                    onchange={handleChange}
+                    disabled={IsEditable}>            
+                    </lightning-combobox>     
+                    </div>          
+                </div>
+                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                   <lightning-combobox
+                    name="Line_of_Sight_10__c"
+                    label="Line of Sight (+/- 10*)"
+                    value={auditRecords.Line_of_Sight_10__c}
+                    options={options}
+                    onchange={handleChange}
+                    disabled={IsEditable}>            
+                    </lightning-combobox>     
+                    </div>          
+                </div>
+                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                   <lightning-combobox
+                    name="ODU_Mount_Hardware__c"
+                    label="ODU Mount & Hardware"
+                    value={auditRecords.ODU_Mount_Hardware__c}
+                    options={options}
+                    onchange={handleChange}
+                    disabled={IsEditable}>            
+                    </lightning-combobox>     
+                    </div>          
+                </div>
+                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                   <lightning-combobox
+                    name="Approved_Cabling_Aesthetics__c"
+                    label="Approved Cabling & Aesthetics"
+                    value={auditRecords.Approved_Cabling_Aesthetics__c}
+                    options={options}
+                    onchange={handleChange}
+                    disabled={IsEditable}>            
+                    </lightning-combobox>     
+                    </div>          
+                </div>
+                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                   <lightning-combobox
+                    name="System_Grounded_to_NEC_Ground_Source__c"
+                    label="System Grounded to NEC Ground Source"
+                    value={auditRecords.System_Grounded_to_NEC_Ground_Source__c}
+                    options={options}
+                    onchange={handleChange}
+                    disabled={IsEditable}>            
+                    </lightning-combobox>     
+                    </div>          
+                </div>
+            </div>
+        </lightning-accordion-section>
+
+        <lightning-accordion-section name="C" label="OJT Review">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                 <div class="slds-form-element">
+                   <lightning-combobox
+                   name="Pre_Install_Customer_Experience__c"
+                    label="Pre-Install Customer Experience"
+                    value={auditRecords.Pre_Install_Customer_Experience__c}
+                    options={options}
+                    onchange={handleChange}
+                    disabled={IsEditable}>            
+                    </lightning-combobox>     
+                    </div>          
+                </div>
+                <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                      <lightning-combobox
+                      name="Site_Survey__c"
+                       label="Site Survey"
+                       value={auditRecords.Site_Survey__c}
+                       options={options}
+                       onchange={handleChange}
+                       disabled={IsEditable}>            
+                       </lightning-combobox>     
+                       </div>          
+                   </div>
+                   <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                      <lightning-combobox
+                      name="Antenna_Assembly__c"
+                       label="Antenna Assembly"
+                       value={auditRecords.Antenna_Assembly__c}
+                       options={options}
+                       onchange={handleChange}
+                       disabled={IsEditable}>            
+                       </lightning-combobox>     
+                       </div>          
+                   </div>
+                   <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                      <lightning-combobox
+                      name="Antenna_Mount__c"
+                       label="Antenna Mount"
+                       value={auditRecords.Antenna_Mount__c}
+                       options={options}
+                       onchange={handleChange}
+                       disabled={IsEditable}>            
+                       </lightning-combobox>     
+                       </div>          
+                   </div>
+                   <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                      <lightning-combobox
+                      name="Cable_Routing__c"
+                       label="Cable Routing"
+                       value={auditRecords.Cable_Routing__c}
+                       options={options}
+                       onchange={handleChange}
+                       disabled={IsEditable}>            
+                       </lightning-combobox>     
+                       </div>          
+                   </div>
+                   <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                      <lightning-combobox
+                      name="System_Grounded__c"
+                       label="System Grounded"
+                       value={auditRecords.System_Grounded__c}
+                       options={options}
+                       onchange={handleChange}
+                       disabled={IsEditable}>            
+                       </lightning-combobox>     
+                       </div>          
+                   </div>
+                   <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                      <lightning-combobox
+                      name="Point_Peak__c"
+                       label="Point & Peak"
+                       value={auditRecords.Point_Peak__c}
+                       options={options}
+                       onchange={handleChange}
+                       disabled={IsEditable}>            
+                       </lightning-combobox>     
+                       </div>          
+                   </div>
+                   <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                      <lightning-combobox
+                      name="System_Provisioned__c"
+                       label="System Provisioned"
+                       value={auditRecords.System_Provisioned__c}
+                       options={options}
+                       onchange={handleChange}
+                       disabled={IsEditable}>            
+                       </lightning-combobox>     
+                       </div>          
+                   </div>
+                   <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                    <div class="slds-form-element">
+                      <lightning-combobox
+                      name="Post_Install_Customer_Experience__c"
+                       label="Post-Install Customer Experience"
+                       value={auditRecords.Post_Install_Customer_Experience__c}
+                       options={options}
+                       onchange={handleChange}
+                       disabled={IsEditable}>            
+                       </lightning-combobox>     
+                       </div>          
+                   </div>
+            </div>    
+        </lightning-accordion-section>
+        
+    </lightning-accordion>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+            <div class="slds-form-element">
+              <lightning-combobox
+              name="Audit_Result__c"
+               label="Audit result"
+               value={auditRecords.Audit_Result__c}
+               options={auditResult}
+               onchange={handleChange}
+               disabled={IsEditable}>            
+               </lightning-combobox>     
+               </div>          
+           </div>
+           <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+            <div class="slds-form-element">
+           <lightning-combobox
+            name="Quality_Follow_Up_Needed__c"
+            label="Quality Follow-Up Needed"
+            value={auditRecords.Quality_Follow_Up_Needed__c}
+            options={qualityFollwup}
+            onchange={handleChange}
+            disabled={IsEditable}>            
+            </lightning-combobox>     
+            </div>          
+        </div>
+        </div>
+    <div class="slds-var-m-around_x-small slds-align_absolute-center">
+        <lightning-button if:true={createAuditscreen}
+            label="Create"
+            variant="brand"
+            disabled={IsEditable}
+            onclick={createAudit}>
+        </lightning-button>
+        <lightning-button if:false={createAuditscreen}
+        label="Update"
+        variant="brand"
+        disabled={IsEditable}
+        onclick={updateAudit}>
+    </lightning-button>
+    </div>
+</lightning-card>
+</template>
+</template>
+</template>

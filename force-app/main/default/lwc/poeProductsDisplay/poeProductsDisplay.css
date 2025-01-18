@@ -1,0 +1,135 @@
+.slds-button.slds-button_neutral {
+    margin: 2em 0;
+}
+
+.disabled {
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    cursor: not-allowed;
+}
+
+.none {
+    cursor: pointer;
+}
+
+.title {
+    font-size: 2.5em;
+    font-weight: 600;
+}
+
+.subTitle {
+    font-size: 1.5em;
+    font-weight: 400;
+}
+
+.partnerCard {
+    border: 1px solid lightgray;
+    border-radius: 20px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.zipSection {
+    background-color: #f7f5fa;
+}
+
+.offersButton {
+    background-clip: padding-box;
+    background-color: #fa6400;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin: 0;
+    min-height: 3rem;
+    padding: calc(0.875rem - 1px) calc(1.5rem - 1px);
+    text-decoration: none;
+    transition: all 250ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: auto;
+}
+
+.offersButton:hover,
+.offersButton:focus {
+    background-color: #fb8332;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.offersButton:hover {
+    transform: translateY(-1px);
+}
+
+.offersButton:active {
+    background-color: #c85000;
+    box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+    transform: translateY(0);
+}
+
+.prevButton {
+    background-color: #fff;
+    color: #fa6400;
+    border: 1px solid #fa6400;
+    margin-left: 3rem;
+}
+
+.prevButton:hover,
+.prevButton:focus,
+.prevButton:active {
+    color: white;
+}
+
+@media only screen and (max-width: 1024px) {
+    /* Make horizontal margin smaller for provider items in screens smaller than large */
+    .partnerCard {
+        margin-left: 1.5rem;
+        margin-right: 1.5rem;
+    }
+
+    /* Remove padding in provider list for screens smaller than large*/
+    .partnerSection {
+        padding: 0;
+    }
+
+    /* Remove left margin from Previous button for screens smaller than large */
+    .prevButton {
+        margin-left: 0;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    /* Make padding and horizontal margin smaller for provider items in screens smaller than medium */
+    .partnerCard {
+        padding: 0.25rem;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+
+    /* Remove horizontal margin from the subtitle for screens smaller than medium */
+    .subTitle {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    /* Remove margin for program info for screens smaller than medium */
+    .program-info {
+        margin: 0;
+    }
+
+    /* Set 100% width to the offers button for screens smaller than medium */
+    .offersButton {
+        width: 100%;
+    }
+
+    /* Set border radius and margin to images for screens smaller than medium */
+    .partnerSection img {
+        border-radius: 20px;
+        margin-bottom: 1rem;
+    }
+}

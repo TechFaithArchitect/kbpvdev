@@ -1,0 +1,45 @@
+.new-record-card {
+    margin: auto; 
+
+    min-width: 40rem;
+    width: 70%; 
+    max-width: 1025px;
+
+    height: 100%;
+}
+
+.card-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.disabled-link {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+    color: black;
+}
+
+.field-section {
+    padding-bottom: 4rem;
+    padding-left: 1.875rem;
+    padding-right: 1.875rem;
+
+    height: auto;
+}
+
+.slds-card__body {
+    height: calc(100% - 7rem);
+}
+
+.slds-docked-form-footer {
+    background: rgba(236, 235, 234, 0.9);
+}
+
+lightning-record-edit-form {
+    height: 100%;
+    display: block;
+    overflow-y: scroll;
+}

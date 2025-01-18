@@ -1,0 +1,102 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="viasat"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-p-around--medium slds-theme_default">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                    <div
+                        class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                        style="background-color: #ff8200; color: white"
+                    >
+                       {labels.Term_condition_and_Disclosures}
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-p-top_medium slds-p-horizontal_medium">
+                        <p class="slds-p-bottom_x-small">
+                            <strong> {termsAndConditionsInstructions} </strong>
+                        </p>
+                    </div>
+                    <template for:each={terms} for:item="term">
+                        <div class="slds-col slds-size_12-of-12 slds-p-around_medium slds-p-right_medium" key={term.id}>
+                            <div class="slds-box">
+                                <p class="slds-p-bottom_x-small">
+                                    <strong
+                                        ><lightning-formatted-rich-text
+                                            value={term.consentLabel}
+                                            linkify
+                                        ></lightning-formatted-rich-text
+                                    ></strong>
+                                </p>
+                                <lightning-formatted-rich-text
+                                    value={term.consentText}
+                                    linkify
+                                ></lightning-formatted-rich-text>
+                                <lightning-input
+                                    type="checkbox"
+                                    label={checkboxAgreementMessage}
+                                    id={term.id}
+                                    value={term.checked}
+                                    data-id={term.id}
+                                    onchange={handleCheckbox}
+                                    required
+                                    class="slds-m-top_x-small"
+                                >
+                                </lightning-input>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-viasat-cart cart={cartInfo}> </c-poe_lwc-buyflow-viasat-cart>
+                    <template lwc:if={isGuestUser}></template>
+                    <template lwc:else>
+                        <button
+                            class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                            onclick={sbsHandler}
+                        >
+                            {labels.T_Chart_labels}
+                        </button>
+                    </template>
+                    <div class="slds-grid slds-p-around_medium">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <c-poe_lwc-buyflow-tab-actions
+                disable-next={disableNext}
+                show-previous="true"
+                show-cancel="true"
+                oncancel={handleCancel}
+                onprevious={handlePrevious}
+                onnext={handleClick}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+            <template lwc:if={showLoaderSpinner}>
+                <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

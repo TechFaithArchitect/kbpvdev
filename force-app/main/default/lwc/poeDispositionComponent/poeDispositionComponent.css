@@ -1,0 +1,64 @@
+.slds-is-complete {
+    fill: rgb(69, 198, 90);
+    color: white;
+}
+
+.custom-textarea {
+    --sds-c-textarea-sizing-min-height: 150px;
+}
+
+.slds-is-current {
+    fill: #ff8200 !important;
+    color: white;
+}
+
+.dispositionFields {
+    width: 100%;
+    height: fit-content;
+}
+
+.dispositionFooter {
+    width: 100%;
+    padding-top: 40px;
+}
+
+.dispositionFooter .slds-col {
+    display: inline-block;
+    text-align: center;
+}
+
+.dispositionSaveButton {
+    text-align: center;
+    width: 100%;
+}
+
+lightning-button.chuzoBtnBackground {
+    --sds-c-button-neutral-color-background: #ff8200;
+    --sds-c-button-text-color: #ffffff;
+}
+
+lightning-button.chuzoBtnBackground:active {
+    --sds-c-button-neutral-color-background: #58595b;
+    --sds-c-button-text-color: #ffffff;
+}
+
+lightning-icon.chuzoFooterStyle {
+    --slds-c-icon-color-background: #ff8200;
+}
+
+lightning-icon.chuzoFooterStyle:hover {
+    cursor: pointer;
+}
+
+lightning-icon.chuzoFooterStyleDisabled {
+    --slds-c-icon-color-background: #c9c7c5;
+}
+
+.saveSuccessMessage {
+    display: none;
+    margin-top: 15px;
+}
+
+.outcome {
+    user-select: none !important;
+}

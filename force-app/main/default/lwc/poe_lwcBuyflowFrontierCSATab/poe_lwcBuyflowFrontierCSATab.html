@@ -1,0 +1,77 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="frontier"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+            <div class="slds-box slds-theme_default slds-p-around_small slds-m-around_small">
+                <div class="slds-grid slds-wrap slds-p-vertical_x-small slds-m-left_small">
+                    <div
+                        class="slds-col slds-size_12-of-12 slds-grid slds-wrap slds-grid_align-spread slds-p-top_x-small slds-p-horizontal_none slds-m-horizontal_none"
+                    >
+                        <div class="slds-col slds-text-heading_medium slds-p-bottom_medium">{btnLabel} {btn}</div>
+                    </div>
+                    <div
+                        class="slds-col slds-size_12-of-12 slds-grid slds-wrap slds-grid_align-spread slds-p-top_x-small slds-p-horizontal_none slds-m-horizontal_none"
+                    >
+                        <!--       <div class="slds-col slds-text-heading_medium slds-p-bottom_medium">Fill CSA Form</div>
+                              </div>
+                           <div class="slds-col slds-size_12-of-12 slds-m-vertical_small slds-text-body_small">{fileName}</div>
+                          <div class="slds-col slds-size_12-of-12 slds-m-bottom_small">
+                                <lightning-button
+                            class="slds-var-m-top_medium"
+                            label="Go To CSA Form"
+                            required={notPhoneSales}
+                            variant="brand"
+                            onclick={handleCSAFormRedirect}
+                                     ></lightning-button>
+                                 </div>
+                                  </div>
+                                      <div class="slds-col slds-size_12-of-12 slds-m-top_x-small">
+                                  By clicking this button a new tab will be opened with the CSA Form.
+                                 </div> -->
+                        <div class="slds-col slds-text-heading_medium slds-p-bottom_medium">Upload CSA File</div>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-top_small">
+                        <lightning-input
+                            name="fileUploader"
+                            accept={acceptedFormats}
+                            label="Select File"
+                            onchange={handleFilesChange}
+                            type="file"
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_small slds-text-body_small">{fileName}</div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-bottom_small">
+                        <lightning-button
+                            class="slds-var-m-top_medium"
+                            label="Upload"
+                            required={notPhoneSales}
+                            variant="brand"
+                            onclick={handleSave}
+                            disabled={uploadDisabled}
+                        ></lightning-button>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-top_x-small">
+                        Formats supported: .jpeg, .jpg, .pdf, .png, .tiff
+                    </div>
+                    <div class="slds-col slds-size_12-of-12">Maximum file size: 5MB</div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions disable-next={disableNext} oncancel={handleCancel} onnext={handleNext}>
+                </c-poe_lwc-buyflow-tab-actions>
+            </div>
+        </template>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

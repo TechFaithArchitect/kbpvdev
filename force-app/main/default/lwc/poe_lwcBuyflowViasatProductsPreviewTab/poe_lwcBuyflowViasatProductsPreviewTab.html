@@ -1,0 +1,112 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="viasat"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_small slds-p-around_small">
+            <div class="slds-grid slds-wrap slds-gutters slds-p-around_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                    <div class="slds-text-heading_medium slds-p-bottom_medium">{labels.Products_Preview}</div>
+                    <div class="slds-form-element__control">
+                        <template for:each={products} for:item="product">
+                            <span key={product.Id}>
+                                <div class="slds-box slds-grid slds-wrap slds-var-m-bottom_medium slds-p-around_small" for={product.Id}>
+                                    <div class="slds-col slds-size_12-of-12">
+                                        <h2><strong>{product.Name}</strong></h2>
+                                        <div class="slds-border_top"></div>
+                                    </div>
+
+                                    <div class="slds-col slds-var-p-top_medium slds-size_12-of-12">
+                                        <strong> {product.Description}</strong>
+                                    </div>
+                                    <div class="slds-col slds-var-p-top_medium slds-size_12-of-12">
+                                        {product.UploadSpeed}
+                                    </div>
+                                    <div class="slds-col slds-var-p-top_medium slds-size_12-of-12">
+                                        {product.DownloadSpeed}
+                                    </div>
+                                    <div class="slds-col slds-var-p-top_medium slds-size_12-of-12">
+                                        Data cap: {product.DataCap}*
+                                    </div>
+                                    <div class="slds-col slds-var-p-top_medium slds-var-p-left_large slds-size_6-of-12">
+                                        Bundle Term: {product.PriceType}
+                                    </div>
+                                    <div
+                                        class="slds-col slds-text-heading_medium slds-text-align_right slds-var-p-top_medium slds-size_6-of-12"
+                                    >
+                                        <strong>${product.Price}**</strong>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-text-body_small slds-text-align_left slds-var-p-top_medium slds-size_12-of-12"
+                                    >
+                                        <div class="slds-border_top"></div>
+                                        {product.DisclosureText}
+                                    </div>
+                                    <div
+                                        class="slds-col slds-text-body_small slds-text-align_left slds-var-p-top_xx-small"
+                                    >
+                                        **{product.FeeText}
+                                    </div>
+                                </div>
+                            </span>
+                        </template>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <lightning-card>
+                        <h2 slot="title">{labels.Plans_available_for}</h2>
+                        <div>
+                            <div class="slds-border_top">
+                                <div class="slds-text-heading_small slds-col slds-var-p-vertical_small">
+                                    <span>{labels.Service_Address_Title}</span>
+                                </div>
+                                <div class="slds-col">{payload.location.address.addressLine1}</div>
+                                <div class="slds-col">{payload.location.address.addressLine2}</div>
+                                <div class="slds-col">{payload.location.address.city}</div>
+                                <div class="slds-col">{payload.location.address.state}</div>
+                                <div class="slds-col">{payload.location.address.zipCode}</div>
+                            </div>
+                        </div>
+                    </lightning-card>
+                    <div class="slds-grid slds-p-around_medium">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <c-poe_lwc-buyflow-tab-actions
+                disable-next={disableNext}
+                show-previous="true"
+                show-cancel="true"
+                oncancel={handleCancel}
+                onprevious={handlePrevious}
+                onnext={handleClick}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

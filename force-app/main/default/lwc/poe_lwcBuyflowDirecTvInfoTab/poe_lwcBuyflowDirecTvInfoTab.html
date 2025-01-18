@@ -1,0 +1,244 @@
+<template>
+    <template if:true={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template if:false={showCollateral}>
+        <div class="slds-grid slds-grid_align-end">
+            <div class="slds-col">
+                <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+            </div>
+        </div>
+        <div class="slds-box slds-theme_default">
+            <div class="slds-grid slds-gutters slds-wrap slds-p-around_medium">
+                <div class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-p-bottom_medium">
+                    Dealer Code Selection
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_medium">
+                    <lightning-combobox
+                        name="dealerCode"
+                        label="Dealer Code"
+                        required="true"
+                        value={dealerCode}
+                        options={dealerOptions}
+                        onchange={handleChange}
+                    ></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_medium"></div>
+                <div class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-p-bottom_medium">Client Info</div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="text"
+                        name="firstName"
+                        value={firstName}
+                        label="First Name"
+                        onchange={handleChange}
+                        required="true"
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="text"
+                        name="middleName"
+                        value={middleName}
+                        label="Middle Name"
+                        onchange={handleChange}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="text"
+                        name="lastName"
+                        value={lastName}
+                        label="Last Name"
+                        onchange={handleChange}
+                        required="true"
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="email"
+                        name="emailAddress"
+                        value={emailAddress}
+                        label="Email Address"
+                        onchange={handleChange}
+                        required="true"
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="tel"
+                        name="phoneNumber"
+                        value={phoneNumber}
+                        label="Phone Number"
+                        onchange={handleChange}
+                        max-length="10"
+                        required="true"
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-p-bottom_medium slds-p-top_medium">
+                    Address Info
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-input
+                        type="text"
+                        name="address"
+                        value={address}
+                        label="Street Address"
+                        required="true"
+                        onchange={handleChange}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-input
+                        type="text"
+                        name="apt"
+                        value={apt}
+                        label="Address Line 2"
+                        onchange={handleChange}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="text"
+                        name="city"
+                        value={city}
+                        label="City"
+                        required="true"
+                        onchange={handleChange}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_2-of-3 slds-medium-size_2-of-6">
+                    <lightning-combobox
+                        name="state"
+                        label="State"
+                        value={state}
+                        options={stateOptions}
+                        onchange={handleChange}
+                        required="true"
+                    ></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-3 slds-medium-size_1-of-6">
+                    <lightning-input
+                        type="text"
+                        name="zip"
+                        value={zip}
+                        label="Zip"
+                        disabled="true"
+                        onchange={handleChange}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-p-bottom_medium slds-p-top_medium">
+                    Read to customer
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-radio-group
+                        name="existingCustomer"
+                        label="Are you an existing customer with DIRECTV service wishing to move, change, or upgrade your services?"
+                        options={optionsRadio}
+                        value={isExistingCustomer}
+                        required
+                        type="radio"
+                        onchange={handleChange}
+                    >
+                    </lightning-radio-group>
+                </div>
+            </div>
+            <div class="slds-grid slds-p-around_medium">
+                <div class="slds-col slds-size_2-of-12">
+                    <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                </div>
+            </div>
+            <div class="slds-grid slds-grid_align-spread slds-p-around_medium">
+                <div class="slds-col">
+                    <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                </div>
+                <div class="slds-col">
+                    <lightning-button
+                        variant="brand"
+                        label="Check Serviceability"
+                        onclick={handleClick}
+                        disabled={noCompleteInfo}
+                    ></lightning-button>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template if:true={showLoaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template if:true={showModal}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="modal-heading-01"
+            class="slds-modal slds-fade-in-open"
+        >
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Notice</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <p>Buyflow allowed only for new customers</p>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick={hideModal}>OK</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <template if:true={showMessageModal}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="modal-heading-02"
+            class="slds-modal slds-fade-in-open"
+        >
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate">Notice</h1>
+                </div>
+                <h2 
+                    if:false={isCallCenterOrigin} 
+                    class="slds-text-heading_medium slds-text-align_center slds-var-m-bottom_small"
+                >
+                    The disclosures must be shown to the customer
+                </h2>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                    <p>{message}</p>
+                </div>
+                <div class="slds-modal__footer">
+                    <button
+                        if:false={isCallCenterOrigin}
+                        class="slds-button slds-button_neutral slds-var-m-right_small"
+                        onclick={handleMessageModal}
+                        style="border-radius: 20px"
+                    >
+                        {disclosureAgreementLabel}
+                    </button>
+                    <button
+                        if:true={isCallCenterOrigin}
+                        class="slds-button slds-button_neutral slds-var-m-right_small"
+                        onclick={hideModal}
+                        style="border-radius: 20px"
+                    >
+                        {disclosureAgreementLabel}
+                    </button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <template if:true={showSuggestedAddressModal}>
+        <c-poe_lwc-buyflow-direc-tv-info-tab-modal
+            onclose={hideModal}
+            onconfirm={handleSuggestedAddress}
+            suggested-addresses={suggestedAddresses}
+        ></c-poe_lwc-buyflow-direc-tv-info-tab-modal>
+    </template>
+</template>

@@ -1,0 +1,60 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        class="slds-modal slds-fade-in-open slds-modal_x-small"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+    >
+        <div class="slds-modal__container slds-p-top_none">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">
+                    By signing you are consenting to the DIRECTV Terms and Conditions.
+                </h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-grid slds-wrap slds-p-around_small slds-grid_align-center">
+                    <div
+                        class="slds-col slds-size_12-of-12 slds-m-around_medium slds-m-bottom_x-small slds-grid slds-wrap slds-grid_vertical slds-grid_vertical-align-center"
+                    >
+                        <p>
+                            <canvas
+                                name="canvasItem"
+                                width="500"
+                                height="300"
+                                style="border: 2px solid rgb(136, 135, 135); background-size: cover"
+                            ></canvas>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={hideModal}>Close</button>
+                <button class="slds-button slds-button_neutral" onclick={handleClearClick}>Clear</button>
+                <button
+                    class="slds-button slds-button_brand"
+                    onclick={handleSaveClick}
+                    disabled={noCompleteInformation}
+                >
+                    Confirm
+                </button>
+            </div>
+        </div>
+        <template if:true={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

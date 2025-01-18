@@ -1,0 +1,357 @@
+<template>
+    <div class="slds-box slds-theme_default">
+        <div class="slds-grid slds-gutters slds-p-around--medium">
+            <div class="slds-col slds-size_2-of-3">
+                <div
+                    class="slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                    style="background-color: #ff8200; color: white"
+                >
+                    Security Information
+                </div>
+                <div class="slds-grid slds-wrap slds-gutters slds-p-around_xx-small">
+                    <div class="slds-col slds-p-around_xx-small slds-m-bottom_medium">
+                        <p>
+                            For authentication purposes, customers are required to set up a 4-8 digit passcode (pin), a
+                            security question & answer, and provide an email address. This passcode will be used to
+                            verify you whenever you contact DIRECTV about your account. Please make a note of this
+                            information.
+                        </p>
+                    </div>
+                    <div class="slds-grid slds-col slds-m-bottom_medium slds-size_10-of-12">
+                        <div class="slds-size_6-of-12 slds-p-around_xx-small">
+                            <lightning-input
+                                type="password"
+                                name="passcode"
+                                class="passcode"
+                                value={data.passcode}
+                                required
+                                label="Passcode"
+                                minlength="4"
+                                maxlength="8"
+                                message-when-too-short="Passcode must be between 4-8 digits."
+                                onchange={handleDataChange}
+                                onblur={checkInputValidity}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-size_6-of-12 slds-p-around_xx-small">
+                            <lightning-input
+                                type="password"
+                                name="passcodeConfirmation"
+                                class="passcodeConfirmation"
+                                value={data.passcodeConfirmation}
+                                required
+                                label="Confirm Passcode"
+                                minlength="4"
+                                maxlength="8"
+                                message-when-too-short="Passcode must be between 4-8 digits."
+                                onchange={handleDataChange}
+                                onblur={checkInputValidity}
+                            ></lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-col slds-size_10-of-12">
+                        <div class="slds-size_6-of-12 slds-p-around_xx-small">
+                            <lightning-combobox
+                                label="Security Question"
+                                required
+                                value={data.securityQuestion}
+                                name="securityQuestion"
+                                options={securityQuestionOptions}
+                                onchange={handleSecurityQuestionChange}
+                                onblur={checkInputValidity}
+                            ></lightning-combobox>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-col slds-m-bottom_medium slds-size_10-of-12">
+                        <div class="slds-size_6-of-12 slds-p-around_xx-small">
+                            <lightning-input
+                                type="password"
+                                name="securityAnswer"
+                                class="securityAnswer"
+                                value={data.securityAnswer}
+                                required
+                                label="Security Answer"
+                                onchange={handleDataChange}
+                                onblur={checkInputValidity}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-size_6-of-12 slds-p-around_xx-small">
+                            <lightning-input
+                                type="password"
+                                name="securityAnswerConfirmation"
+                                class="securityAnswerConfirmation"
+                                value={data.securityAnswerConfirmation}
+                                required
+                                label="Confirm Security Answer"
+                                onchange={handleDataChange}
+                                onblur={checkInputValidity}
+                            ></lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-col slds-size_10-of-12">
+                        <div class="slds-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small">
+                            <lightning-input
+                                class="slds-size_12-of-12"
+                                type="email"
+                                name="email"
+                                value={data.email}
+                                required
+                                label="Email Address"
+                                field-level-help="An email address is required for account, billing, and installation notifications."
+                                onchange={handleEmailChange}
+                                onblur={checkInputValidity}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-size_6-of-12 slds-grid slds-p-around_xx-small slds-m-bottom_x-small">
+                            <lightning-input
+                                type="tel"
+                                name="phoneNumber"
+                                value={data.phoneNumber}
+                                required
+                                label="Phone Number"
+                                onchange={handleDataChange}
+                                onblur={checkInputValidity}
+                            ></lightning-input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-3">
+                <lightning-card>
+                    <h2 slot="title">
+                        <lightning-icon
+                            icon-name="utility:cart"
+                            size="small"
+                            class="slds-var-m-right_small"
+                        ></lightning-icon>
+                        Shopping Cart
+                    </h2>
+                    <div>
+                        <div class="slds-border_top slds-grid slds-wrap">
+                            <div
+                                class="slds-text-heading_small slds-col slds-text-align_center slds-size_12-of-12 slds-var-p-vertical_xx-small"
+                                style="background-color: #ff8200; color: white"
+                            >
+                                <span>Order ID: {cartInfo.orderNumber}</span>
+                            </div>
+                            <template if:true={cartInfo.hasToday}>
+                                <div
+                                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    <span>Today's Charges</span>
+                                </div>
+                                <template for:each={cartInfo.todayCharges} for:item="charge">
+                                    <div
+                                        key={charge.id}
+                                        class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                    >
+                                        <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                            <b>{charge.name}</b>
+                                        </div>
+                                        <template if:true={charge.discount}>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                style="color: #00c6b7"
+                                            >
+                                                ${charge.fee}
+                                            </div>
+                                        </template>
+                                        <template if:false={charge.discount}>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                            >
+                                                ${charge.fee}
+                                            </div>
+                                        </template>
+                                        <template if:true={charge.hasDescription}>
+                                            <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                {charge.description}
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <div
+                                    class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                                >
+                                    <div class="slds-col slds-size_9-of-12">
+                                        <b>Today's Total*:</b>
+                                    </div>
+                                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-m-right_medium">
+                                        <b>${cartInfo.todayTotal}</b>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                    <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                </div>
+                            </template>
+                            <template if:true={cartInfo.hasFirstBill}>
+                                <div
+                                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    <span>First Bill Charges</span>
+                                </div>
+                                <template for:each={cartInfo.firstBillCharges} for:item="charge">
+                                    <div
+                                        key={charge.id}
+                                        class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                    >
+                                        <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                            <b>{charge.name}</b>
+                                        </div>
+                                        <template if:true={charge.discount}>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                style="color: #00c6b7"
+                                            >
+                                                ${charge.fee}
+                                            </div>
+                                        </template>
+                                        <template if:false={charge.discount}>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                            >
+                                                ${charge.fee}
+                                            </div>
+                                        </template>
+                                        <template if:true={charge.hasDescription}>
+                                            <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                {charge.description}
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <div
+                                    class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                                >
+                                    <div class="slds-col slds-size_9-of-12">
+                                        <b>First Bill Total (plus monthly):</b>
+                                    </div>
+                                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-m-right_medium">
+                                        <b>${cartInfo.firstBillTotal}</b>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                    <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                </div>
+                            </template>
+                            <template if:true={cartInfo.hasMonthly}>
+                                <div
+                                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    <span>Monthly Charges</span>
+                                </div>
+                                <template for:each={cartInfo.monthlyCharges} for:item="charge">
+                                    <div
+                                        key={charge.id}
+                                        class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                    >
+                                        <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                            <b>{charge.name}</b>
+                                        </div>
+                                        <template if:true={charge.discount}>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                style="color: #00c6b7"
+                                            >
+                                                ${charge.fee}
+                                            </div>
+                                        </template>
+                                        <template if:false={charge.discount}>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                            >
+                                                ${charge.fee}
+                                            </div>
+                                        </template>
+                                        <template if:true={charge.hasDescription}>
+                                            <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                {charge.description}
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small">
+                                    <div class="slds-col slds-size_9-of-12">
+                                        <b>Monthly Total*:</b>
+                                    </div>
+                                    <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                                        <b>${cartInfo.monthlyTotal}</b>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                    <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                </div>
+                            </template>
+                            <template if:true={cartInfo.hasSavings}>
+                                <div
+                                    class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    <span>Savings & Promotions</span>
+                                </div>
+                                <template for:each={cartInfo.savingCharges} for:item="charge">
+                                    <div
+                                        key={charge.id}
+                                        class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                    >
+                                        <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                            <b>{charge.name}</b>
+                                        </div>
+                                        <template if:true={charge.discount}>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                style="color: #00c6b7"
+                                            ></div>
+                                        </template>
+                                        <template if:false={charge.discount}>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                            ></div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </div>
+                </lightning-card>
+                <div class="slds-grid slds-p-around_medium">
+                    <div class="slds-col slds-size_12-of-12">
+                        <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid_align-spread slds-p-around--medium">
+            <div class="slds-col slds-size_6-of-12">
+                <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+            </div>
+            <div class="slds-col slds-size_6-of-12">
+                <div class="slds-grid slds-float_right">
+                    <div class="slds-col slds-p-right--medium">
+                        <lightning-button
+                            variant="brand"
+                            label="Previous"
+                            onclick={handlePrevious}
+                            class="slds-float_right"
+                        ></lightning-button>
+                    </div>
+                    <div class="slds-col slds-p-right--medium">
+                        <lightning-button
+                            variant="brand"
+                            label="Next"
+                            disabled={noCompleteInfo}
+                            onclick={handleClick}
+                            class="slds-float_right"
+                        ></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template if:true={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

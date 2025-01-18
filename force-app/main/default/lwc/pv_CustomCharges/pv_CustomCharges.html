@@ -1,0 +1,110 @@
+<template>
+<template if:true={showLoader}>
+    <div>
+        <lightning-spinner size="medium" variant="brand"></lightning-spinner>
+    </div>
+</template>
+    <lightning-card>
+        <template if:true={showCustomCharge}>
+            <lightning-spinner if:true={isSpinner} variant="brand" size="large"> </lightning-spinner>
+
+            <template for:each={filterList} for:item="filterData" for:index="index">
+                <div key={filterData} class="slds-grid slds-wrap slds-border_bottom">
+                    <div class="slds-col slds-size_1-of-1 slds-p-around_small ">
+                        Select Product
+                        <lightning-combobox name="productName" class='validate' data-index={index} placeholder="" onchange={handleChange}
+                            value={filterData.CustomCharge_Products__c} data-field="productName" variant="label-hidden"
+                            options={customProductList} required>
+                        </lightning-combobox>
+                    </div>
+                    <div
+                        class="slds-col slds-size_1-of-2 slds-small-size--1-of-1 slds-medium-size--1-of-2 slds-p-around_small">
+                        Quantity
+                        <lightning-input type="number" class="validate" name="quantity" data-index={index} variant="label-hidden"
+                            placeholder="" onchange={handleChange} data-field="quantity" value={filterData.Quantity__c} pattern="[0-9]*" min = 0 message-when-pattern-mismatch="Please enter numbers only" maxlength = '2'>
+                        </lightning-input>
+                    </div>
+                    <div
+                        class="slds-col slds-size_1-of-2 slds-p-around_small slds-small-size--1-of-1 slds-medium-size--1-of-2">
+                        Unit Price($)
+                        <template if:true={showPrice}>
+                            <lightning-input type="text"  name="price" data-index={index} disabled variant="label-hidden"
+                                placeholder="" onchange={handleChange} value={filterData.Price__c}>
+                            </lightning-input>
+                        </template>
+                    </div>
+                    <div
+                        class="slds-col slds-size_1-of-2 slds-p-around_small slds-small-size--1-of-1 slds-medium-size--1-of-2">
+                        Total Price($)
+                        <template if:true={showPrice}>
+                            <lightning-input type="text" name="total" data-index={index} disabled
+                                value={filterData.Total_Amount__c} variant="label-hidden" onchange={handleChange}>
+                            </lightning-input>
+                        </template>
+                    </div>
+                    <div
+                        class="slds-col slds-size_1-of-2 slds-p-top_large slds-p-left_medium slds-small-size--1-of-1 slds-medium-size--1-of-2">
+                        <template if:true={showDelete}>
+                            <lightning-button-icon data-index={filterData.id} class="slds-float--right"
+                                icon-name="action:delete" onclick={handleRemoveRow} ></lightning-button-icon>
+                        </template>
+                    </div>
+
+                </div>
+            </template>
+            <div class="slds-p-around_small slds-grid slds-border_top slds-wrap">
+
+                <div class="slds-col slds-size_1-of-2">
+
+                </div>
+                <div class="slds-col slds-size_1-of-2 slds-p-around_small slds-float_right " style="font-size: large;">
+                    Total Amount : <b>${sumOfQuantity}</b>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-button icon-name="action:new" label="Add Product"
+                        onclick={handleAddRow} disabled={showAddButton} ></lightning-button>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+
+                </div><br>
+                <div class="slds-col slds-size_1-of-1 ">
+
+                    <lightning-button variant="brand" class="slds-float_right" label="Save" onclick={handleValidation} disabled={showSave}>
+                    </lightning-button>
+                </div>
+
+            </div>
+
+            <!-- <div class="slds grid">
+    <div class="slds-col slds-size_1-of-1 slds-p-around_small" >
+<lightning-combobox type="text" name="total" label="Exception Type" data-index={index} options={options} onchange={handleChange}>
+</lightning-combobox>
+    </div>
+    <div class="slds-col slds-size_1-of-1 slds-p-around_small">
+        <lightning-textarea name="total" data-index={index}  label="Installation issue(s)"
+            onchange={handleChange}>
+        </lightning-textarea>
+    </div>
+    <div class="slds-col slds-size_1-of-1 slds-p-around_small">
+        <lightning-input type="checkbox" name="total" data-index={index} label="Charge back Previous Dealer"
+            onchange={handleChange}>
+        </lightning-input>
+    </div>
+    <div class="slds-col slds-size_1-of-1 slds-p-around_small" >
+        <lightning-textarea type="textarea" name="total" data-index={index}  label="Work Performed"
+            onchange={handleChange}>
+        </lightning-textarea>
+    </div>
+    <div class="slds-col slds-size_1-of-1 slds-p-around_small" >
+        <lightning-input type="text" name="total" data-index={index} label="Trip Fee" 
+            onchange={handleChange}>
+        </lightning-input>
+    </div>
+
+</div> -->
+        </template>
+        <template if:false={showCustomCharge}>
+            {customChargeMsg}
+        </template>
+    </lightning-card>
+</template>

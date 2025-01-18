@@ -1,0 +1,156 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <a onclick={changeViewToServiceDirecTVPlanTwo} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <h2>{title}</h2>
+                </div>
+
+                <div class="page-content width-large">
+                    <div class="slds-grid slds-grid_align-end slds-m-bottom_small">
+                        <div class="toggle-container">
+                            <label class="switch">
+                                <input type="checkbox" onchange={handleShowMore} />
+                                <span class="slider"></span>
+                            </label>
+                            <span class="label-text">Show More</span>
+                        </div>
+                    </div>
+                    <div class="price-table-comparative">
+                        <template for:each={packages} for:item="product">
+                            <template lwc:if={product.show}>
+                                <div
+                                    class={product.contentClass}
+                                    key={product.Id}
+                                    data-id={product.containerId}
+                                    onclick={handlePriceChange}
+                                >
+                                    <div class="price-header" data-id={product.Id} style="cursor: pointer">
+                                        <p data-id={product.Id}>
+                                            {product.Name}
+                                            <template lwc:if={product.popular}
+                                                ><span class="badge" data-id={product.Id}>popular</span></template
+                                            >
+                                        </p>
+                                        <h2 data-id={product.Id}>
+                                            ${product.discountedFee}
+                                            <span data-id={product.Id}>for 24 months plus taxes and fees.</span>
+                                        </h2>
+
+                                        <p class="description" data-id={product.Id}>
+                                            <lightning-formatted-rich-text
+                                                data-id={product.Id}
+                                                linkify
+                                                value={product.Description}
+                                            ></lightning-formatted-rich-text>
+                                        </p>
+                                    </div>
+
+                                    <div class="price-list" data-id={product.Id}>
+                                        <template lwc:if={product.isChoice}>
+                                            <p data-id={product.Id}>Included in this plan</p>
+                                            <ul data-id={product.Id}>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> Everything in
+                                                    Entertainment
+                                                </li>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> Specialty sports
+                                                    including: ACC Network, Big Ten Network, MLB Network, NBA TV, SEC
+                                                    Network & more.
+                                                </li>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> Regional Sports
+                                                    Networks for watching your local teams
+                                                </li>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> +125 channels.
+                                                </li>
+                                            </ul>
+                                        </template>
+                                        <template lwc:if={product.isEntertainment}>
+                                            <p data-id={product.Id}>Included in this plan</p>
+                                            <ul data-id={product.Id}>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> Local channels
+                                                    included
+                                                </li>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> Unlimited CLOUD DVR
+                                                    recording
+                                                </li>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> First upgraded
+                                                    Gemini Receiver included
+                                                </li>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> Special offer on
+                                                    premium channels
+                                                </li>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> +85 channels.
+                                                </li>
+                                            </ul>
+                                        </template>
+                                        <template lwc:if={product.isUltimate}>
+                                            <p data-id={product.Id}>Included in this plan</p>
+                                            <ul data-id={product.Id}>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> More sports &
+                                                    movies including: CBS Sports Network, Discovery Family, FX Movie
+                                                    Channel, NHL Network, STARZ Encore & more
+                                                </li>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> +160 channels.
+                                                </li>
+                                            </ul>
+                                        </template>
+                                        <template lwc:if={product.isPremier}>
+                                            <p data-id={product.Id}>Included in this plan</p>
+                                            <ul data-id={product.Id}>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> THE top-rated
+                                                    premium networks including: Max¹, Paramount+ with SHOWTIME, STARZ®,
+                                                    and Cinemax®
+                                                </li>
+                                                <li data-id={product.Id}>
+                                                    <img src={iconCheckBlue} data-id={product.Id} /> +185 channels.
+                                                </li>
+                                            </ul>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+
+                    <p class="text-center">
+                        Terms apply to all offers. New approved resid. customers only. w/24 mo. agmt., price incl. TV
+                        pkg. & equip. fees for first TV. Add’l fees may apply to non-qualified customers. Early agmt.
+                        termination fee applies ($20/mo.) & add’l fee(s) may apply if equip. not returned. Equip. lease
+                        req’d in most sales channels. Credit card req’d. Restr’s apply. ¹Max: Max is used under license.
+                        Access Max through Max app or max.com w/ your DIRECTV log-in credentials. Compatible device or
+                        browser req’d. $19.95 activation applies to satellite customers.
+                    </p>
+
+                    <a onclick={handleNext} class={nextBtnDesktopClass} data-id="next"> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <a onclick={changeViewToServiceDirecTVPlanTwo} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <a onclick={handleNext} class={nextBtnMobileClass} data-id="next"> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

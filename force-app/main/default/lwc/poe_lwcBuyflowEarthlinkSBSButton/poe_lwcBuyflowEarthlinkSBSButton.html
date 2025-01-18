@@ -1,0 +1,47 @@
+<template>
+    <lightning-card title="T-Chart Comparison">
+        <lightning-icon
+            icon-name="action:back"
+            alternative-text="Go Back"
+            title="Go Back"
+            onclick={handleCancelClick}
+            size="x-small"
+            class="slds-m-around_small"
+            style="cursor: pointer"
+        ></lightning-icon>
+        <div class="slds-grid slds-wrap slds-p-around_small slds-grid_align-center">
+            <div
+                class="slds-col slds-size_12-of-12 slds-m-around_medium slds-m-bottom_x-small slds-grid slds-wrap slds-grid_vertical slds-grid_vertical-align-center"
+            >
+                <p>
+                    <canvas
+                        name="canvasItem"
+                        width="700"
+                        height="555"
+                        style="border: 2px solid rgb(136, 135, 135); background-size: cover"
+                    ></canvas>
+                </p>
+            </div>
+            <div class="slds-grid slds-grid_align-spread slds-p-around_medium slds-gutters">
+                <div class="slds-col slds-grid">
+                    <div class="slds-col">
+                        <lightning-button 
+                            label={labels.CANCEL_BUTTON_LABEL} 
+                            onclick={handleCancelClick}
+                        ></lightning-button>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-button 
+                            variant="neutral" 
+                            label={labels.CLEAN_BUTTON_LABEL}
+                            onclick={handleClearClick}
+                        ></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

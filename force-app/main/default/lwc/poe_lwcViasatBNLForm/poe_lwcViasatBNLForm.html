@@ -1,0 +1,209 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        class="slds-modal slds-fade-in-open slds-modal_x-small"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">BNL Physical Copy Request</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-text-heading_small">
+                    <form action={viasatOrgUrl} method="POST" target="_blank">
+                        <div class="slds-grid slds-wrap slds-var-m-around_medium">
+                            <input type="hidden" name="oid" value={orgId} />
+                            <input type="hidden" name="retURL" value="https://www.viasat.com" />
+                            <input type="hidden" id="00NP0000004Wo9G" name="00NP0000004Wo9G" value={dealerId} />
+                            <input type="hidden" id="lead_source" name="lead_source" value={leadSource} />
+                            <label for="first_name" class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                                >First Name:</label
+                            ><input
+                                id="first_name"
+                                maxlength="40"
+                                name="first_name"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label for="last_name" class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                                >Last Name:</label
+                            ><input
+                                id="last_name"
+                                maxlength="80"
+                                name="last_name"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label for="email" class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                                >Email:</label
+                            ><input
+                                id="email"
+                                maxlength="80"
+                                name="email"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label for="street" class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                                >Street:</label
+                            ><textarea
+                                name="street"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            ></textarea>
+                            <label for="city" class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                                >City:</label
+                            ><input
+                                id="city"
+                                maxlength="40"
+                                name="city"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label for="state" class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                                >State/Province:</label
+                            ><input
+                                id="state"
+                                maxlength="20"
+                                name="state"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label for="zip" class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small">Zip:</label
+                            ><input
+                                id="zip"
+                                maxlength="20"
+                                name="zip"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label for="00NP0000004Wo9L" class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                                >Partner Reference ID:</label
+                            >
+                            <input
+                                id="00NP0000004Wo9L"
+                                maxlength="25"
+                                name="00NP0000004Wo9L"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label for="00NP0000004goYW" class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                                >Customer Type:</label
+                            >
+                            <select
+                                id="00NP0000004goYW"
+                                name="00NP0000004goYW"
+                                title="Customer Type"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            >
+                                <option value="">--None--</option>
+                                <option value="Individual">Individual</option>
+                                <option value="Business">Business</option>
+                            </select>
+                            <label
+                                for="00NP0000003EOoE"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            >
+                                Service Address Line 1:</label
+                            >
+                            <input
+                                id="00NP0000003EOoE"
+                                maxlength="100"
+                                name="00NP0000003EOoE"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label
+                                for="00NP0000003EOoD"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            >
+                                Service Address Line 2:</label
+                            >
+                            <input
+                                id="00NP0000003EOoD"
+                                maxlength="100"
+                                name="00NP0000003EOoD"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label
+                                for="00NP0000003EOo9"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            >
+                                Service City:</label
+                            >
+                            <input
+                                id="00NP0000003EOo9"
+                                maxlength="60"
+                                name="00NP0000003EOo9"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label
+                                for="00NP0000003EOoC"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            >
+                                Service State:</label
+                            >
+                            <input
+                                id="00NP0000003EOoC"
+                                maxlength="50"
+                                name="00NP0000003EOoC"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <label for="00NP0000003EOoF" class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                                >Service ZIP Code:</label
+                            >
+                            <input
+                                id="00NP0000003EOoF"
+                                maxlength="40"
+                                name="00NP0000003EOoF"
+                                size="20"
+                                type="text"
+                                class="slds-col slds-size_6-of-12 slds-var-m-vertical_xx-small"
+                            />
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-grid slds-grid_align-end slds-var-m-top_small">
+                                    <div class="slds-col">
+                                        <lightning-button
+                                            type="submit"
+                                            label="Submit"
+                                            variant="brand"
+                                            target="_blank"
+                                            onclick={handleFormSubmission}
+                                        ></lightning-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

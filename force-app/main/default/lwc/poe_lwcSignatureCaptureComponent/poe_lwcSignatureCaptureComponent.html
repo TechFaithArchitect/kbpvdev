@@ -1,0 +1,31 @@
+<template>
+    <lightning-card title="Signature Capture">
+        <div class="slds-grid slds-wrap slds-p-around_small slds-grid_align-center">
+            <div
+                class="slds-col slds-size_12-of-12 slds-m-around_medium slds-m-bottom_x-small slds-grid slds-wrap slds-grid_vertical slds-grid_vertical-align-center"
+            >
+                <p>
+                    <canvas
+                        name="canvasItem"
+                        width="300"
+                        height="300"
+                        style="border: 2px solid rgb(136, 135, 135); background-size: cover"
+                    ></canvas>
+                </p>
+            </div>
+            <div class="slds-grid slds-grid_align-spread slds-p-around_medium slds-gutters">
+                <div class="slds-col slds-grid">
+                    <div class="slds-col">
+                        <lightning-button variant="brand" label="Capture" onclick={handleSaveClick}></lightning-button>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-button variant="neutral" label="Clean" onclick={handleClearClick}></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

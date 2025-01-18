@@ -1,0 +1,186 @@
+<template>
+    <template lwc:if={isLoading}>
+        <lightning-spinner alternative-text="Loading" variant="brand"> </lightning-spinner>
+    </template>
+    <div class="page pages-nav">
+        <div class="nav-bar">
+            <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                <img src={iconBtnBack} alt="Back button" />
+            </a>
+
+            <h2>Tell us about you</h2>
+        </div>
+
+        <div class="page-content no-padding-top">
+            <form class="slds-m-bottom_medium">
+                <div class="form-header">
+                    <img align="left" src={iconFormUser} />
+
+                    <h3>Personal information</h3>
+                    <p>Enter your name and contact details.</p>
+                </div>
+
+                <div class="form-content">
+                    <template lwc:if={isNotGuestUser}>
+                        <p class="slds-m-bottom_x-small">
+                            You must read the statements below to the customer verbatim:
+                        </p>
+                        <div class="form-group">
+                            <lightning-input
+                                type="checkbox"
+                                data-field-name="disclosureAgreement"
+                                value={disclosureAgreement}
+                                label={verbiages.creditCheck}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                    </template>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="text"
+                            required
+                            data-field-name="firstName"
+                            placeholder="Write your name"
+                            label="Name (*)"
+                            value={firstName}
+                            disabled={isNotGuestUser}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="text"
+                            required
+                            data-field-name="lastName"
+                            placeholder="Write your last name"
+                            label="Last Name (*)"
+                            value={lastName}
+                            disabled={isNotGuestUser}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="tel"
+                            required
+                            data-field-name="phoneNumber"
+                            placeholder="Write your phone"
+                            label="Phone (*)"
+                            pattern="[0-9]{10}"
+                            max-length="10"
+                            message-when-pattern-mismatch="Please enter a valid phone number"
+                            value={phoneNumber}
+                            disabled={isNotGuestUser}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="email"
+                            required
+                            data-field-name="emailAddress"
+                            placeholder="Write your email"
+                            label="Email (*)"
+                            value={emailAddress}
+                            disabled={disableForm}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-select
+                            required
+                            label="Preferred Contact Method (*)"
+                            data-field-name="contactMethod"
+                            value={contactMethod}
+                            options={contactMethodOptions}
+                            disabled={disableForm}
+                            onchange={handleChange}
+                        ></lightning-select>
+                    </div>
+
+                    <template lwc:if={isSMSContactMethod}>
+                        <p class="slds-text-body_small form-group">
+                            <lightning-formatted-rich-text
+                                value={verbiages.smsPreference}
+                            ></lightning-formatted-rich-text>
+                        </p>
+
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="checkbox"
+                                data-field-name="smsTermsAgreed"
+                                label={agreementVerbiage}
+                                checked={smsTermsAgreed}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                    </template>
+                    <template lwc:elseif={isTelephoneContactMethod}>
+                        <p class="slds-text-body_small form-group">
+                            <lightning-formatted-rich-text
+                                value={verbiages.contactInformation}
+                            ></lightning-formatted-rich-text>
+                        </p>
+
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="checkbox"
+                                data-field-name="phoneTermsAgreed"
+                                label={agreementVerbiage}
+                                checked={phoneTermsAgreed}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                    </template>
+
+                    <div class="form-group slds-text-body_small">
+                        <lightning-input
+                            type="checkbox"
+                            name="optIn"
+                            checked={optIn}
+                            label={consentLabel}
+                            onchange={handleConsent}
+                        ></lightning-input>
+                    </div>
+
+                    <template lwc:if={showConsentRadio}>
+                        <div class="form-group slds-text-body_small">
+                            <lightning-input
+                                type="checkbox"
+                                label={dtvConsentLabel}
+                                name="dtvConsent"
+                                checked={dtvConsent}
+                                onchange={handleConsent}
+                            ></lightning-input>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div class="form-group slds-text-body_small">
+                            <lightning-formatted-text
+                                linkify
+                                value="By clicking the button below or entering your information, you consent for DIRECTV, and any of its affiliate service providers to use automated technology. Including but not limited to: texts, phone calls, prerecorded messages, email or digital technology to contact you at the number and email provided about DIRECTV offers which may or may not be directly related to this specific marketing campaign using other affiliate companies. This consent is not required to make a purchase. Clicking the button below constitutes your electronic signature."
+                            ></lightning-formatted-text>
+                        </div>
+                    </template>
+                </div>
+            </form>
+
+            <a onclick={handleNext} class={nextBtnDesktopClass}> Next step </a>
+        </div>
+
+        <div class="footer-mobile">
+            <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                <img src={iconBtnBack} alt="Back button" />
+            </a>
+
+            <a onclick={handleNext} class={nextBtnMobileClass}> Next step </a>
+        </div>
+    </div>
+</template>

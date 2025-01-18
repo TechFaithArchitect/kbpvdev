@@ -1,0 +1,136 @@
+<template>
+    <template lwc:if={cart}>
+        <div class="panel-header">
+            <img align="left" src={cartIcon} />
+            <h3>{cartTitle}</h3>
+            <p>{cartSubtitle}</p>
+        </div>
+
+        <div class="panel-content">
+            <template lwc:if={cart.hasToday}>
+                <h3>Today's charges</h3>
+                <ul class="list-price">
+                    <template for:each={cart.todayCharges} for:item="charge">
+                        <li key={charge.id}>
+                            <p class="description">
+                                <lightning-formatted-rich-text value={charge.name}> </lightning-formatted-rich-text>
+                            </p>
+                            <template lwc:if={charge.discount}>
+                                <p class="price discount">
+                                    $<lightning-formatted-rich-text value={charge.fee}></lightning-formatted-rich-text
+                                    >/mo
+                                </p>
+                            </template>
+                            <template lwc:else>
+                                <p class="price">
+                                    $<lightning-formatted-rich-text value={charge.fee}></lightning-formatted-rich-text
+                                    >/mo
+                                </p>
+                            </template>
+                            <template lwc:if={charge.hasDescription}>
+                                <p class="slds-text-body_small charge-description">
+                                    <lightning-formatted-rich-text value={charge.description}>
+                                    </lightning-formatted-rich-text>
+                                </p>
+                            </template>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+
+            <template lwc:if={cart.hasFirstBill}>
+                <h3>First bill charges</h3>
+                <ul class="list-price">
+                    <template for:each={cart.firstBillCharges} for:item="charge">
+                        <li key={charge.id}>
+                            <p class="description">
+                                <lightning-formatted-rich-text value={charge.name}> </lightning-formatted-rich-text>
+                            </p>
+                            <template lwc:if={charge.discount}>
+                                <p class="price discount">
+                                    $<lightning-formatted-rich-text value={charge.fee}></lightning-formatted-rich-text
+                                    >/mo
+                                </p>
+                            </template>
+                            <template lwc:else>
+                                <p class="price">
+                                    $<lightning-formatted-rich-text value={charge.fee}></lightning-formatted-rich-text
+                                    >/mo
+                                </p>
+                            </template>
+                            <template lwc:if={charge.hasDescription}>
+                                <p class="slds-text-body_small charge-description">
+                                    <lightning-formatted-rich-text value={charge.description}>
+                                    </lightning-formatted-rich-text>
+                                </p>
+                            </template>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+
+            <template lwc:if={cart.hasMonthly}>
+                <h3>Monthly fees & taxes</h3>
+                <ul class="list-price">
+                    <template for:each={cart.monthlyCharges} for:item="charge">
+                        <li key={charge.id}>
+                            <p class="description">
+                                <lightning-formatted-rich-text value={charge.name}> </lightning-formatted-rich-text>
+                            </p>
+                            <template lwc:if={charge.discount}>
+                                <p class="price discount">
+                                    $<lightning-formatted-rich-text value={charge.fee}></lightning-formatted-rich-text
+                                    >/mo
+                                </p>
+                            </template>
+                            <template lwc:else>
+                                <p class="price">
+                                    $<lightning-formatted-rich-text value={charge.fee}></lightning-formatted-rich-text
+                                    >/mo
+                                </p>
+                            </template>
+                            <template lwc:if={charge.hasDescription}>
+                                <p class="slds-text-body_small charge-description">
+                                    <lightning-formatted-rich-text value={charge.description}>
+                                    </lightning-formatted-rich-text>
+                                </p>
+                            </template>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+        </div>
+
+        <div class="panel-footer">
+            <ul class="list-price">
+                <template lwc:if={cart.hasToday}>
+                    <li>
+                        <p class="description">Today's total</p>
+                        <p class="price">
+                            $
+                            <lightning-formatted-rich-text value={cart.todayTotal}> </lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                </template>
+                <template lwc:if={cart.hasFirstBill}>
+                    <li>
+                        <p class="description">First bill total (plus monthly)</p>
+                        <p class="price">
+                            $
+                            <lightning-formatted-rich-text value={cart.firstBillTotal}> </lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                </template>
+                <template lwc:if={cart.hasMonthly}>
+                    <li>
+                        <p class="description">Total per month</p>
+                        <p class="price">
+                            $
+                            <lightning-formatted-rich-text value={cart.monthlyTotal}> </lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </template>
+</template>

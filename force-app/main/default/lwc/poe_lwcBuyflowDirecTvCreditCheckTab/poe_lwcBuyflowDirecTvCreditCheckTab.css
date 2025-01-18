@@ -1,0 +1,10 @@
+.slds-accordion,
+.addressbutton button,
+.buttonWidth,
+.gridWidth {
+    width: 80% !important;
+}
+
+.slds-form-element__control .slds-radio.horizontal {
+    display: inline-block !important;
+}

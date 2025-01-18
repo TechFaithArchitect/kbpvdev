@@ -1,0 +1,57 @@
+<template>
+    <lightning-modal-header label={labels.CREDIT_CHECK_PREVIOUS_ADDRESS_MODAL_TITLE}></lightning-modal-header>
+    <lightning-modal-body class="modal-see-more">
+        <div provider="frontier">
+            <h2>
+                <lightning-formatted-text
+                    value={labels.CREDIT_CHECK_PREVIOUS_ADDRESS_MODAL_TITLE}
+                >
+                </lightning-formatted-text>
+            </h2>
+
+            <form>
+                <div class="form-content">
+                    <div class="form-group">
+                        <div class="slds-col slds-size_1-of-1">
+                            <c-poe_lwc-address-field
+                                always-send-changes="true"
+                                street={previousAddress}
+                                address-line-2={previousApt}
+                                city={previousCity}
+                                province={previousState}
+                                postal-code={previousZip}
+                                country="United States"
+                                onaddresschange={handlePredictiveShippingAddressChange}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-address-field>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="group-buttons">
+                <a class="btn-outline btn-only-rounded" 
+                   onclick={hideModal}>
+                   <lightning-formatted-text 
+                        value={labels.CANCEL_BUTTON_LABEL}
+                    ></lightning-formatted-text>
+                </a>
+
+                <a class={continueBtnClass}
+                   onclick={handleVerifyPreviousAddress}>
+                    <lightning-formatted-text 
+                        value={labels.VERIFY_PREVIOUS_ADDRESS_BUTTON_LABEL}
+                    ></lightning-formatted-text>
+                </a>
+            </div>
+
+            <template lwc:if={loaderSpinner}>
+                <lightning-spinner 
+                    variant="brand" 
+                    alternative-text="Loading..."
+                    size="medium"
+                ></lightning-spinner>
+            </template>    
+        </div>
+    </lightning-modal-body>
+</template>

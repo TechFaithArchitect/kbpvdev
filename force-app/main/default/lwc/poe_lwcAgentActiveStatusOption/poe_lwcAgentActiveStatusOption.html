@@ -1,0 +1,30 @@
+<template>
+    <template lwc:if={agentStatus}>
+        <div class="slds-p-around_x-small">
+            <p>
+                <lightning-icon
+                    icon-name="action:approval"
+                    alternative-text="Active"
+                    title="Active"
+                    size="xx-small"
+                    class="slds-var-m-right_small"
+                ></lightning-icon>
+                This User is Active in {experience}
+            </p>
+        </div>
+    </template>
+    <template lwc:else>
+        <div class="slds-p-around_x-small">
+            <p>
+                <lightning-icon
+                    icon-name="action:close"
+                    alternative-text="Inactive"
+                    title="Inactive"
+                    size="xx-small"
+                    class="slds-var-m-right_small"
+                ></lightning-icon>
+                This User is Inactive in {experience}
+            </p>
+        </div>
+    </template>
+</template>

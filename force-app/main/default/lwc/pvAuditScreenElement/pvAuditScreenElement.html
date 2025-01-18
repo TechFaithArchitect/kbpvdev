@@ -1,0 +1,75 @@
+<template>
+  
+    <!-- <div class ='slds-p-bottom_small '> -->
+        <!-- <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+            <div class="slds-form-element"> -->
+              
+        <template if:true={isCheckBox}>
+            <lightning-checkbox-group name="Checkbox Group"
+                label={input.question}
+                options={options}
+                value={value}
+                onchange={handleCheckBox}
+                class = 'inputCmp'
+                read-only={readonlyuser}
+                required>
+            </lightning-checkbox-group>
+        </template>
+        <template if:true={isDropDown}>
+            <lightning-combobox
+                label={input.question}
+                name="dropDown"
+                options={options}
+                value={value}
+                onchange={handleCheckboxChange}
+                placeholder="Select" 
+                read-only={readonlyuser}
+                class = 'inputCmp'
+                required>
+            </lightning-combobox>
+            
+        </template>
+        <template if:true={isRadio}>
+            
+            <lightning-radio-group name={input.id}
+                label={input.question}
+                options={options}
+                value={value}
+                class = 'inputCmp'
+                onchange={handleCheckboxChange}
+                variant="label-stacked"
+                read-only={readonlyuser}
+                type="radio" required></lightning-radio-group>
+        </template>
+        <template if:true={isInputText}>
+            <lightning-input
+                type="text"
+                label={input.question}
+                onchange={handleCheckboxChange}
+                variant="label-stacked"
+                class = 'inputCmp'
+                read-only={readonlyuser}
+                value={value} 
+            required></lightning-input>
+        </template>
+        <template if:true={isNumberBox}>
+            <lightning-input
+                type="number"
+                label={input.question}
+                onchange={handleCheckboxChange}
+                variant="label-stacked"
+                class = 'inputCmp'
+                read-only={readonlyuser}
+                value={value} 
+            required></lightning-input>
+        </template>
+        <div if:true={showOtherTextBox}>
+            <lightning-input type="text" label="Other" value={otherText} name="otherText" read-only={readonlyuser}
+                onchange={handleCheckBox}>
+            </lightning-input>
+        </div>
+    <!-- </div>
+</div> -->
+    <!-- </div> -->
+    
+</template>

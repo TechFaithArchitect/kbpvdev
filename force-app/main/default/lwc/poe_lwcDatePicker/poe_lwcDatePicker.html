@@ -1,0 +1,73 @@
+<template>
+    <div 
+        class="slds-datepicker slds-dropdown slds-dropdown_left" 
+        role="dialog"
+    >
+        <div class="slds-datepicker__filter slds-grid">
+            <div class="slds-datepicker__filter_month slds-grid slds-grid_align-spread slds-grow">
+                <div class="slds-align-middle">
+                    <button 
+                        name="prev"
+                        class="slds-button slds-button_icon slds-button_icon-container" 
+                        title="Previous Month"
+                        onclick={handleMonthChange}
+                    >
+                        <lightning-icon
+                            icon-name="utility:left"
+                            alternative-text="Previous Month"
+                            size="xx-small"
+                        >
+                        </lightning-icon>
+                    </button>
+                </div>
+                <h2 class="slds-align-middle">{monthLabel} {year}</h2>
+                <div class="slds-align-middle">
+                    <button 
+                        name="next"
+                        class="slds-button slds-button_icon slds-button_icon-container" 
+                        title="Next Month"
+                        onclick={handleMonthChange}
+                    >
+                        <lightning-icon
+                            icon-name="utility:right"
+                            alternative-text="Next Month"
+                            size="xx-small"
+                        >
+                        </lightning-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <table class="slds-datepicker__month" role="grid">
+            <thead>
+                <tr>
+                    <template for:each={weekdays} for:item="weekday">
+                        <th key={weekday.label} scope="col">
+                            <abbr title={weekday.label}>{weekday.shortLabel}</abbr>
+                        </th>
+                    </template>
+                </tr>
+            </thead>
+            <tbody>
+                <template for:each={dateRows} for:item="dateRow">
+                    <tr key={dateRow.range}>
+                        <template for:each={dateRow.dates} for:item="date">
+                            <td
+                                class={date.className}
+                                key={date.date}
+                                role="gridcell"
+                                onclick={handleDateSelect}
+                                data-date={date.date}
+                                data-month={date.month}
+                                data-year={date.year}
+                                data-disabled={date.disabled}
+                            >
+                                <span class="slds-day">{date.date}</span>
+                            </td>
+                        </template>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+</template>

@@ -1,0 +1,93 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        class="slds-modal slds-fade-in-open slds-modal_large"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_3-of-12">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_2-of-12">
+                                <lightning-icon icon-name="standard:case" size="large"></lightning-icon>
+                            </div>
+                            <div class="slds-col slds-grid slds-wrap slds-grid_vertical slds-var-p-left_small">
+                                <div class="slds-col slds-text-heading_xx-small slds-float_left"></div>
+                                <div class="slds-col slds-text-heading_small slds-float_left">Cases</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-vertical_small">
+                    <label class="slds-checkbox_toggle slds-grid slds-align_absolute-center">
+                        <template lwc:if={showAllCases}>
+                            <span class="slds-form-element__label slds-m-bottom_none">All Cases</span>
+                        </template>
+                        <template lwc:else>
+                            <span class="slds-form-element__label slds-m-bottom_none">Open Cases</span>
+                        </template>
+                        <input
+                            type="checkbox"
+                            name="checkbox-toggle-16"
+                            value="checkbox-toggle-16"
+                            aria-describedby="checkbox-toggle-16"
+                            checked=""
+                            onchange={filterByOpenCases}
+                        />
+                        <span id="checkbox-toggle-16" class="slds-checkbox_faux_container" aria-live="assertive">
+                            <span class="slds-checkbox_faux"></span>
+                            <span class="slds-checkbox_on">Enabled</span>
+                            <span class="slds-checkbox_off">Disabled</span>
+                        </span>
+                    </label>
+                </div>
+
+                <div class="slds-text-align_center slds-m-top_none slds-p-top_none">
+                    <template lwc:if={showAllCases}> All Cases </template>
+                    <template lwc:else>
+                        <p>Open Cases</p>
+                    </template>
+                </div>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-m-bottom_medium">
+                    <lightning-input
+                        type="text"
+                        value={searchValue}
+                        label="Search by Case Subject, Rep or Status"
+                        onchange={searchKeyword}
+                    ></lightning-input>
+                </div>
+                <lightning-datatable
+                    key-field="id"
+                    columns={columns}
+                    data={data}
+                    hide-checkbox-column
+                    default-sort-direction={defaultSortDirection}
+                    sorted-by={sortBy}
+                    sorted-direction={sortDirection}
+                    onsort={doSorting}
+                ></lightning-datatable>
+            </div>
+        </div>
+        <template lwc:if={showLoaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

@@ -1,0 +1,26 @@
+<template>
+    <lightning-modal-header label="Let’s connect"></lightning-modal-header>
+    <lightning-modal-body class="modal-schedule-call">
+        <div class="page-content">
+            <img src={iconInfoUser} />
+
+            <div class="slds-text-heading_medium slds-p-top_small slds-p-bottom_xxx-small slds-p-horizontal_small">
+                <b>Enter your address</b>
+            </div>
+            <form>
+                <div class="form-content">
+                    <div>
+                        <c-poe_lwc-address-field onaddresschange={handleAddressChange}></c-poe_lwc-address-field>
+                    </div>
+                    <template lwc:if={content.showCaptcha}>
+                        <div>
+                            <c-recaptcha-component oncaptcha={handleCaptchaResult}></c-recaptcha-component>
+                        </div>
+                    </template>
+                </div>
+
+                <a class={buttonClass} onclick={handleSubmit} data-id="next"> Submit </a>
+            </form>
+        </div>
+    </lightning-modal-body>
+</template>

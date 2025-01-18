@@ -1,0 +1,165 @@
+<template>
+    <div class="slds-p-vertical_medium">
+        <c-poe_lwc-progress-indicator steps={buyflowSteps} current-step={currentStep}> </c-poe_lwc-progress-indicator>
+    </div>
+    <template lwc:if={showEarthlinkInfoTab}>
+        <c-poe_lwc-buyflow-earthlink-info-tab
+            record-id={recordId}
+            logo={logo}
+            origin={origin}
+            oncheckserviceability={handleCheckServiceability}
+            onback={handleBack}
+            onlogerror={handleLogError}
+            is-guest-user={isGuestUser}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-earthlink-info-tab>
+    </template>
+    <template lwc:if={showEarthlinkProductsTab}>
+        <c-poe_lwc-buyflow-earthlink-products-tab
+            record-id={recordId}
+            logo={logo}
+            user-id={userId}
+            address-info={clientInfo.addressInfo}
+            selected={selectedProduct}
+            origin={origin}
+            promo-codes={promoCodes}
+            onproductselection={handleProductSelection}
+            onnormalizedaddress={handleNormalizedAddress}
+            onback={handleBack}
+            onlogerror={handleLogError}
+            is-guest-user={isGuestUser}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-earthlink-products-tab>
+    </template>
+    <template lwc:if={showEarthlinkServicesTab}>
+        <c-poe_lwc-buyflow-earthlink-services-tab
+            record-id={recordId}
+            logo={logo}
+            user-id={userId}
+            cart-info={cartProducts}
+            services={services}
+            bundles={bundles}
+            selected-services={selectedServices}
+            selected={selectedProduct}
+            origin={origin}
+            onserviceselection={handleServiceSelection}
+            onback={handleBack}
+            onlogerror={handleLogError}
+            is-guest-user={isGuestUser}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-earthlink-services-tab>
+    </template>
+    <template lwc:if={showEarthlinkCreditCheckTab}>
+        <c-poe_lwc-buyflow-earthlink-credit-check-tab
+            record-id={recordId}
+            logo={logo}
+            origin={origin}
+            contact={contact}
+            is-wireless={isWireless}
+            selected-product={selectedProduct.Name}
+            selected-services={selectedServices}
+            address-info={clientInfo.addressInfo}
+            contact-info={clientInfo.contactInfo}
+            contact-email={clientInfo.contactEmail}
+            use-earthlink-domain={useEarthlinkDomain}
+            oncreditcheckpassed={handleCreditCheckPassed}
+            onback={handleBack}
+            onlogerror={handleLogError}
+            is-guest-user={isGuestUser}
+            referral-code-data={referralCodeData}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-earthlink-credit-check-tab>
+    </template>
+    <template lwc:if={showEarthlinkCartTab}>
+        <c-poe_lwc-buyflow-earthlink-cart-tab
+            record-id={recordId}
+            logo={logo}
+            is-wireless={isWireless}
+            selected-services={selectedServices}
+            cart-info={cartServices}
+            product={selectedProduct}
+            first-fee={oneTimeFee}
+            origin={origin}
+            oncartnext={handleCartNext}
+            onback={handleBack}
+            is-guest-user={isGuestUser}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-earthlink-cart-tab>
+    </template>
+    <template lwc:if={showEarthlinkCheckoutTab}>
+        <c-poe_lwc-buyflow-earthlink-checkout-tab
+            record-id={recordId}
+            logo={logo}
+            reference-number={referenceNumber}
+            client-info={clientInfo}
+            cart-info={cartServices}
+            disclaimers={checkoutDisclaimers}
+            shipping-address={creditCheckCallout.account.shippingAddress}
+            billing-address={creditCheckCallout.account.billingAddress}
+            due={cartServices.todayTotal}
+            origin={origin}
+            oncreditcardvalidated={handleCheckoutNext}
+            onback={handleBack}
+            onlogerror={handleLogError}
+            is-guest-user={isGuestUser}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-earthlink-checkout-tab>
+    </template>
+    <template lwc:if={showEarthlinkTPVTab}>
+        <c-poe_lwc-buyflow-earthlink-t-p-v-tab
+            record-id={recordId}
+            reference-number={referenceNumber}
+            client-info={clientInfo}
+            date-selected={dateSelected}
+            selected-product={selectedProduct}
+            shipping-address={creditCheckCallout.account.shippingAddress}
+            origin={origin}
+            logo={logo}
+            ontpvnext={handleTPVNext}
+            onback={handleBack}
+            onlogerror={handleLogError}
+            is-guest-user={isGuestUser}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-earthlink-t-p-v-tab>
+    </template>
+    <template lwc:if={showEarthlinkOrderConfirmationTab}>
+        <c-poe_lwc-buyflow-earthlink-order-confirmation-tab
+            record-id={recordId}
+            logo={logo}
+            product={selectedProduct}
+            user-id={userId}
+            cart-info={cartServices}
+            payment-attempts={paymentAttempts}
+            first-fee={oneTimeFee}
+            origin={origin}
+            selected-services={selectedServices}
+            callout-info={confirmationCallout}
+            promo-code={selectedPromoCode}
+            is-guest-user={isGuestUser}
+            installation-datetime={dateSelected}
+            skip-installation={skipInstallation}
+            onorderconfirmationnext={handleOrderConfirmationNext}
+            onback={handleBack}
+            onlogerror={handleLogError}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-earthlink-order-confirmation-tab>
+    </template>
+    <template lwc:if={showEarthlinkOrderSuccessTab}>
+        <c-poe_lwc-buyflow-earthlink-order-success-tab
+            order-number={orderNumber}
+            order-id={orderId}
+            record-id={recordId}
+            email={clientInfo.contactInfo.email}
+            phone={clientInfo.contactInfo.phone}
+            reference-number={referenceNumber}
+            origin={origin}
+            client-info={clientInfo}
+            onlogerror={handleLogError}
+            is-guest-user={isGuestUser}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-earthlink-order-success-tab>
+    </template>
+    <template lwc:if={showLoaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

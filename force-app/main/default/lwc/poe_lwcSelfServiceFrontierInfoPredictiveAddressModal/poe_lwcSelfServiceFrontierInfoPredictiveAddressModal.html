@@ -1,0 +1,32 @@
+<template>
+    <lightning-modal-header label="Related Addresses"></lightning-modal-header>
+    <lightning-modal-body class="modal-see-more">
+        <div provider="frontier">
+            <h2>{labels.INFO_PREDICTIVE_ADDRESS_MODAL_TITLE}</h2>
+
+            <p>{labels.INFO_PREDICTIVE_ADDRESS_MODAL_SUBTITLE}</p>
+
+            <div class="form-group slds-m-top_small">
+                <lightning-radio-group
+                    type="radio"
+                    name="radioGroup"
+                    options={options}
+                    value={selectedAddress}
+                    onchange={handleChange}
+                ></lightning-radio-group>
+            </div>
+
+            <div class="group-buttons">
+                <a class="btn-outline btn-only-rounded" 
+                   onclick={hideModal}>
+                   {labels.CANCEL_BUTTON_LABEL}
+                </a>
+
+                <a class={confirmBtnClass}
+                   onclick={handleSelector}>
+                   {labels.CONFIRM_BUTTON_LABEL}
+                </a>
+            </div>
+        </div>
+    </lightning-modal-body>
+</template>

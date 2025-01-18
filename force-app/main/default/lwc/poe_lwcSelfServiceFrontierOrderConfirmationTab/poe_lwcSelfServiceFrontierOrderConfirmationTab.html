@@ -1,0 +1,22 @@
+<template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading"> </lightning-spinner>
+    </template>
+    <div class="page pages-nav">
+        <template lwc:if={isNotGuestUser}>
+            <div class="nav-bar">
+                <h2>Bill preview</h2>
+            </div>
+    
+            <div class="page-content no-padding-top">
+                <div class="bill slds-size_12-of-12 slds-align_absolute-center slds-scrollable" lwc:dom="manual"></div>
+    
+                <a onclick={handleClick} class="btn-rounded btn-center hide-mobile"> Next step </a>
+            </div>
+    
+            <div class="footer-mobile">
+                <a onclick={handleClick} class="btn-rounded btn-center"> Next step </a>
+            </div>
+        </template>
+    </div>
+</template>

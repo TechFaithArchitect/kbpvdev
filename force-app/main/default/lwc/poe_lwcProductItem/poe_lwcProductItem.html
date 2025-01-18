@@ -1,0 +1,57 @@
+<template>
+    <span class={selectionTypeClasses.base}>
+        <input
+            type={inputType}
+            id={product.Id}
+            value={product.Id}
+            name="products"
+            checked={product.isChecked}
+            onchange={handleChange}
+            disabled={product.isDisabled}
+        />
+        <label class={selectionTypeClasses.label} for={product.Id}>
+            <span class="slds-form-element__label">
+                <div class="slds-box slds-grid slds-wrap">
+                    <div
+                        class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                    >
+                        <span class={selectionTypeClasses.faux}></span>
+                    </div>
+                    <div class="slds-col slds-size_10-of-12 slds-small-size_7-of-12 slds-p-horizontal_none">
+                        <strong>{product.Name}</strong>
+                        <template lwc:if={product.hasTerms}>
+                            &nbsp;&nbsp;&nbsp;<a
+                                onclick={toggleShowDetails}
+                                data-terms={product.terms}
+                                >See Details</a
+                            >
+                        </template>
+                    </div>
+                    <div class="slds-size_1-of-1 slds-m-bottom_x-small slds-hide_small"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-small-size_4-of-12 slds-text-align_right">
+                        ${product.Price} {product.PriceType}
+                    </div>
+                    <template lwc:if={product.hasDescription}>
+                        <div
+                            class="slds-col slds-var-p-top_medium slds-var-p-left_large slds-size_2-of-12 slds-show_medium"
+                        >
+                            Description:
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-medium-size_10-of-12 slds-var-p-top_medium"
+                        >
+                            {product.Description}
+                        </div>
+                    </template>
+                </div>
+            </span>
+        </label>
+    </span>
+
+    <template lwc:if={showDetailsModal}>
+        <c-poe_lwc-buyflow-earthlink-product-description-modal
+            onclosedescription={toggleShowDetails}
+            description={product.terms}
+        ></c-poe_lwc-buyflow-earthlink-product-description-modal>
+    </template>
+</template>

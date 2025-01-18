@@ -1,0 +1,72 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open"
+    >
+        <div class="slds-modal__container">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                    <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+                <span class="slds-assistive-text">Cancel and close</span>
+            </button>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">DIRECTV Via Internet National Offers</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <p>
+                    <strong>DIRECTV Via Internet:</strong> Service subject to DIRECTV Via Internet terms and conditions (see
+                    directv.com/legal/). Requires high speed internet. Minimum internet speed of 8Mbps per stream
+                    recommended for optimal viewing. Compatible device req’d. Residential U.S. customers only (excludes
+                    Puerto Rico and U.S. Virgin Islands)
+                </p>
+                <p>
+                    <strong
+                        >Your DIRECTV Via Internet service renews monthly at the prevailing rate, charged to your payment
+                        method on file unless you cancel.</strong
+                    >
+                    New customers who cancel service in the first 14 days will receive a full refund.
+                </p>
+                <p>
+                    <strong
+                        >Otherwise, no refunds or credits for any partial month periods or unwatched content.
+                    </strong>
+                    However, once you have cancelled, you can access DIRECTV Via Internet through the remaining monthly
+                    period.
+                </p>
+                <p>
+                    Returning customers who disconnected service within previous 12 months are not eligible for a refund
+                    <strong>Regional Sports & Local Channels:</strong> Regional Sports available with CHOICE and above.
+                    Not available in select areas. Channels vary by package & billing region.
+                </p>
+                <p>
+                    Device may need to be in billing region in order to view. <strong>Cancellation:</strong> Modify or
+                    cancel at any time online or by calling 1-800-531-5000. <strong>Taxes:</strong> State and local
+                    taxes or other governmental fees and charges may apply including any such taxes, fees or charges
+                    assessed against discounted fees or service credits.
+                </p>
+                <p>
+                    <strong>Limits:</strong> Offers may not be available through all channels and in select areas.
+                    Programming subject to blackout restrictions.
+                    <strong
+                        >All offers, programming, promotions, pricing, terms, restrictions & conditions subject to
+                        change & may be modified, discontinued, or terminated at any time without notice.</strong
+                    >
+                </p>
+                <p>
+                    See directv.com/stream/ for details. ©2022 DIRECTV. DIRECTV and all other DIRECTV marks are
+                    trademarks of DIRECTV, LLC. All other marks are the property of their respective owners.
+                </p>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" aria-label="Cancel and close" onclick={hideModal}>
+                    OK
+                </button>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

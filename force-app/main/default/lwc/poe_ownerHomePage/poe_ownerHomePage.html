@@ -1,0 +1,34 @@
+<template>
+    <lightning-card>
+        <div class="slds-grid slds-gutters slds-wrap slds-var-p-around_medium slds-grid_align-space">
+            <div class="slds-col slds-size_4-of-12">
+                <lightning-button
+                    variant="brand"
+                    label="View All Open Cases"
+                    name="Store"
+                    onclick={handleClick}
+                    class="slds-var-p-around_small"
+                    stretch
+                ></lightning-button>
+            </div>
+            <div class="slds-col slds-size_4-of-12">
+                <lightning-button
+                    variant="brand"
+                    label="Create New Case"
+                    name="newCase"
+                    onclick={handleCreateCase}
+                    class="slds-var-p-around_small"
+                    stretch
+                ></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+    <template lwc:if={showModal}>
+        <c-poe-case-modal
+            onclosemodal={handleCloseModal}
+            oncloseandcreatemodal={handleCreateCase}
+            record-type-name={caseTypeRT}
+            case-type={caseType}
+        ></c-poe-case-modal>
+    </template>
+</template>

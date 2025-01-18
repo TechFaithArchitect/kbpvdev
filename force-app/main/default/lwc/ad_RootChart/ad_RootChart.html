@@ -1,0 +1,20 @@
+<template>
+    <div style={chartStyle} class="slds-var-p-around_small">
+        <div class="slds-text-heading_small">{title}</div>
+        <template lwc:if={hasData}>
+            <div style="overflow:auto; height: 300px">
+                <div class="slds-var-p-around_xx-small" style="height: 300px;" data-id="canvas-container">
+                    <canvas lwc:dom="manual" width="300px"></canvas>
+                </div>
+            </div>
+        </template>
+        <template lwc:else>
+            <div class="slds-text-body_small slds-text-align_center slds-align_absolute-center" style="height: 300px">
+                We can't draw this chart because there is no data.
+            </div>
+        </template>
+        <div class="slds-text-body_small slds-truncate">
+            <a style="text-decoration: none; cursor: pointer;" onclick={handleReportClick}> View Report ({report.Name})</a>
+        </div>
+    </div>
+</template>

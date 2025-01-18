@@ -1,0 +1,114 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider="frontier">
+            <div class="page pages-nav">
+                <a onclick={handleCancel} title="Back button" class="btn-back-rounded">
+                    <img src={iconBtnBack} alt="Back button" />
+                </a>
+
+                <template lwc:if={showInfoTabContent}>
+                    <div class="nav-bar">
+                        <h2>Address Information</h2>
+                    </div>
+
+                    <div class="page-content width-large">
+                        <form>
+                            <div class="form-header">
+                                <img align="left" src={iconFormUser} />
+                                <h3>Service Address</h3>
+                                <p>Enter the customer's address details.</p>
+                            </div>
+    
+                            <div class="form-content">
+                                <template lwc:if={isGuestUser}>
+                                    <template lwc:if={showAddressComponent}>
+                                        <div class="slds-col slds-size_1-of-1">
+                                            <c-poe_lwc-address-field
+                                                options={addressOptions}
+                                                postal-code={zip}
+                                                onaddresschange={handleAddressChange}
+                                                onlogerror={handleLogError}
+                                            ></c-poe_lwc-address-field>
+                                        </div>
+                                    </template>
+                                </template>
+                                <template lwc:else>
+                                    <div class="form-group">
+                                        <lightning-input
+                                            type="text"
+                                            name="address"
+                                            value={address}
+                                            label="Street Address (*)"
+                                            required="true"
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <lightning-input
+                                            type="text"
+                                            name="apt"
+                                            value={apt}
+                                            label="Address Line 2"
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <lightning-input
+                                            type="text"
+                                            name="city"
+                                            value={city}
+                                            label="City (*)"
+                                            required="true"
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+    
+                                    <div class="form-group">
+                                        <lightning-select
+                                            name="state"
+                                            label="State (*)"
+                                            value={state}
+                                            options={stateOptions}
+                                            onchange={handleChange}
+                                            required="true"
+                                        ></lightning-select>
+                                    </div>
+                                    <div class="form-group">
+                                        <lightning-input
+                                            type="text"
+                                            name="zip"
+                                            value={zip}
+                                            label="Zip"
+                                            disabled="true"
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+                                </template>
+                            </div>
+                        </form>
+    
+                        <a onclick={handleClick} class={nextButtonClass} data-id="next"> Check Serviceability </a>
+                    </div>
+    
+                    <div class="footer-mobile">
+                        <a onclick={handleClick} data-id="next" class={nextButtonClassMobile}> Check Serviceability</a>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={showLoaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            show-cancel="true"
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

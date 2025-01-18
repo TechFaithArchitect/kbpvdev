@@ -1,0 +1,85 @@
+<template>
+    
+    <lightning-modal-header label="Assign Service Territory"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="min-height: 360px;" >
+        <div class="slds-form-element slds-p-around_large">
+                
+            <div class="slds-form-element__control">
+                <div class="slds-combobox_container">
+                    <div>
+                        <lightning-layout-item size="4" padding="around-small" >
+                            <div class="slds-border_bottom">
+                            <lightning-record-view-form record-id={recordId} object-api-name="Account">
+                                <lightning-output-field field-name="Name"></lightning-output-field>
+                                <lightning-output-field field-name="POE_Dealer_Code__c"></lightning-output-field>
+                            </lightning-record-view-form>
+                            </div>
+                        </lightning-layout-item>
+                    </div>
+                    <template if:false={isDealerCode}>
+                        <p>Dealer code should be filled before assigning service territory.</p>
+                    </template>
+                    <template if:true={isDealerCode}>
+                    <div class={txtclassname} data-id="resultBox" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon slds-input-has-icon_left-right" role="none">
+                            <lightning-input required={required} type="search" data-id="userinput" placeholder={placeholder} name="searchText" onchange={searchField} class="leftspace"></lightning-input>
+                        </div>
+                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon slds-input-has-icon_left-right" role="none">
+                            <template for:each={selectedRecords} for:item="serecord">
+                                <span key={serecord.recId}>
+                                <lightning-pill label={serecord.recName} name={serecord.recId} onremove={removeRecord}>
+                                        <lightning-icon icon-name={iconName} variant="circle" alternative-text={serecord.recName}></lightning-icon> 
+                                    </lightning-pill>
+                                </span>
+                            </template>
+                        </div>
+                    
+                        <!-- This part display result -->
+                        <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                            <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                <template for:each={searchRecords} for:item="serecord">
+                                    <li role="presentation" class="slds-listbox__item" key={serecord.recId}>
+                                        
+                                        <div data-id={serecord.recId} data-name={serecord.recName} onclick={setSelectedRecord} class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                            <span class="slds-media__figure">
+                                                <span class="slds-icon_container slds-icon-standard-account">
+                                                    <lightning-icon icon-name={iconName} class="slds-icon slds-icon slds-icon_small slds-icon-text-default" size="x-small"></lightning-icon>
+                                                </span>
+                                            </span>
+                                            <span class="slds-media__body">
+                                                <span class="slds-listbox__option-text slds-listbox__option-text_entity">{serecord.recName}</span>
+                                                <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{objectName} • {serecord.recName}</span>
+                                            </span>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                        </div>
+                        <div if:true={messageFlag}>
+                            No result found.
+                        </div>
+                        <div if:true={LoadingText}>
+                            Loading...
+                        </div>
+                    </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <div class="slds-m-top_small slds-align_absolute-center">
+            <lightning-button variant="Neutral" class="slds-m-left_x-small" label="Cancel" title="Cancel" onclick={handleCloseClick}></lightning-button >
+            <lightning-button variant="brand" class="slds-m-left_x-small" label="Assign Service Territory" title="Assign Service Territory" onclick={createServiceTerritoryRecords}></lightning-button>
+            <div class="spinner">
+                <template if:true={loaded}>
+              <lightning-spinner alternative-text="Loading..." variant="brand">
+              </lightning-spinner>  
+                </template>
+            </div>
+        </div>
+    </lightning-modal-footer>
+
+</template>

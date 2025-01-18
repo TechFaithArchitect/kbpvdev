@@ -1,0 +1,182 @@
+<template>
+    <div class="pages-with-provider-style page pages-nav" provider="earthlink">
+        <div class="nav-bar">
+            <a onclick={handlePrevious} title="Back button" class="btn-back-rounded">
+                <img src={iconBtnBack} alt="Back button" />
+            </a>
+
+            <h2>{labels.TELL_US_ABOUT_YOU_TITLE}</h2>
+        </div>
+
+        <div class="page-content no-padding-top">
+            <form>
+                <div class="form-header">
+                    <img align="left" src={iconFormUser} />
+
+                    <h3>{labels.PERSONAL_INFORMATION_TAB_NAME_LABEL}</h3>
+                    <p>{labels.PERSONAL_INFORMATION_TAB_INSTRUCTIONS}</p>
+                </div>
+
+                <div class="form-content">
+                    <div class="form-group">
+                        <lightning-input
+                            type="text"
+                            name="firstName"
+                            required
+                            placeholder={labels.FIRST_NAME_FIELD_PLACEHOLDER}
+                            label={labels.FIRST_NAME_FIELD_LABEL}
+                            value={firstName}
+                            onchange={handleContact}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="text"
+                            name="middleName"
+                            label={labels.MIDDLE_NAME_FIELD_LABEL}
+                            value={middleName}
+                            onchange={handleContact}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="text"
+                            name="lastName"
+                            required
+                            placeholder={labels.LAST_NAME_FIELD_PLACEHOLDER}
+                            label={labels.LAST_NAME_FIELD_LABEL}
+                            value={lastName}
+                            onchange={handleContact}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="tel"
+                            pattern="[0-9]{10}"
+                            field-level-help={phoneHelp}
+                            max-length="10"
+                            label={labels.CONTACT_PHONE_NUMBER_FIELD_LABEL}
+                            name="phone"
+                            required
+                            value={phone}
+                            onchange={handleContact}
+                            message-when-pattern-mismatch={labels.INVALID_PHONE_NUMBER_GENERIC_ERROR_MESSAGE}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="email"
+                            name="email"
+                            field-level-help={labels.UNIQUE_IDENTIFIER_DISCLAIMER}
+                            required
+                            placeholder={labels.EMAIL_FIELD_PLACEHOLDER}
+                            label={labels.EMAIL_FIELD_LABEL}
+                            value={email}
+                            onchange={handleContact}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group slds-text-body_small">
+                        <lightning-input
+                            type="checkbox"
+                            name="optIn"
+                            checked={optIn}
+                            label={consentLabel}
+                            onchange={handleConsent}
+                        ></lightning-input>
+                    </div>
+
+                    <template lwc:if={isWireless}>
+                        <hr />
+
+                        <h3>{labels.SHIPPING_ADDRESS_SECTION_TITLE}</h3>
+
+                        <div class="form-group">
+                            <lightning-input
+                                type="checkbox"
+                                checked={useSameAddressAsShippingAddress}
+                                label={labels.SHIPPING_ADDRESS_SAME_AS_SERVICE_ADDRESS_FIELD_LABEL}
+                                onchange={handleShippingAddress}
+                            ></lightning-input>
+                        </div>
+
+                        <template lwc:if={showShippingAddress}>
+                            <div class="form-group">
+                                <div class="slds-col slds-size_1-of-1">
+                                    <c-poe_lwc-address-field
+                                        options={addressOptions}
+                                        onaddresschange={handlePredictiveShippingAddressChange}
+                                        onlogerror={handleChildLogError}
+                                    ></c-poe_lwc-address-field>
+                                </div>
+                            </div>
+                        </template>
+                    </template>
+
+                    <template lwc:if={noSkipInstallation}>
+                        <hr />
+
+                        <h3 style="margin-bottom: 0">{labels.INSTALLATION_PREFERENCES_TITLE}</h3>
+
+                        <div class="form-group">
+                            <div class="slds-col slds-size_1-of-1 slds-var-m-bottom_none">
+                                <template lwc:if={showDatePicker}>
+                                    <c-poe_lwc-installation-date-time-picker
+                                        is-guest-user={isGuestUser}
+                                        class="slds-m-around_medium"
+                                        date-time-label={labels.SELECT_AVAILABLE_DATE_TIME_FIELD_LABEL}
+                                        required="true"
+                                        value={dateValue}
+                                        available-date-times={availableDateTimeOptions}
+                                        ondatetimechange={handleInstallationTimeChange}
+                                    >
+                                    </c-poe_lwc-installation-date-time-picker>
+                                </template>
+                                <template lwc:if={timeOut}>
+                                    <a onclick={handleRefreshDates} class="btn-rounded" style="margin-top: 0px">
+                                        {labels.REFRESH_DATES_BUTTON_LABEL}
+                                    </a>
+                                </template>
+                                <template lwc:if={error}>
+                                    <div
+                                        class="slds-box slds-m-vertical_x-small"
+                                        style="border: 1px solid red; background-color: #fbf0ec"
+                                    >
+                                        <p class="slds-p-around_medium">{errorDisclaimer}</p>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </form>
+
+            <a onclick={handleNext} class={nextButtonClass}> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+        </div>
+
+        <div class="footer-mobile">
+            <a onclick={handlePrevious} title="Back button" class="btn-back-rounded">
+                <img src={iconBtnBack} alt="Back button" />
+            </a>
+
+            <a onclick={handleNext} class={nextButtonClassMobile}> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+        </div>
+    </div>
+
+    <template lwc:if={showCapReachedModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.CAP_REACHED_ERROR}
+            modal-title={labels.LIMIT_REACHED_TITLE}
+            onconfirm={handleCancel}
+            onclose={handleCancel}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

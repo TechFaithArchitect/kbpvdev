@@ -1,0 +1,142 @@
+<template>
+    <template lwc:if={hasProducts}>
+        <div class="slds-box" style={dynamicColor}>
+            <template lwc:if={isGuestUser}>
+                <div class="slds-grid slds-wrap">
+                    <div
+                        class="zipSection slds-col slds-size_12-of-12 title slds-align_absolute-center slds-p-around_small"
+                        style="height: 20vh"
+                    >
+                        Partners in ZIP Code {zipCode}
+                    </div>
+                    <div
+                        class="subTitle slds-col slds-size_12-of-12 slds-p-vertical_medium slds-p-horizontal_large slds-m-horizontal_large"
+                    >
+                        {partnersQuantity} results near your address
+                    </div>
+                    <div class="partnerSection slds-col slds-size_12-of-12 slds-p-around_large slds-border_right">
+                        <template for:each={availablePrograms} for:item="program">
+                            <div
+                                key={program.id}
+                                class="partnerCard slds-grid slds-gutters slds-m-vertical_large slds-m-horizontal_xx-large slds-p-around_large slds-wrap"
+                            >
+                                <div class="partnerSection slds-col slds-size_1-of-1 slds-medium-size_2-of-12 slds-align_absolute-center slds-border_right">
+                                    <img src={program.src} name={program.product} class={program.class}/>
+                                </div>
+                                <div
+                                    class="program-info slds-col slds-size_1-of-2 slds-medium-size_3-of-12 slds-text-heading_medium slds-grid slds-gutters slds-align_absolute-center slds-grid_vertical slds-m-left_medium {program.class}"
+                                >
+                                    <div class="slds-col slds-size_12-of-12">Plans starting at</div>
+                                    <div class="slds-col slds-size_12-of-12"><b>{program.price}</b></div>
+                                </div>
+                                <div
+                                    class="program-info slds-col slds-size_1-of-2 slds-medium-size_3-of-12 slds-text-heading_medium slds-grid slds-gutters slds-align_absolute-center slds-grid_vertical slds-m-left_medium {program.class}"
+                                >
+                                    <template lwc:if={program.hasSpeed}>
+                                        <div class="slds-col slds-size_12-of-12">Speeds up to</div>
+                                        <div class="slds-col slds-size_12-of-12"><b>{program.speed}</b></div>
+                                    </template>
+                                </div>
+                                <div
+                                    class="slds-col slds-size_1-of-1 slds-medium-size_2-of-12 slds-align_absolute-center slds-p-around_medium {program.class} slds-border_left"
+                                >
+                                    <button class="offersButton" name={program.product} onclick={startBuyflow}>
+                                        View Offers
+                                    </button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div
+                    class="slds-grid slds-wrap slds-m-bottom_large"
+                >
+                    <div
+                        class="slds-col slds-grid slds-p-around_small slds-wrap slds-m-horizontal_small"
+                    >
+                        <button class="offersButton prevButton" onclick={handlePrevious}>Previous</button>
+                    </div>
+                </div>
+            </template>
+            <template lwc:else>
+                <template for:each={availablePrograms} for:item="program">
+                    <div key={program.id} class="slds-grid slds-gutters slds-p-around_small">
+                        <div class="slds-col slds-size_1-of-6 slds-align_absolute-left">
+                            <img
+                                src={program.src}
+                                name={program.product}
+                                onclick={startBuyflow}
+                                class={program.class}
+                            />
+                        </div>
+                        <div
+                            class="slds-col slds-size_3-of-6 slds-text-heading_medium slds-grid slds-gutters slds-grid_vertical-align-center slds-m-left_medium {program.class}"
+                        >
+                            {program.price} {program.speed}
+                        </div>
+                    </div>
+                </template>
+                <div class="slds-m-top_medium">
+                    <template for:each={unavailablePrograms} for:item="program">
+                        <div key={program.id} class="slds-grid slds-gutters slds-p-around_small">
+                            <div class="slds-col slds-size_1-of-6 slds-align_absolute-left">
+                                <img
+                                    src={program.src}
+                                    name={program.product}
+                                    onclick={startBuyflow}
+                                    class={program.class}
+                                />
+                            </div>
+                            <div
+                                class="slds-col slds-size_4-of-6 slds-text-heading_medium slds-grid slds-gutters slds-grid_vertical-align-center slds-m-left_medium {program.class}"
+                            >
+                                {program.price}
+                                <template lwc:if={isOwner}>
+                                    <a
+                                        class="slds-m-left_medium"
+                                        style="text-decoration: none"
+                                        onclick={handleCreateCase}
+                                        >New Program Request</a
+                                    >
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="slds-text-heading_small slds-text-color_weak slds-p-right_medium">
+                    <div class="slds-p-around_small">
+                        <i>{pricesDisclaimer}</i>
+                    </div>
+                </div>
+                <div class="slds-text-heading_small slds-text-color_weak slds-p-right_medium">
+                    <div class="slds-p-around_small">
+                        <i>{serviceDisclaimer}</i>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-p-right_medium slds-wrap slds-grid_align-end slds-m-bottom_small">
+                    <div class="slds-col slds-size_1-of-6 slds-p-around_small">
+                        <lightning-button
+                            variant="neutral"
+                            label="Other"
+                            onclick={startBuyflow}
+                            name="Other"
+                        ></lightning-button>
+                    </div>
+                    <div class="slds-col slds-size_5-of-6 slds-grid_align-end">
+                        <div class="slds-grid slds-p-around_small slds-wrap slds-grid_align-end">
+                            <lightning-button
+                                variant="brand"
+                                label="Previous"
+                                onclick={handlePrevious}
+                            ></lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template lwc:if={loaderSpinner}>
+                <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+            </template>
+        </div>
+    </template>
+</template>

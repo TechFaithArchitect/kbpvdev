@@ -1,0 +1,109 @@
+<template>
+    <div class="slds-box slds-theme_default slds-p-around_x-small">
+        <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_medium">
+            <div
+                class="slds-col slds-box slds-size_1-of-1 slds-medium-size_2-of-3 slds-m-bottom_small slds-p-horizontal_small"
+            >
+                <div class="slds-text-heading_medium slds-p-bottom_medium slds-p-horizontal_medium">
+                    {labels.Product_Selection_Title}
+                </div>
+                <template lwc:if={hasAddons}>
+                    <template for:each={addons} for:item="addon">
+                        <div
+                            class="slds-box slds-box_xx-small slds-text-title_bold"
+                            style="background-color: #74747436"
+                            key={addon.id}
+                        >
+                            {addon.addonName}
+                        </div>
+
+                        <div class="slds-var-p-left_small slds-var-p-top_medium" key={addon.id}>
+                            {addon.description}
+                        </div>
+                        <ul key={addon.id} class="slds-m-around_medium slds-list_dotted">
+                            <template for:each={addon.attributes} for:item="attribute">
+                                <li key={attribute.name}>{attribute.value}</li>
+                            </template>
+                        </ul>
+                        <div class="slds-col slds-size_1-of-1 slds-p-bottom_small" key={addon.id}>
+                            <lightning-input
+                                label={addon.label}
+                                value={addon.id}
+                                data-id={addon.id}
+                                type="radio"
+                                class="slds-box slds-text-title_bold"
+                                onchange={handlePackageSelection}
+                            ></lightning-input>
+                            <lightning-input
+                                label="Decline"
+                                value="decline"
+                                data-id={addon.id}
+                                type="radio"
+                                class="slds-box slds-text-title_bold"
+                                onchange={handlePackageSelection}
+                            ></lightning-input>
+                        </div>
+                    </template>
+                </template>
+                <template lwc:if={hasOffers}>
+                    <template for:each={offers} for:item="offer">
+                        <div
+                            class="slds-box slds-box_xx-small slds-text-title_bold"
+                            style="background-color: #74747436"
+                            key={offer.id}
+                        >
+                            {offer.name}
+                        </div>
+                        <div key={offer.id} class="slds-col slds-size_1-of-1 slds-p-bottom_small slds-var-p-top_large">
+                            <lightning-input
+                                checked
+                                label={offer.description}
+                                value={offer.id}
+                                data-id={offer.id}
+                                type="radio"
+                                class="slds-box slds-text-title_bold selectedPackage"
+                                onchange={handleOfferSelection}
+                            ></lightning-input>
+                            <lightning-input
+                                label="Decline"
+                                value="decline"
+                                data-id={offer.id}
+                                type="radio"
+                                class="slds-box slds-text-title_bold"
+                                onchange={handleOfferSelection}
+                            ></lightning-input>
+                        </div>
+                    </template>
+                </template>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                <c-poe_lwc-buyflow-viasat-cart cart={cart}> </c-poe_lwc-buyflow-viasat-cart>
+                <div class="slds-grid slds-p-around_medium">
+                    <div class="slds-col slds-size_12-of-12 slds-text-align_center">
+                        <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <c-poe_lwc-buyflow-tab-actions
+            disable-next={disableNext}
+            show-previous="true"
+            show-cancel="true"
+            oncancel={handleCancel}
+            onprevious={handlePrevious}
+            onnext={handleClick}
+        >
+        </c-poe_lwc-buyflow-tab-actions>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

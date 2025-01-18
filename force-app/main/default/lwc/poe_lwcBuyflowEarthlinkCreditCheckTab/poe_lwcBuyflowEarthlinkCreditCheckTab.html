@@ -1,0 +1,437 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="earthlink"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_small slds-clearfix">
+            <template lwc:if={dontShowSSNAgreement}>
+                <div class="slds-grid slds-wrap slds-p-around_medium slds-grid_align-center">
+                    <div
+                        class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-grid slds-wrap slds-grid_vertical slds-grid_vertical-align-center"
+                    >
+                        <div class="slds-text-heading_medium slds-p-around_large">
+                            <lightning-formatted-text
+                                value={labels.CC_1_CUSTOMER_DETAILS_TITLE}
+                            ></lightning-formatted-text>
+                        </div>
+                        <lightning-accordion active-section-name="A" allow-multiple-sections-open>
+                            <lightning-accordion-section name="A" label={labels.CONTACT_INFORMATION_SECTION_TITLE}>
+                                <form name="contactInfo">
+                                    <lightning-input
+                                        type="text"
+                                        label={labels.FIRST_NAME_FIELD_LABEL}
+                                        name="firstName"
+                                        required
+                                        value={firstName}
+                                        onchange={handleContact}
+                                    ></lightning-input>
+
+                                    <lightning-input
+                                        type="text"
+                                        label={labels.MIDDLE_NAME_FIELD_LABEL}
+                                        value={middleName}
+                                        onchange={handleContact}
+                                    ></lightning-input>
+
+                                    <lightning-input
+                                        type="text"
+                                        label={labels.LAST_NAME_FIELD_LABEL}
+                                        name="lastName"
+                                        required
+                                        value={lastName}
+                                        onchange={handleContact}
+                                    ></lightning-input>
+
+                                    <lightning-input
+                                        type="tel"
+                                        pattern="[0-9]{10}"
+                                        field-level-help={phoneHelp}
+                                        max-length="10"
+                                        label={labels.CONTACT_PHONE_NUMBER_FIELD_LABEL}
+                                        name="phone"
+                                        required
+                                        value={phone}
+                                        onchange={handleContact}
+                                        message-when-pattern-mismatch={labels.INVALID_PHONE_NUMBER_GENERIC_ERROR_MESSAGE}
+                                    ></lightning-input>
+                                    <lightning-input
+                                        class="slds-m-top_medium"
+                                        type="checkbox"
+                                        label={contactConsentLabel}
+                                        name="contactConsent"
+                                        checked={contactConsent}
+                                        onchange={handleConsentChange}
+                                    ></lightning-input>
+                                </form>
+                            </lightning-accordion-section>
+                        </lightning-accordion>
+                    </div>
+                    <div
+                        class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3 slds-grid slds-wrap slds-grid_vertical slds-grid_vertical-align-center"
+                    >
+                        <div class="slds-text-heading_medium slds-p-around_large">
+                            <lightning-formatted-text
+                                value={labels.CC_2_ACCOUNT_DETAILS_TITLE}
+                            ></lightning-formatted-text>
+                        </div>
+                        <lightning-accordion active-section-name={activeSections} allow-multiple-sections-open>
+                            <template lwc:if={isWireless}>
+                                <lightning-accordion-section name="B" label={labels.SHIPPING_ADDRESS_SECTION_TITLE}>
+                                    <lightning-input
+                                        type="checkbox"
+                                        label={labels.SHIPPING_ADDRESS_SAME_AS_SERVICE_ADDRESS_FIELD_LABEL}
+                                        class="slds-p-around_x-small"
+                                        onchange={handleShippingAddress}
+                                        checked
+                                        disabled={noContactInformation}
+                                    ></lightning-input>
+                                    <template lwc:if={isGuestUser}>
+                                        <div class="slds-col slds-size_1-of-1">
+                                            <c-poe_lwc-address-field
+                                                options={addressOptions}
+                                                postal-code={shippingZip}
+                                                street={shippingAddress}
+                                                address-line-2={shippingApt}
+                                                city={shippingCity}
+                                                province={shippingState}
+                                                onaddresschange={handlePredictiveShippingAddressChange}
+                                                onlogerror={handleChildLogError}
+                                                disabled={editShippingAddress}
+                                            ></c-poe_lwc-address-field>
+                                        </div>
+                                    </template>
+                                    <template lwc:else>
+                                        <lightning-input
+                                            type="text"
+                                            label={labels.ADDRESS_FIELD_LABEL}
+                                            required
+                                            disabled={editShippingAddress}
+                                            value={shippingAddress}
+                                            name="shippingAddress"
+                                            onchange={handleAddressChange}
+                                        ></lightning-input>
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                                <lightning-input
+                                                    type="text"
+                                                    label={labels.ADDRESS_LINE_2_FIELD_LABEL}
+                                                    disabled={editShippingAddress}
+                                                    value={shippingApt}
+                                                    name="shippingApt"
+                                                    onchange={handleAddressChange}
+                                                ></lightning-input>
+                                            </div>
+                                            <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                                <lightning-input
+                                                    type="text"
+                                                    name="shippingCity"
+                                                    label={labels.CITY_FIELD_LABEL}
+                                                    required
+                                                    disabled={editShippingAddress}
+                                                    value={shippingCity}
+                                                    onchange={handleAddressChange}
+                                                ></lightning-input>
+                                            </div>
+                                            <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                                <lightning-combobox
+                                                    name="shippingState"
+                                                    label={labels.STATE_FIELD_LABEL}
+                                                    value={shippingState}
+                                                    disabled={editShippingAddress}
+                                                    onchange={handleAddressChange}
+                                                    options={states}
+                                                    required
+                                                ></lightning-combobox>
+                                            </div>
+                                        </div>
+                                        <lightning-input
+                                            type="text"
+                                            max-length="5"
+                                            label={labels.ZIP_FIELD_LABEL}
+                                            onchange={handleAddressChange}
+                                            value={shippingZip}
+                                            name="shippingZip"
+                                            required
+                                            disabled={editShippingAddress}
+                                        ></lightning-input>
+                                    </template>
+                                    <template lwc:if={addressWarning}>
+                                        <div class="slds-box slds-m-around_small" style="background: #f6bc8d">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-col">
+                                                    <lightning-icon
+                                                        icon-name="utility:warning"
+                                                        size="small"
+                                                        alternative-text="Warning"
+                                                        title="Warning"
+                                                    ></lightning-icon>
+                                                </div>
+                                                <div class="slds-col">
+                                                    <p>
+                                                        <lightning-formatted-text
+                                                            value={labels.MULTIPLE_ADDRESS_ATTEMPTS_WARNING}
+                                                        ></lightning-formatted-text>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </lightning-accordion-section>
+                            </template>
+                            <template lwc:else>
+                                <lightning-accordion-section name="B" label={labels.SHIPPING_ADDRESS_SECTION_TITLE}>
+                                    <lightning-input
+                                        type="text"
+                                        label={labels.ADDRESS_FIELD_LABEL}
+                                        required
+                                        disabled
+                                        value={shippingAddress}
+                                        name="shippingAddress"
+                                        onchange={handleAddressChange}
+                                    ></lightning-input>
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                            <lightning-input
+                                                type="text"
+                                                label={labels.ADDRESS_LINE_2_FIELD_LABEL}
+                                                disabled
+                                                value={shippingApt}
+                                                name="shippingApt"
+                                                onchange={handleAddressChange}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                            <lightning-input
+                                                type="text"
+                                                name="shippingCity"
+                                                label={labels.CITY_FIELD_LABEL}
+                                                required
+                                                disabled
+                                                value={shippingCity}
+                                                onchange={handleAddressChange}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                            <lightning-combobox
+                                                name="shippingState"
+                                                label={labels.STATE_FIELD_LABEL}
+                                                value={shippingState}
+                                                disabled
+                                                onchange={handleAddressChange}
+                                                options={states}
+                                                required
+                                            ></lightning-combobox>
+                                        </div>
+                                    </div>
+                                    <lightning-input
+                                        type="text"
+                                        max-length="5"
+                                        label={labels.ZIP_FIELD_LABEL}
+                                        onchange={handleAddressChange}
+                                        value={shippingZip}
+                                        name="shippingZip"
+                                        required
+                                        disabled
+                                    ></lightning-input>
+                                </lightning-accordion-section>
+                            </template>
+                            <lightning-accordion-section name="A" label={labels.BILLING_ADDRESS_SECTION_TITLE}>
+                                <lightning-input
+                                    type="checkbox"
+                                    label={labels.BILLING_ADDRESS_SAME_AS_SERVICE_ADDRESS_FIELD_LABEL}
+                                    class="slds-p-around_x-small"
+                                    onchange={handleBillingAddress}
+                                    checked
+                                    disabled={noContactInformation}
+                                ></lightning-input>
+
+                                <template lwc:if={isGuestUser}>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <c-poe_lwc-address-field
+                                            options={addressOptions}
+                                            postal-code={shippingZip}
+                                            street={shippingAddress}
+                                            address-line-2={shippingApt}
+                                            city={shippingCity}
+                                            province={shippingState}
+                                            onaddresschange={handlePredictiveBillingAddressChange}
+                                            onlogerror={handleChildLogError}
+                                            disabled={editBillingAddress}
+                                        ></c-poe_lwc-address-field>
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <lightning-input
+                                        type="text"
+                                        label={labels.ADDRESS_FIELD_LABEL}
+                                        name="billingAddress"
+                                        required
+                                        onchange={handleAddressChange}
+                                        value={billingAddress}
+                                        placeholder={shippingAddress}
+                                        disabled={editBillingAddress}
+                                    ></lightning-input>
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                            <lightning-input
+                                                type="text"
+                                                label={labels.ADDRESS_LINE_2_FIELD_LABEL}
+                                                onchange={handleAddressChange}
+                                                name="billingApt"
+                                                value={billingApt}
+                                                placeholder={shippingApt}
+                                                disabled={editBillingAddress}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                            <lightning-input
+                                                type="text"
+                                                label={labels.CITY_FIELD_LABEL}
+                                                required
+                                                onchange={handleAddressChange}
+                                                name="billingCity"
+                                                value={billingCity}
+                                                placeholder={shippingCity}
+                                                disabled={editBillingAddress}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                            <lightning-combobox
+                                                label={labels.STATE_FIELD_LABEL}
+                                                name="billingState"
+                                                value={billingState}
+                                                onchange={handleAddressChange}
+                                                options={states}
+                                                disabled={editBillingAddress}
+                                                placeholder={shippingState}
+                                                required
+                                            ></lightning-combobox>
+                                        </div>
+                                    </div>
+                                    <lightning-input
+                                        type="text"
+                                        max-length="5"
+                                        label={labels.ZIP_FIELD_LABEL}
+                                        required
+                                        onchange={handleAddressChange}
+                                        name="billingZip"
+                                        placeholder={shippingZip}
+                                        disabled={editBillingAddress}
+                                        value={billingZip}
+                                    ></lightning-input>
+                                </template>
+                            </lightning-accordion-section>
+                        </lightning-accordion>
+                    </div>
+                    <div
+                        class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-medium-size_1-of-3 slds-p-horizontal_large slds-grid_vertical slds-grid_vertical-align-center"
+                    >
+                        <div class="slds-text-heading_medium slds-p-around_large">
+                            <lightning-formatted-text
+                                value={labels.CC_3_EARTHLINK_ACCOUNT_TITLE}
+                            ></lightning-formatted-text>
+                        </div>
+                        <div class="slds-grid slds-grid_vertical slds-grid_align-center slds-size_12-of-12">
+                            <p class="slds-m-bottom_x-small">
+                                <lightning-formatted-text
+                                    value={labels.UNIQUE_IDENTIFIER_DISCLAIMER}
+                                ></lightning-formatted-text>
+                            </p>
+                            <div class="slds-col slds-size_12-of-12">
+                                <lightning-input
+                                    type="email"
+                                    label={userLabel}
+                                    name="elUser"
+                                    max-length={userLength}
+                                    required
+                                    disabled={isEarthLinkAccDisabled}
+                                    value={email}
+                                    onchange={handleUserChange}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12 slds-m-vertical_small">
+                                <lightning-button
+                                    stretch
+                                    class="slds-max-small-size_1-of-1"
+                                    variant="brand"
+                                    label={labels.CHECK_BUTTON_LABEL}
+                                    onclick={handleCallELCheck}
+                                    disabled={checkDisabled}
+                                ></lightning-button>
+                            </div>
+                            <template lwc:if={validateResults}>
+                                <template lwc:if={accountNotAccepted}>
+                                    <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_x-small">
+                                        <p style="color: #ef6e64"><b>
+                                            <lightning-formatted-text
+                                                value={labels.INVALID_USER_ID_ERROR_MESSAGE}
+                                            ></lightning-formatted-text>
+                                        </b></p>
+                                    </div>
+                                    <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_x-small">
+                                        {labels.SUGGESTED_USER_IDS_VERBIAGE} {suggestedIds}
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_x-small">
+                                        <p style="color: #00c6b7"><b>
+                                            <lightning-formatted-text
+                                                value={labels.USER_ID_VALIDATED_MESSAGE}
+                                            ></lightning-formatted-text>
+                                        </b></p>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-p-around_medium">
+                    <div class="slds-col slds-size_6-of-12 slds-small-size_4-of-12 slds-medium-size_2-of-12">
+                        <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    disable-next={notValidated}
+                    show-previous="true"
+                    show-cancel="true"
+                    oncancel={handleCancel}
+                    onprevious={handlePrevious}
+                    onnext={handleNext}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={ssnLimit}>
+        <c-poe-credit-check-fraud-validation record-id={recordId}></c-poe-credit-check-fraud-validation>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.SELF_SERVICE_VALIDATE_LEAVING_MESSAGE}
+            modal-title={labels.SELF_SERVICE_VALIDATE_LEAVING_TITLE}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showCapReachedModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.capReachedError}
+            modal-title="Limit Reached"
+            onconfirm={handleCancel}
+            onclose={handleCancel}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

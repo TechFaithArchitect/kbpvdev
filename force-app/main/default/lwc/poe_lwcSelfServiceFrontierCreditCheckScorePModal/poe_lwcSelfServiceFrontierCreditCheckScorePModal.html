@@ -1,0 +1,56 @@
+<template>
+    <lightning-modal-header label={labels.CREDIT_CHECK_SCORE_P_MODAL_TITLE}></lightning-modal-header>
+    <lightning-modal-body class="modal-see-more">
+        <div provider="frontier">
+            <h2>
+                <lightning-formatted-text
+                    value={labels.CREDIT_CHECK_SCORE_P_MODAL_TITLE}
+                >
+                </lightning-formatted-text>
+            </h2>
+            
+            <template for:each={securityQuestions} for:item="question">
+                <div class="slds-m-top_large" key={question.questionNumber}>
+                    <p>
+                        <lightning-formatted-text
+                            value={question.question}
+                        ></lightning-formatted-text>
+                    </p>
+                    <div class="form-group">
+                        <lightning-radio-group
+                            label=" "
+                            type="radio"
+                            variant="label-hidden"
+                            options={question.answerChoices}
+                            onchange={handleChoiceChange}
+                        ></lightning-radio-group>
+                    </div>
+                </div>
+            </template>
+
+            <div class="group-buttons">
+                <a class="btn-outline btn-only-rounded" 
+                   onclick={hideModal}>
+                   <lightning-formatted-text 
+                        value={labels.CANCEL_BUTTON_LABEL}
+                    ></lightning-formatted-text>
+                </a>
+
+                <a class={continueBtnClass}
+                   onclick={handleAnswerQuestions}>
+                   <lightning-formatted-text 
+                        value={labels.ANSWER_SECURITY_QUESTIONS_BUTTON_LABEL}
+                    ></lightning-formatted-text>
+                </a>
+            </div>
+
+            <template lwc:if={loaderSpinner}>
+                <lightning-spinner 
+                    variant="brand" 
+                    alternative-text="Loading..."
+                    size="medium"
+                ></lightning-spinner>
+            </template>    
+        </div>
+    </lightning-modal-body>
+</template>

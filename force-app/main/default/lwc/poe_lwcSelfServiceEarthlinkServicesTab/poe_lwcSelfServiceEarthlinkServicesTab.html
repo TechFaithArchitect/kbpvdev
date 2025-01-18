@@ -1,0 +1,77 @@
+<template>
+    <div class="pages-with-provider-style" provider={providerStyle}>
+        <div class="page pages-nav">
+            <div class="nav-bar">
+                <a onclick={handlePrevious} title="Back button" class="btn-back-rounded">
+                    <img src={iconBtnBack} alt="Back button" />
+                </a>
+
+                <h2>{title}</h2>
+            </div>
+
+            <div class="page-content no-padding-top">
+                <form>
+                    <div class="form-header">
+                        <img align="left" src={iconFormExtra} />
+
+                        <h3>{subTitle}</h3>
+                        <p>{labels.PLAN_ENHANCEMENT_TAB_DESCRIPTION}</p>
+                    </div>
+
+                    <div class="form-content">
+                        <template for:each={services} for:item="service">
+                            <div key={service.Id}>
+                                <div class="form-group">
+                                    <lightning-input
+                                        class="label-semi-bold"
+                                        type="toggle"
+                                        checked={service.isChecked}
+                                        label={service.Name}
+                                        data-id={service.Id}
+                                        onchange={handlePriceChange}
+                                        disabled={service.isDisabled}
+                                    ></lightning-input>
+                                </div>
+                                <p class="input-description-toggle">
+                                    {service.Description}
+                                    <template lwc:if={service.hasTerms}>
+                                        <a
+                                            class="hyperlink"
+                                            onclick={handleShowDetailsModal}
+                                            data-id={service.Id}
+                                            data-terms={service.terms}
+                                        >
+                                            &nbsp;{labels.LEARN_MORE_LINK_LABEL}
+                                        </a>
+                                    </template>
+                                </p>
+                                <hr class="between-toggles" />
+                            </div>
+                        </template>
+                    </div>
+                </form>
+
+                <a onclick={handleClick} class="btn-rounded btn-center hide-mobile"> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+            </div>
+
+            <div class="footer-mobile">
+                <a onclick={changeViewToServicesTab} title="Back button" class="btn-back-rounded">
+                    <img src={iconBtnBack} alt="Back button" />
+                </a>
+
+                <a onclick={handleClick} class="btn-rounded btn-center"> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.SELF_SERVICE_VALIDATE_LEAVING_MESSAGE}
+            modal-title={labels.SELF_SERVICE_VALIDATE_LEAVING_TITLE}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

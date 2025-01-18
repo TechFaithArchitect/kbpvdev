@@ -1,0 +1,15 @@
+<template>
+    <lightning-card>
+        <div class="slds-text-align_center slds-m-vertical_large">
+            <lightning-button
+                label="Begin Sale"
+                onclick={handleClick}
+                variant="brand"
+                disabled={disableButton}
+            ></lightning-button>
+        </div>
+    </lightning-card>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

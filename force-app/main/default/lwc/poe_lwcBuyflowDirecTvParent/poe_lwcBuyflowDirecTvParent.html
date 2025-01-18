@@ -1,0 +1,259 @@
+<template>
+    <div class="slds-p-vertical_medium">
+        <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
+            <lightning-progress-step label="Info" value="1"></lightning-progress-step>
+            <lightning-progress-step label="Products" value="2"></lightning-progress-step>
+            <lightning-progress-step label="Customer Information" value="3"></lightning-progress-step>
+            <lightning-progress-step label="Hardware" value="4"></lightning-progress-step>
+            <lightning-progress-step label="Offers" value="5"></lightning-progress-step>
+            <lightning-progress-step label="Options" value="6"></lightning-progress-step>
+            <lightning-progress-step label="T&C" value="8"></lightning-progress-step>
+            <!---<lightning-progress-step label="Order Checklist" value="9"></lightning-progress-step> -->
+            <template if:false={isStream}>
+                <template if:false={NFFL}>
+                    <lightning-progress-step label="Installation" value="10"></lightning-progress-step>
+                </template>
+            </template>
+            <lightning-progress-step label="Payment" value="11"></lightning-progress-step>
+            <lightning-progress-step label="Order Submitted" value="12"></lightning-progress-step>
+            <lightning-progress-step label="Order Success" value="13"></lightning-progress-step>
+        </lightning-progress-indicator>
+    </div>
+    <template if:true={showDirecTVInfoTab}>
+        <c-poe_lwc-buyflow-direc-tv-info-tab
+            record-id={recordId}
+            logo={logo}
+            origin={origin}
+            code-n-f-f-l={codeNFFL}
+            code-f-f-l={codeFFL}
+            client-info={clientInfo}
+            oncheckserviceability={handleCheckServiceability}
+            onback={handleBack}
+            return-url={returnUrl}
+        ></c-poe_lwc-buyflow-direc-tv-info-tab>
+    </template>
+    <template if:true={showDirecTVProductsTab}>
+        <c-poe_lwc-buyflow-direc-tv-products-tab
+            record-id={recordId}
+            user-id={userId}
+            logo={logo}
+            origin={origin}
+            selected={selectedProduct}
+            order-info={orderInfo}
+            dealer-code={dealerCode}
+            suggested-address-selected={suggestedAddressSelected}
+            return-url={returnUrl}
+            onproductselection={handleProductSelection}
+            onback={handleBack}
+        ></c-poe_lwc-buyflow-direc-tv-products-tab>
+    </template>
+    <template if:true={showDirecTVCreditCheckTab}>
+        <c-poe_lwc-buyflow-direc-tv-credit-check-tab
+            stream={isStream}
+            onback={handleBack}
+            account-id={accountId}
+            order-info={orderInfo}
+            cart-info={cartInfo}
+            order={sfOrderId}
+            onproduct={handleRemoveProduct}
+            oncreditchecknext={handleCreditCheckPassed}
+            payment-method={paymentMethod}
+            onhighrisk={handleHighRisk}
+            disclaimers={legalCustomizations}
+            product-selected={productSelected}
+            logo={logo}
+            origin={origin}
+            record-id={recordId}
+            return-url={returnUrl}
+        ></c-poe_lwc-buyflow-direc-tv-credit-check-tab>
+    </template>
+    <template if:true={showDirecTVHardwareTab}>
+        <template if:true={isStream}>
+            <c-poe_lwc-buyflow-direc-t-v-hardware-tab
+                record-id={recordId}
+                user-id={userId}
+                account-id={accountId}
+                cart-info={cartCreditCheck}
+                order={sfOrderId}
+                logo={logo}
+                payment-method-selected={paymentMethod}
+                origin={origin}
+                must-pay-in-full={mustPayInFull}
+                order-info={orderInfo}
+                onhardwarenext={handleProductDetail}
+                onback={handleBack}
+                return-url={returnUrl}
+            ></c-poe_lwc-buyflow-direc-t-v-hardware-tab>
+        </template>
+        <template if:false={isStream}>
+            <c-poe_lwc-buyflow-direc-t-v-hardware-beam
+                record-id={recordId}
+                user-id={userId}
+                cart-info={cartCreditCheck}
+                dealer-code={dealerCode}
+                product-detail-response={productDetailResponse}
+                logo={logo}
+                origin={origin}
+                order-info={orderInfo}
+                included={included}
+                onhardwarenext={handleProductDetail}
+                onback={handleBack}
+                return-url={returnUrl}
+            ></c-poe_lwc-buyflow-direc-t-v-hardware-beam>
+        </template>
+    </template>
+    <template if:true={showDirecTVOffersTab}>
+        <c-poe_lwc-buyflow-direc-tv-offers-tab
+            stream={isStream}
+            onoffernext={handleOffersNext}
+            onback={handleBack}
+            international-required={internationalRequired}
+            cart-info={cartHardware}
+            offer-object={productDetailResponse}
+            logo={logo}
+            origin={origin}
+            record-id={recordId}
+            return-url={returnUrl}
+        ></c-poe_lwc-buyflow-direc-tv-offers-tab>
+    </template>
+    <template if:true={showDirecTVOptionsTab}>
+        <template if:true={isStream}>
+            <c-poe_lwc-buyflow-direc-t-v-options-tab
+                stream={isStream}
+                onoptionsnext={handleOptionsNext}
+                onback={handleBack}
+                order-info={orderInfo}
+                cart-info={cartOffers}
+                disclaimers={legalCustomizations}
+                call-information={orderInfo}
+                logo={logo}
+                origin={origin}
+                record-id={recordId}
+                email-verified={emailVerified}
+                return-url={returnUrl}
+            ></c-poe_lwc-buyflow-direc-t-v-options-tab
+        ></template>
+        <template if:false={isStream}>
+            <c-poe_lwc-buyflow-direc-tv-security-info
+                onoptionsnext={handleOptionsNext}
+                onback={handleBack}
+                order-info={orderInfo}
+                disclaimers={legalCustomizations}
+                call-information={orderInfo}
+                cart-info={cartOffers}
+                logo={logo}
+                origin={origin}
+                record-id={recordId}
+                return-url={returnUrl}
+            ></c-poe_lwc-buyflow-direc-tv-security-info>
+        </template>
+    </template>
+    <template if:true={showDirecTVTermsTab}>
+        <c-poe_lwc-buyflow-direc-tv-terms-tab
+            stream={isStream}
+            hardware-selected-request={hardwareSelectedRequest}
+            offers-selected={offersSelected}
+            order-info={orderInfo}
+            ontermsnext={handleTermsNext}
+            record-id={recordId}
+            onback={handleBack}
+            origin={origin}
+            cart-info={cartOffers}
+            logo={logo}
+            return-url={returnUrl}
+        ></c-poe_lwc-buyflow-direc-tv-terms-tab>
+    </template>
+    <template if:true={showDirecTVOrderChecklistTab}>
+        <c-poe_lwc-buyflow-direc-tv-order-checklist-mock
+            stream={isStream}
+            onorderchecklistnext={handleOrderChecklistNext}
+            onback={handleBack}
+            origin={origin}
+            record-id={recordId}
+            logo={logo}
+            return-url={returnUrl}
+        ></c-poe_lwc-buyflow-direc-tv-order-checklist-mock>
+    </template>
+    <template if:true={showDirecTVTPVTab}>
+        <c-poe_lwc-buyflow-direc-tv-t-p-v-tab
+            order-request={orderQualReq}
+            cart-info={cartTerms}
+            origin={origin}
+            record-id={recordId}
+            onback={handleBack}
+            logo={logo}
+            ontpvnext={handleTPVNext}
+            return-url={returnUrl}
+        ></c-poe_lwc-buyflow-direc-tv-t-p-v-tab>
+    </template>
+    <template if:true={showDirecTVPaymentInformation}>
+        <template if:true={isStream}>
+            <c-poe_lwc-buyflow-direc-tv-stream-payment-information-tab
+                stream={isStream}
+                onpaymentinformationnext={handlePaymentInformationNext}
+                order-info={orderInfo}
+                payment-attempts={paymentAttempts}
+                cart-info={cartTerms}
+                today-charges={todaysCharges}
+                order-request={orderQualReq}
+                origin={origin}
+                record-id={recordId}
+                onback={handleBack}
+                logo={logo}
+                return-url={returnUrl}
+            ></c-poe_lwc-buyflow-direc-tv-stream-payment-information-tab>
+        </template>
+        <template if:false={isStream}>
+            <c-poe_lwc-buyflow-direc-tv-beam-payment-information-tab
+                onpaymentinformationnext={handlePaymentInformationNext}
+                order-info={orderInfo}
+                payment-attempts={paymentAttempts}
+                cart-info={cartTerms}
+                order-request={orderQualReq}
+                today-charges={todaysCharges}
+                future-charges={futureCharges}
+                verbiages={legalCustomizations}
+                origin={origin}
+                record-id={recordId}
+                onback={handleBack}
+                logo={logo}
+                return-url={returnUrl}
+            ></c-poe_lwc-buyflow-direc-tv-beam-payment-information-tab>
+        </template>
+    </template>
+    <template if:true={showDirecTVPaymentConfirmationTab}>
+        <c-poe_lwc-buyflow-direc-tv-order-confirmation-tab
+            stream={isStream}
+            nffl={NFFL}
+            order-info={orderQualReq}
+            product-selected={productSelected}
+            hardware-selected={hardwareSelected}
+            cart-info={cartPayment}
+            onback={handleBack}
+            sf-order-id={sfOrderId}
+            order-item-id={orderItemId}
+            user-id={userId}
+            payment-info={paymentInfo}
+            onconfirmationnext={handleOrderConfirmationNext}
+            installation-info={installationInfo}
+            origin={origin}
+            record-id={recordId}
+            logo={logo}
+            return-url={returnUrl}
+        ></c-poe_lwc-buyflow-direc-tv-order-confirmation-tab>
+    </template>
+    <template if:true={showDirecTVOrderSuccessTab}>
+        <c-poe_lwc-buyflow-direc-tv-order-success-tab
+            order-number={orderNumber}
+            order-id={orderId}
+            record-id={recordId}
+            reference-number={referenceNumber}
+            return-url={returnUrl}
+            origin={origin}
+            onback={handleBack}
+        ></c-poe_lwc-buyflow-direc-tv-order-success-tab>
+    </template>
+    <template if:true={showLoaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

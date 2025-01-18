@@ -1,0 +1,86 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate" tabindex="-1">
+                    Credit Check Security Questions
+                </h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-form-element__control">
+                    <div class="slds-grid slds-gutters slds-var-p-around_medium">
+                        <div class="slds-col slds-size_3-of-3 slds-box">
+                            <template for:each={securityQuestions} for:item="question">
+                                <div
+                                    key={question.questionNumber}
+                                    class="slds-box slds-col slds-size_1-of-1 slds-m-bottom_medium"
+                                >
+                                    <span>{question.question}</span>
+                                    <template for:each={question.answerChoices} for:item="choice">
+                                        <span class="slds-radio" key={choice.id}>
+                                            <input
+                                                type="radio"
+                                                id={choice.id}
+                                                value={choice.id}
+                                                name={choice.questionId}
+                                                checked={choice.isChecked}
+                                                onchange={handleChoiceChange}
+                                            />
+                                            <label class="slds-radio__label" for={choice.id}>
+                                                <span class="slds-radio_faux"></span>
+                                                <span class="slds-form-element__label">{choice.text}</span>
+                                            </label>
+                                        </span>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <div class="slds-grid slds-float_right">
+                    <div class="slds-col slds-p-right--medium">
+                        <lightning-button
+                            variant="neutral"
+                            label="Cancel"
+                            onclick={hideModal}
+                            class="slds-float_right"
+                        ></lightning-button>
+                    </div>
+                    <div class="slds-col slds-p-right--medium">
+                        <lightning-button
+                            variant="brand"
+                            label="Answer Questions"
+                            onclick={handleAnswerQuestions}
+                            class="slds-float_right"
+                            disabled={noCompleteInfo}
+                        ></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

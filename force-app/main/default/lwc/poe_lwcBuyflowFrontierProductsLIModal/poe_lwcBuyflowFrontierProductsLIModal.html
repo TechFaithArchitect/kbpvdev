@@ -1,0 +1,209 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        class="slds-modal slds-fade-in-open slds-modal_small"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Affordable Connectivity Program</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-p-around_small slds-size_12-of-12">
+                        <lightning-radio-group
+                            name="noApplication"
+                            required="true"
+                            label="Does the customer have the application ID from the FCC National Verifier application?"
+                            options={radioOptions}
+                            value={applicationOption}
+                            onchange={handleChange}
+                        ></lightning-radio-group>
+                    </div>
+                    <template lwc:if={hasApplication}>
+                        <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                            <lightning-input
+                                required="true"
+                                type="text"
+                                name="application"
+                                label="Application ID (from your FCC National Verifier application)"
+                                value={application}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-p-around_small slds-size_6-of-12"></div>
+                    </template>
+                    <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                        <lightning-input
+                            type="text"
+                            name="firstName"
+                            label="First Name"
+                            required="true"
+                            value={firstName}
+                            onchange={handleChange}
+                            pattern={onlyLettersRegExPattern}
+                            message-when-pattern-mismatch={onlyLettersRegExErrorMessage}
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                        <lightning-input
+                            type="text"
+                            name="lastName"
+                            label="Last Name"
+                            required="true"
+                            value={lastName}
+                            onchange={handleChange}
+                            pattern={onlyLettersRegExPattern}
+                            message-when-pattern-mismatch={onlyLettersRegExErrorMessage}
+                        ></lightning-input>
+                    </div>
+                    <template lwc:if={noApplication}>
+                        <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                            <lightning-input
+                                type="text"
+                                label="SSN (last four digits)"
+                                required="true"
+                                name="ssn"
+                                data-id="ssn"
+                                pattern="[0-9]{4}"
+                                max-length="4"
+                                value={ssn}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                    </template>
+                    <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                        <lightning-input
+                            type="date"
+                            label="Date of Birth"
+                            name="dob"
+                            data-id="dob"
+                            value={dob}
+                            required="true"
+                            onchange={handleChange}
+                            min="1901-01-01"
+                        ></lightning-input>
+                    </div>
+                    <template lwc:if={noApplication}>
+                        <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                            <lightning-input
+                                type="text"
+                                name="address"
+                                label="Address"
+                                value={address}
+                                onchange={handleChange}
+                                required
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                            <lightning-input
+                                type="text"
+                                name="address2"
+                                label="Address Line 2"
+                                value={address2}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                            <lightning-input
+                                type="text"
+                                name="city"
+                                label="City"
+                                value={city}
+                                onchange={handleChange}
+                                required
+                            ></lightning-input>
+                        </div>
+                    </template>
+                    <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                        <lightning-combobox
+                            name="state"
+                            label="State"
+                            value={state}
+                            onchange={handleChange}
+                            options={stateOptions}
+                            required
+                        ></lightning-combobox>
+                    </div>
+                    <template lwc:if={noApplication}>
+                        <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                            <lightning-input
+                                type="text"
+                                name="zipCode"
+                                label="Zip code"
+                                value={zipCode}
+                                onchange={handleChange}
+                                required
+                            ></lightning-input></div
+                    ></template>
+                    <div class="slds-col slds-p-top_small slds-size_12-of-12">
+                        <p>Phone number and email listed on National Verifier or Lifeline application</p>
+                    </div>
+                    <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                        <lightning-input
+                            name="phone"
+                            data-id="phone"
+                            value={phone}
+                            type="tel"
+                            max-length="10"
+                            label="Phone Number"
+                            onchange={handleChange}
+                            required
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-p-around_small slds-size_6-of-12">
+                        <lightning-input
+                            type="text"
+                            name="email"
+                            label="Email"
+                            data-id="email"
+                            value={email}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-p-around_small slds-size_12-of-12">
+                        <lightning-radio-group
+                            required="true"
+                            name="tribalEnrollment"
+                            label="Does the customer want to enroll in Tribal benefits?"
+                            options={radioOptions}
+                            value={tribalEnrollment}
+                            onchange={handleChange}
+                        ></lightning-radio-group>
+                    </div>
+                    <template for:each={acpDisclosures} for:item="disclosure">
+                        <div class="slds-col slds-p-around_small slds-size_12-of-12" key={disclosure.id}>
+                            <lightning-formatted-rich-text
+                                value={disclosure.disclaimer}
+                            ></lightning-formatted-rich-text>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick={hideModal}>Close</button>
+                <button class="slds-button slds-button_brand" onclick={handleConfirm} disabled={incompleteInfo}>
+                    Confirm
+                </button>
+            </div>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

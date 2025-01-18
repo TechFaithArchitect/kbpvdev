@@ -1,0 +1,134 @@
+<template>
+    <form class="slds-m-bottom_medium">
+        <div class="form-header">
+            <img align="left" src={iconFormPassword} />
+
+            <h3>Email Validation</h3>
+
+            <template lwc:if={isD2DorEvent}>
+                <p>
+                    You have the option to receive applicable documents and disclosures electronically or receive a
+                    paper copy. If you would like to receive them electronically, please provide your email address so
+                    that we can send you a 6-digit verification PIN that you will need to read to me. You will be asked
+                    later in the order process to read and accept a Consent to Electronic Delivery of Disclosures.
+                    Please note: If you are ordering DIRECTV STREAM, you must consent to electronic delivery so that any
+                    installment agreement applicable to your order can be delivered electronically. If you do not want
+                    to consent to electronic delivery, you can complete that type of order by visiting an authorized
+                    DIRECTV retail store.
+                </p>
+            </template>
+            <template lwc:else>
+                <p>
+                    In order to proceed with your order we will need an email address for your account which we will
+                    validate in this next step.
+                </p>
+            </template>
+            <template lwc:if={isNotD2DorEvent}>
+                <div class="slds-col slds-size_12-of-12 slds-m-vertical_x-small">
+                    Please Read to Customer:
+                    <lightning-formatted-rich-text
+                        value={streamEmailValidationVerbiage}
+                    ></lightning-formatted-rich-text>
+                </div>
+            </template>
+        </div>
+
+        <div class="form-content">
+            <div class="form-group">
+                <lightning-input
+                    type="email"
+                    name="email"
+                    value={email}
+                    placeholder="Enter email"
+                    required
+                    label="Contact Email (*)"
+                    onchange={handleChangeEmail}
+                    disabled={pinValidated}
+                ></lightning-input>
+            </div>
+
+            <div class="form-group">
+                <lightning-input
+                    type="email"
+                    name="confirmemail"
+                    value={confirmEmail}
+                    required
+                    label="Repeat Email (*)"
+                    onchange={handleChangeEmail}
+                    disabled={pinValidated}
+                    placeholder="Repeat your email"
+                ></lightning-input>
+            </div>
+
+            <template lwc:if={noEqualEmail}>
+                <div class="form-group">
+                    <div>
+                        <p style="color: #cc0000">Emails must be identical</p>
+                    </div>
+                </div></template
+            >
+
+            <template lwc:if={isNotD2DorEvent}>
+                <template lwc:if={pinValidated}>
+                    <div>
+                        The customer will receive an email from DIRECTV to complete Quick Account Registration after
+                        order submission.
+                    </div>
+
+                    <div>
+                        Please Read to Customer:
+                        <lightning-formatted-rich-text
+                            value={streamCreateAccountVerbiage}
+                        ></lightning-formatted-rich-text>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div>
+                        The customer will receive an email from DIRECTV to complete Quick Account Registration after
+                        order submission.
+                    </div>
+                    <div>
+                        Please complete the email verification steps below. Email confirmation is required for DIRECTV
+                        Via Internet account setup.
+                    </div>
+                    <div>1. Send Pin to customer email address. 2. Validate Pin received by customer.</div>
+                    <div>
+                        <strong> Note: This email will be used for DIRECTV Via Internet Secure Data T&C.</strong>
+                    </div>
+                </template>
+            </template>
+
+            <template lwc:if={pinNotValidated}>
+                <template lwc:if={pinSent}>
+                    <div class="form-group">
+                        <a onclick={sendPin} class="btn-rounded btn-left" data-id="resend">Re-Send PIN</a>
+                    </div>
+                    <div class="form-group">
+                        <lightning-input
+                            type="text"
+                            label="Enter PIN"
+                            placeholder="Enter the one-time PIN"
+                            max-length="6"
+                            pattern="[0-9]{6}"
+                            message-when-pattern-mismatch="The PIN must be a number"
+                            onchange={handlePINInput}
+                        ></lightning-input>
+                    </div>
+                    <div class="form-group">
+                        <a onclick={validatePin} class="btn-rounded btn-left btn-disabled" data-id="validate">
+                            Validate PIN
+                        </a>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div class="form-group">
+                        <a onclick={sendPin} class="btn-rounded btn-left btn-disabled" data-id="next">Send PIN</a>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </form>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

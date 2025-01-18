@@ -1,0 +1,554 @@
+<template>
+    <article class="slds-card slds-p-around_medium" style="background-color: #f7f4fb">
+        <div class="slds-grid slds-m-around_medium">
+            <div class="slds-col slds-size_4-of-12">
+                <c-dealer-score-card-component-type-ahead
+                    icon-name="standard:account"
+                    s-object-api-name="account"
+                    onlookupupdate={lookupRecord}
+                    placeholder="Search Dealer"
+                ></c-dealer-score-card-component-type-ahead>
+            </div>
+        </div>
+        <div class="slds-card__header slds-grid slds-p-vertical_medium">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <div style="width: 100%; text-align: center; font-size: 13pt">
+                        <h1>
+                            <strong>
+                                <p>DEALER SCORE CARD</p>
+                            </strong>
+                        </h1>
+                    </div>
+                    <div style="width: 100%; text-align: center; font-size: 11pt">
+                        <h2>
+                            <p>{accountName}</p>
+                        </h2>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <!-- Here goes the body of first card -->
+            <div class="slds-grid slds-gutters_large">
+                <div class="slds-col slds-size_1-of-2">
+                    <!-- Table 1 -->
+                    <article class="slds-card slds-card_boundary" style="height: 100%">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <table
+                                class="slds-table slds-table_cell-buffer slds-table_header-hidden"
+                                aria-label="Example headless table of Opportunities"
+                            >
+                                <thead class="slds-assistive-text">
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Opportunity Name">Opportunity Name</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Account Name">Account Name</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Dealer Ranking">Dealer Ranking</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate">{dealerRanking}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="YTD Headcount">YTD Headcount</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="210">{ytdHeadcount}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Daily Headcount Worked (DHW)">
+                                                Daily Headcount Worked (DHW)
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="20">{dhcWorked}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Daily Headcount Sold (DHS)">
+                                                Daily Headcount Sold (DHS)
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate">{dhcSold}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Average Sale">Average Sale</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate">$ {avgSale}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Product Mix">Product Mix</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate">{prodMix}%</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Opportunity to Mix/Cross-Sell">
+                                                Opportunity to Mix/Cross-Sell
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate">{crossSell}%</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-border_bottom">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" style="text-align: left; font-size: 11pt">
+                                                <p style="font-weight: 700">PRODUCTS SOLD 30 DAYS</p>
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate"></div>
+                                        </td>
+                                    </tr>
+                                    <template for:each={productsSold} for:item="product">
+                                        <tr class="slds-hint-parent" key={product.program}>
+                                            <th data-label="Opportunity Name" scope="row">
+                                                <div class="slds-truncate" title={product.program}>
+                                                    {product.program}
+                                                </div>
+                                            </th>
+                                            <td data-label="Account Name">
+                                                <div class="slds-truncate" title={product.sold}>{product.sold}</div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <!---  <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Cancel Percentage">Cancel Percentage</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate">12%</div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" style="text-align: left; font-size: 11pt">
+                                                <p style="font-weight: 700">TOP CANCEL REASON</p>
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate"></div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Change Mind">Change Mind</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate">40%</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Price">Price</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="20%">20%</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Line of Sight">Line of Sight</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="20%">20%</div>
+                                        </td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+
+                    <!-- End of Table 1 -->
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <article class="slds-card slds-card_boundary">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <!-- Table 2 -->
+                            <table
+                                class="slds-table slds-table_cell-buffer slds-table_header-hidden"
+                                aria-label="Example headless table of Opportunities"
+                            >
+                                <thead class="slds-assistive-text">
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Opportunity Name">Opportunity Name</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Account Name">Account Name</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="slds-border_bottom">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" style="text-align: left; font-size: 11pt">
+                                                <p style="font-weight: 700">DAILY WORK HABITS (DW)</p>
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate"></div>
+                                        </td>
+                                    </tr>
+
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Hours Average Daily">
+                                                Hours Average Daily
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate">{hoursAvgDaily}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Conversations">Conversations</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="100">{conversations}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Pitches">Pitches</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="10">{pitches}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Sales">Sales</div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate" title="2.4">{sales}</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- End of Table 2 -->
+
+                            <table
+                                class="slds-table slds-table_cell-buffer slds-table_header-hidden"
+                                aria-label="Example headless table of Opportunities"
+                            >
+                                <thead class="slds-assistive-text">
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Opportunity Name">Opportunity Name</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Account Name">Account Name</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Numbers">Numbers</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Numbers2">Numbers2</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="slds-border_bottom">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" style="text-align: left; font-size: 11pt">
+                                                <p style="font-weight: 700">TRENDS</p>
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate"><strong>10</strong></div>
+                                        </td>
+                                        <td data-label="Numbers">
+                                            <div class="slds-truncate"><strong>20</strong></div>
+                                        </td>
+                                        <td data-label="Numbers2">
+                                            <div class="slds-truncate"><strong>30</strong></div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="Headcount">Headcount</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{hc10}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{hc20}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{hc30}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="DHW">DHW</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{dhw10}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{dhw20}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{dhw30}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="DHS">DHS</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{dhs10}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{dhs20}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{dhs30}</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table
+                                class="slds-table slds-table_cell-buffer slds-table_header-hidden"
+                                aria-label="Example headless table of Opportunities"
+                            >
+                                <thead class="slds-assistive-text">
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Opportunity Name">Opportunity Name</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Account Name">Account Name</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Numbers">Numbers</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Numbers2">Numbers2</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="slds-border_bottom">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" style="text-align: left; font-size: 11pt">
+                                                <p style="font-weight: 700">TRENDS BY AGENT TYPE</p>
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name">
+                                            <div class="slds-truncate"><strong>10</strong></div>
+                                        </td>
+                                        <td data-label="Numbers">
+                                            <div class="slds-truncate"><strong>20</strong></div>
+                                        </td>
+                                        <td data-label="Numbers2">
+                                            <div class="slds-truncate"><strong>30</strong></div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="Headcount">Headcount - Retail</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{hc10retail}</div>
+                                        </td>
+                                        <td data-label="Numbers">
+                                            <div class="slds-truncate" width="20%">{hc20retail}</div>
+                                        </td>
+                                        <td data-label="Numbers2">
+                                            <div class="slds-truncate" width="20%">{hc30retail}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row">
+                                            <div class="slds-truncate" title="Headcount" width="20%">
+                                                Headcount - Event
+                                            </div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{hc10event}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{hc20event}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{hc30event}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="Headcount">Headcount - Door To Door</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{hc10d2d}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{hc20d2d}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{hc30d2d}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="Headcount">Headcount - Call Center</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{hc10callcenter}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{hc20callcenter}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{hc30callcenter}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="DHW">DHW - Retail</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{dhw10retail}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{dhw20retail}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{dhw30retail}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="DHW">DHW - Event</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{dhw10event}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{dhw20event}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{dhw30event}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="DHW">DHW - Door To Door</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{dhw10d2d}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{dhw20d2d}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{dhw30d2d}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="DHW">DHW - Call Center</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{dhw10callcenter}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{dhw20callcenter}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{dhw30callcenter}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="DHS">DHS - Retail</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{dhs10retail}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{dhs20retail}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{dhs30retail}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="DHS">DHS - Event</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{dhs10event}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{dhs20event}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{dhs30event}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="DHS">DHS - Door To Door</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{dhs10d2d}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{dhs20d2d}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{dhs30d2d}</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="slds-hint-parent">
+                                        <th data-label="Opportunity Name" scope="row" width="40%">
+                                            <div class="slds-truncate" title="DHS">DHS - Call Center</div>
+                                        </th>
+                                        <td data-label="Account Name" width="20%">
+                                            <div class="slds-truncate">{dhs10callcenter}</div>
+                                        </td>
+                                        <td data-label="Numbers" width="20%">
+                                            <div class="slds-truncate">{dhs20callcenter}</div>
+                                        </td>
+                                        <td data-label="Numbers2" width="20%">
+                                            <div class="slds-truncate">{dhs30callcenter}</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </article>
+    <template if:true={showLoaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

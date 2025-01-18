@@ -1,0 +1,123 @@
+<template>
+    <lightning-card>
+        <template lwc:if={data}>
+            <div class="slds-var-m-around_medium">
+                <lightning-layout multiple-rows="true" horizontal-align="end">
+                    <lightning-layout-item
+                        flexibility="auto"
+                        class="slds-align-middle slds-var-m-around_small slds-align_absolute-center"
+                    >
+                        <div class="slds-var-m-top_small slds-var-m-right_small">
+                            Leads Selected: {selectedIds.length}
+                        </div>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item
+                        flexibility="auto"
+                        class="slds-var-m-around_small slds-align_absolute-center"
+                    >
+                        <template lwc:if={isPVManager}>
+                            <lightning-radio-group
+                                name="radioGroup"
+                                options={radioOptions}
+                                value={radioValue}
+                                onchange={handleRadioChange}
+                            ></lightning-radio-group>
+                        </template>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item flexibility="auto" class="slds-var-m-around_medium">
+                        <lightning-button
+                            label={buttonLabel}
+                            onclick={handleFlowNext}
+                            variant="brand"
+                            disabled={disableNext}
+                        ></lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+                <lightning-input
+                    type="search"
+                    onchange={handleKeyChange}
+                    class="slds-var-m-bottom_small"
+                    label="Search by Name"
+                    value={searchKey}
+                >
+                </lightning-input>
+                <div class="slds-box">
+                    <lightning-datatable
+                        data-id="table"
+                        key-field="Id"
+                        data={data}
+                        columns={columns}
+                        sorted-by={sortedBy}
+                        sorted-direction={sortedDirection}
+                        onrowselection={onRowSelection}
+                        selected-rows={allSelectedRows}
+                        onsort={sortColumns}
+                    >
+                    </lightning-datatable>
+                </div>
+
+                <lightning-layout horizontal-align="space" class="slds-var-m-top_large">
+                    <lightning-layout-item flexibility="auto">
+                        <template lwc:if={showPreviousPageButton}>
+                            <lightning-button
+                                label="Previous Page"
+                                icon-name="utility:chevronleft"
+                                onclick={previousHandler}
+                            >
+                            </lightning-button>
+                        </template>
+                    </lightning-layout-item>
+                    <lightning-layout-item flexibility="auto"> Page {page} of {totalPage} </lightning-layout-item>
+                    <lightning-layout-item flexibility="auto">
+                        <template lwc:if={showNextPageButton}>
+                            <lightning-button
+                                label="Next Page"
+                                icon-name="utility:chevronright"
+                                icon-position="right"
+                                onclick={nextHandler}
+                            >
+                            </lightning-button>
+                        </template>
+                    </lightning-layout-item> </lightning-layout
+                ><lightning-layout multiple-rows="true" horizontal-align="end" class="slds-var-m-top_medium">
+                    <lightning-layout-item
+                        flexibility="auto"
+                        class="slds-align-middle slds-var-m-around_small slds-align_absolute-center"
+                    >
+                        <div class="slds-var-m-top_small slds-var-m-right_small">
+                            Leads Selected: {selectedIds.length}
+                        </div>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item
+                        flexibility="auto"
+                        class="slds-var-m-around_small slds-align_absolute-center"
+                    >
+                        <template lwc:if={isPVManager}>
+                            <lightning-radio-group
+                                name="radioGroup2"
+                                options={radioOptions}
+                                value={radioValue}
+                                onchange={handleRadioChange}
+                            ></lightning-radio-group>
+                        </template>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item flexibility="auto" class="slds-var-m-around_medium">
+                        <lightning-button
+                            label={buttonLabel}
+                            onclick={handleFlowNext}
+                            variant="brand"
+                            disabled={disableNext}
+                        ></lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </template>
+    </lightning-card>
+    <template lwc:if={showModal}>
+        <c-poe_lwc-leads-warning-modal onclose={handleModal}></c-poe_lwc-leads-warning-modal>
+    </template>
+</template>

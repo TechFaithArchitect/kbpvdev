@@ -1,0 +1,47 @@
+<template>
+    <span class="slds-radio">
+        <input 
+            type="radio" 
+            id={product.Id} 
+            value={product.Id} 
+            name="products" 
+            checked={isChecked}
+            onchange={handlePriceChange} 
+        />
+        <label class="slds-radio__label" for={product.Id}>
+            <span class="slds-form-element__label">
+                <div class="slds-box slds-grid slds-wrap">
+                    <div class="slds-col slds-size_1-of-12 slds-align_absolute-center">
+                        <span class="slds-radio_faux slds-m-right_none"></span>
+                    </div>
+                    <div class="slds-col slds-size_10-of-12 slds-small-size_6-of-12 slds-align-middle">
+                        <strong>
+                            <lightning-formatted-rich-text value={product.Name}>
+                            </lightning-formatted-rich-text>
+                        </strong>
+                    </div>
+
+                    <!-- This is a small margin for the mobile UI -->
+                    <div class="slds-hide_small slds-size_1-of-1 slds-m-top_small"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-small-size_5-of-12 slds-text-align_right" style="color: green">
+                        <template lwc:if={included}>
+                            <strong>Promo Price (monthly plus tax) ${product.discountedFee}</strong>
+                        </template>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-small-size_9-of-12 slds-var-p-top_medium slds-var-p-left_large"
+                        data-id={product.disclosure} onclick={handleDisclosure} style="cursor: pointer">
+                        <div>
+                            <lightning-formatted-rich-text value={product.Description}>
+                            </lightning-formatted-rich-text>
+                        </div>
+                    </div>
+                    <div
+                        class="slds-col slds-var-p-top_medium slds-var-p-right_large slds-size_12-of-12 slds-text-align_right">
+                        <strong>Full Price (monthly plus tax) ${product.fee}</strong>
+                    </div>
+                </div>
+            </span>
+        </label>
+    </span>
+</template>

@@ -1,0 +1,55 @@
+<template>
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small">
+        <div class="slds-modal__container">
+            <div class="slds-var-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate" tabindex="-1">
+                    <lightning-formatted-text
+                        value={labels.SUGGESTED_ADDRESS_SELECTION_TITLE}
+                    ></lightning-formatted-text>
+                </h1>
+            </div>
+            <div class="slds-modal__content slds-var-p-around_medium slds-scrollable" id="modal-content-id-1">
+                <div
+                    class="slds-text-heading_small slds-var-p-around_xx-small slds-p-bottom_none slds-align_absolute-center"
+                >
+                    <lightning-formatted-text
+                        value={labels.PRODUCT_SELECTION_MODAL_INSTRUCTIONS}
+                    ></lightning-formatted-text>
+                </div>
+                <div class="slds-align_absolute-center">
+                    <lightning-radio-group
+                        class="slds-var-p-around_medium"
+                        name="radioAddresses"
+                        options={options}
+                        value={value}
+                        type="radio"
+                        onchange={handleChangeAddress}
+                    ></lightning-radio-group>
+                </div>
+            </div>
+            <div class="slds-modal__footer slds-align_absolute-center">
+                <button class="slds-button slds-button_brand" onclick={handleConfirm} disabled={noInfo}>
+                    <lightning-formatted-text
+                        value={labels.CONFIRM_BUTTON_LABEL}
+                    ></lightning-formatted-text>
+                </button>
+            </div>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

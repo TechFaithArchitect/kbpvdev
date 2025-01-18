@@ -1,0 +1,231 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="earthlink"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-p-around_small slds-theme_default">
+            <div class="slds-grid slds-wrap slds-gutters slds-p-around_small">
+                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-medium-size_2-of-3">
+                    <template lwc:if={orderSuccess}>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                            style="color: #00c6b7"
+                        >
+                            Your order has been successfully submitted. Confirmation Number: {confirmationNumber}
+                        </div>
+                    </template>
+                    <template lwc:elseif={orderInProgress}>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                        >
+                            You need to manually check the status using the Refresh button
+                        </div>
+                        <div class="slds-m-vertical_small slds-max-small-size_1-of-1">
+                            <lightning-button
+                                stretch
+                                class="slds-max-small-size_1-of-1"
+                                label="Refresh"
+                                onclick={checkSubmitOrder}
+                                variant="brand"
+                            ></lightning-button>
+                        </div>
+                    </template>
+                    <template lwc:elseif={loaderSpinner}></template>
+                    <template lwc:else>
+                        <div class="slds-m-vertical_small slds-max-small-size_1-of-1">
+                            <lightning-button
+                                stretch
+                                class="slds-max-small-size_1-of-1"
+                                label="Resend Order"
+                                onclick={submitOrder}
+                                variant="brand"
+                            ></lightning-button>
+                        </div>
+                    </template>
+                    <div class="slds-box slds-p-around_small">
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Customer Information
+                        </div>
+                        <div class="slds-grid slds-wrap slds-p-around_small">
+                            <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                <p><strong>Customer Name & Address</strong></p>
+                            </div>
+                            <div
+                                class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_none"
+                            >
+                                <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                    <p>{clientInfo.contactInfo.firstName} {clientInfo.contactInfo.lastName}</p>
+                                </div>
+                                <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                    <p>
+                                        {orderInfo.address.addressLine1} {orderInfo.address.addressLine2}
+                                        {orderInfo.address.city} {orderInfo.address.state}, {orderInfo.address.zipCode}
+                                    </p>
+                                </div>
+                            </div>
+                            <div
+                                class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_none"
+                            >
+                                <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                    <p><strong>Primary Phone: </strong> {clientInfo.contactInfo.phone}</p>
+                                </div>
+                                <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                    <p><strong>Email: </strong>{clientInfo.contactInfo.email}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-m-bottom_xx-small slds-text-align_center"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Services Ordered
+                        </div>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            {serviceType}
+                        </div>
+                        <div class="slds-grid slds-wrap slds-p-around_small">
+                            <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <p><strong>Package Option: </strong>{productSelected}</p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <p>
+                                    <strong>Hardware Option: </strong>
+                                    <lightning-formatted-rich-text
+                                        value={hardwareSelected}
+                                    ></lightning-formatted-rich-text>
+                                </p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <p><strong>Order Number: </strong>{cartInfo.orderNumber}</p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_medium slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <p><strong>Account Number: </strong>{accountNumber}</p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <p>
+                                    <strong>
+                                        <lightning-formatted-text
+                                            linkify
+                                            value="Customer can go to directv.com/AccountLogin"
+                                        >
+                                        </lightning-formatted-text>
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Order Information
+                        </div>
+                        <div class="slds-grid slds-wrap slds-p-around_small slds-grid_vertical-align-center">
+                            <div
+                                class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_6-of-12 slds-col-bump_right"
+                            >
+                                <p><strong>Completed On: </strong>{confirmedDate}</p>
+                            </div>
+                            <div
+                                class="slds-col slds-p-bottom_medium slds-max-medium-size_1-of-1 slds-grid slds-grid_align-end"
+                            >
+                                <lightning-button
+                                    stretch
+                                    class="slds-max-medium-size_1-of-1"
+                                    variant="brand"
+                                    label="View Order Summary"
+                                    onclick={handleViewOrderSummary}
+                                ></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- This is a small margin left between the products and the cart when vertically aligned -->
+                <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-directv-enga-cart
+                        cart={cartInfo}
+                        bold-description="false"
+                    ></c-poe_lwc-buyflow-directv-enga-cart>
+                    <div class="slds-grid slds-p-around_medium">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <c-poe_lwc-buyflow-tab-actions
+                show-cancel="true"
+                disable-next={noCompleteInfo}
+                oncancel={handleCancel}
+                onnext={handleClick}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </div>
+        <template lwc:if={showSummarySignatureModal}>
+            <c-poe_lwc-buyflow-direc-tv-enga-order-summary-signature-modal
+                stream={stream}
+                name={signatureName}
+                address={signatureAddress}
+                origin={origin}
+                record-id={recordId}
+                is-guest-user={isGuestUser}
+                onback={handleBack}
+                onclose={hideSignatureModal}
+            ></c-poe_lwc-buyflow-direc-tv-enga-order-summary-signature-modal>
+        </template>
+        <template lwc:if={showOrderSummary}>
+            <c-poe_lwc-buyflow-direc-tv-order-summary-modal
+                stream={stream}
+                order-info={summaryOrderInfo}
+                origin={origin}
+                payment-info={paymentInfo}
+                product-selected={productSelected}
+                hardware-selected={hardwareSelected}
+                record-id={recordId}
+                service-type={serviceType}
+                confirmed-date={confirmedDate}
+                onclosesummary={hideSummaryModal}
+                onshowsummarysignaturemodal={showSignatureModal}
+                onback={handleBack}
+            ></c-poe_lwc-buyflow-direc-tv-order-summary-modal>
+        </template>
+    </template>
+
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showPaymentErrorModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.DTVPaymentErrorBody}
+            modal-title={labels.DTVPaymentErrorTitle}
+            onconfirm={handlePrevious}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

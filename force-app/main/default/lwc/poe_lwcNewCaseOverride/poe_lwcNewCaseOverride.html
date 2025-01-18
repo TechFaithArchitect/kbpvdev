@@ -1,0 +1,125 @@
+<template>
+    <article class="slds-card new-record-card">
+        <template lwc:if={showRecordTypeSelection}>
+            <div class="slds-card__header">
+                <h2 class="slds-border_bottom slds-p-top_medium slds-p-horizontal_medium slds-p-bottom_medium slds-text-heading_medium"
+                >
+                    <lightning-formatted-text
+                        value="New Case"
+                    >
+                    </lightning-formatted-text>
+                </h2>
+            </div>
+        </template>
+        <template lwc:else>
+            <div class="slds-modal__header">
+                <h2 class="slds-modal__title slds-hyphenate slds-text-heading_medium">
+                    <lightning-formatted-text
+                        value={cardTitle}
+                    >
+                    </lightning-formatted-text>
+                </h2>
+            </div>
+        </template>
+        <div class="slds-card__body slds-card__body_inner">
+            <template lwc:if={isLoading}>
+                <lightning-spinner 
+                    variant="brand" 
+                    alternative-text="Loading" 
+                    size="medium"
+                ></lightning-spinner>
+            </template>
+            
+            <template lwc:if={showRecordTypeSelection}>
+                <div class="slds-p-left_medium slds-m-top_medium">
+                    <c-poe_lwc-radio-group
+                        options={recordTypeOptions}
+                        value={selectedRecordTypeId}
+                        onchange={handleChange}
+                    >
+                    </c-poe_lwc-radio-group>
+                </div>
+                <div class="card-footer slds-align_absolute-center slds-p-vertical_medium">
+                    <lightning-button
+                        label="Cancel"
+                        onclick={handleCancel}
+                    >
+                    </lightning-button>
+                    <lightning-button
+                        class="slds-m-left_xx-small"
+                        label="Next"
+                        variant="brand"
+                        disabled={disableNext}
+                        onclick={handleNext}
+                    >
+                    </lightning-button>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-size_1-of-1 slds-text-align_right slds-m-vertical_medium">
+                    <abbr class="slds-required" >*</abbr> = Required Information
+                </div>
+
+                <lightning-record-edit-form object-api-name="Case"
+                                            onload={handleLayoutLoad}
+                                            record-type-id={selectedRecordTypeId}
+                                            onsubmit={handleSubmit}
+                                            onsuccess={handleSuccess}
+                                            onerror={handleError}>
+                    <lightning-messages>
+                    </lightning-messages>
+                    <div class="field-section slds-scrollable_y">
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <template for:each={layoutFields} for:item="field">
+                                <div class={colSize} key={field.fieldApiName}>
+                                    <template lwc:if={field.fieldApiName}>
+                                        <template lwc:if={field.readonly}>
+                                            <lightning-output-field
+                                                class="disabled-link"
+                                                field-name={field.fieldApiName}
+                                            >
+                                            </lightning-output-field>
+                                        </template>
+                                        <template lwc:else>
+                                            <lightning-input-field 
+                                                field-name={field.fieldApiName}
+                                                required={field.required}
+                                            ></lightning-input-field>
+                                        </template>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="card-footer slds-docked-form-footer slds-p-vertical_medium">
+                        <lightning-button
+                            label="Cancel"
+                            type="button"
+                            disabled={isLoading}
+                            onclick={handleCancel}
+                        >
+                        </lightning-button>
+                        <lightning-button
+                            class="slds-m-left_xx-small"
+                            label="Save & New"
+                            type="submit"
+                            disabled={isLoading}
+                            onclick={handleSaveAndNew}
+                        >
+                        </lightning-button>
+                        <lightning-button
+                            class="slds-m-left_xx-small"
+                            label="Save"
+                            variant="brand"
+                            type="submit"
+                            disabled={isLoading}
+                            onclick={handleSaveClick}
+                        >
+                        </lightning-button>
+                    </div>
+                </lightning-record-edit-form>
+            </template>
+        </div>
+    </article>
+</template>

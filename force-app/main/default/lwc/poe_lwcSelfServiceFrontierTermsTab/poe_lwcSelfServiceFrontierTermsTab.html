@@ -1,0 +1,44 @@
+<template>
+    <div class="pages-with-provider-style page pages-nav" provider="frontier">
+        <div class="nav-bar">
+            <h2>Terms and conditions</h2>
+        </div>
+
+        <div class="page-content no-padding-top">
+            <form>
+                <div class="form-content">
+                    <template for:each={termsOptions} for:item="option">
+                        <div class="terms-box slds-m-bottom_small" key={option.value}>
+                            <p class="legal-bottom">
+                                <lightning-formatted-rich-text
+                                    linkify
+                                    value={option.value}
+                                ></lightning-formatted-rich-text>
+                            </p>
+
+                            <div class="form-group slds-m-bottom_none">
+                                <lightning-input
+                                    type="checkbox"
+                                    label={checkboxAgreementMessage}
+                                    name={option.id}
+                                    checked={option.isChecked}
+                                    value={option.isChecked}
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </form>
+            <a onclick={handleClick} class={nextButtonClass}> Accept all terms and conditions </a>
+        </div>
+
+        <div class="footer-mobile">
+            <a onclick={handleClick} class={nextButtonClassMobile}> Accept all terms and conditions </a>
+        </div>
+    </div>
+
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

@@ -1,0 +1,24 @@
+<template>
+    <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_medium">
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon icon-name="utility:close" alternative-text="Close Modal" title="Close Modal" variant="inverse" onclick={hideModal} size="small" class="slds-float_right" style="cursor: pointer;"></lightning-icon>
+            </div>
+          <div class="slds-modal__header">
+            <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">File Preview</h1>
+          </div>
+          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <div class="slds-text-heading_medium slds-m-vertical_small">File Name: {title}</div>
+            <div class="slds-grid slds-wrap slds-grid_align-center">
+                <div class="slds-col slds-size_10-of-12 slds-grid slds-wrap slds-grid_align-center">
+                    <img src={url} class="slds-border_bottom slds-border_top slds-border_left slds-border_right">
+                </div>
+            </div>
+          </div>
+          <div class="slds-modal__footer">
+            <button class="slds-button slds-button_brand" onclick={hideModal}>Close</button>
+          </div>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

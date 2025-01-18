@@ -1,0 +1,37 @@
+<template>
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_small">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate" tabindex="-1">Shop Id Selection</h1>
+            </div>
+            <div class="slds-modal__content slds-var-p-around_medium slds-scrollable" id="modal-content-id-1">
+                <div
+                    class="slds-text-heading_small slds-var-p-around_xx-small slds-p-bottom_none slds-align_absolute-center"
+                >
+                    Select the Shop ID that this order should be assigned to.
+                </div>
+
+                <lightning-combobox
+                    name="Shop Id"
+                    label=""
+                    value={value}
+                    placeholder="Select Shop Id..."
+                    options={codes}
+                    onchange={handleChangeShopId}
+                    class="slds-var-p-horizontal_large"
+                ></lightning-combobox>
+            </div>
+            <div class="slds-modal__footer">
+                <div class="slds-align_absolute-center">
+                    <button class="slds-button slds-button_brand" onclick={handleConfirm} disabled={noInfo}>
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

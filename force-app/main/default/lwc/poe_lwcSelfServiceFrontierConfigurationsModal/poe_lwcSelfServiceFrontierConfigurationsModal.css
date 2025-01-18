@@ -1,0 +1,86 @@
+lightning-modal-header {
+    border-bottom: 0 !important;
+}
+
+.slds-modal__header {
+    border-bottom: 0 !important;
+}
+
+.slds-modal__footer {
+    border-top: 0 !important;
+}
+
+lightning-modal-body.modal-see-more {
+    max-width: 520px;
+    min-width: 520px;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.form-content-padding{
+    padding: 1rem !important;
+}
+
+.form-remove-box-shadow{
+    box-shadow: 0 0px 0px !important;
+}
+
+/* Color by Provider frontier */
+
+[provider="frontier"] .content-steps-information ul li i,
+[provider="frontier"] .content-steps-information-mobile p i {
+    background: #ff0037;
+}
+
+[provider="frontier"].pages-with-provider-style .group-cards .card.focus {
+    border: 2px solid #ff0037;
+}
+
+[provider="frontier"].pages-with-provider-style p a {
+    color: #ff0037 !important;
+}
+
+[provider="frontier"] .filter-tab .button-tab.selected {
+    border-color: #ff0037;
+}
+
+[provider="frontier"] .slds-button.slds-accordion__summary-action,
+[provider="frontier"] lightning-accordion.btn-open-included .slds-button.slds-accordion__summary-action,
+[provider="frontier"] lightning-accordion.btn-open-included .slds-button.slds-accordion__summary-action:hover,
+[provider="frontier"] .group-cards .card .card-footer a.btn-open-included {
+    font-size: 14px;
+    color: #ff0037 !important;
+}
+
+[provider="frontier"] .list-with-check ul li a,
+[provider="frontier"].pages-with-provider-style .price-table-comparative .price-content .price-list ul li a {
+    color: #ff0037 !important;
+}
+
+[provider="frontier"] lightning-accordion.btn-open-included .slds-accordion__summary {
+    background-color: #fafbfc !important;
+}
+
+[provider="frontier"] .group-cards .card .card-footer,
+[provider="frontier"].list-services .services-listing .service-list .service-footer {
+    background: #fafbfc;
+}
+
+[provider="frontier"] .card.card-min-form .card-content p a {
+    color: #ff0037;
+}
+
+[provider="frontier"].pages-with-provider-style .price-table-comparative .price-content .price-header p {
+    color: #ff0037;
+}
+
+[provider="frontier"].pages-with-provider-style .price-table-comparative .price-content.selected {
+    border: 2px solid #ff0037;
+}
+
+/* End Color by Provider */
+
+.pages-with-provider-style .btn-rounded {
+    padding: 12px 32px;
+    margin-top: 32px;
+}

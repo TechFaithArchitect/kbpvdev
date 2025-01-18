@@ -1,0 +1,25 @@
+.disabled {
+    background: lightgray;
+    pointer-events: none;
+}
+
+.disabled span {
+    background: lightgrey !important;
+}
+
+.disabled:hover {
+    background: lightgray;
+}
+
+.disabled:hover span {
+    background: lightgrey !important;
+}
+
+.slds-datepicker tbody > tr > td:hover > .slds-day {
+    background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+}
+
+.slds-datepicker tbody>tr>td.slds-is-selected>.slds-day {
+    background: #0070d2;
+    color: #fff;
+}

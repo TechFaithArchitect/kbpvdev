@@ -1,0 +1,18 @@
+.slds-transition-show {
+    transition: opacity, 0.4s;
+}
+
+.slds-transition-hide {
+    transition: opacity, 0.4s;
+}
+
+.slds-notify_toast {
+    max-width: 60%;
+}
+
+@media only screen and (max-width: 35rem) {
+    .slds-notify_toast {
+        min-width: 95vw;
+        width: 95vw;
+    }
+}

@@ -1,0 +1,57 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideFeeModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-04" class="slds-modal__title slds-hyphenate">DO Fee Required</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" style="overflow: initial" id="modal-content-id-4">
+                <div class="slds-grid slds-wrap slds-grid_vertical slds-grid_vertical-align-center">
+                    <div
+                        class="slds-col slds-size_12-of-12 slds-text-heading_small slds-p-top_small slds-text-align_center"
+                    >
+                        DO Fee Required: ${fee}
+                    </div>
+                    <div
+                        class="slds-col slds-size_12-of-12 slds-grid slds-align_absolute-center slds-text-align_center slds-p-around_small"
+                    >
+                        <lightning-input
+                            type="checkbox"
+                            name="feeAgreement"
+                            label=""
+                            variant="label-hidden"
+                            class="slds-float_left"
+                            checked={feeAgreement}
+                            onchange={handleFeeAgreement}
+                        ></lightning-input>
+                        <legend>The customer understands a <b>non-refundable</b> DO fee is required</legend>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick={removeProduct}>Modify Order</button>
+                <button class="slds-button slds-button_brand" disabled={noFeeAgreement} onclick={closeFeeDebt}>
+                    Continue
+                </button>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

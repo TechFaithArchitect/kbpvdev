@@ -1,0 +1,40 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-label="Meaningful description of the modal content"
+        class="slds-modal slds-fade-in-open"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-modal__content">
+                <template if:true={showError}>
+                    <div class="slds-text-align_center slds-p-around_medium">
+                        <p style="color: red">
+                            <span class="slds-p-left_small" style="font-size: 18px; padding-left: 2px"><b>ERROR:</b> </span> These are base products and 
+                            you must agree to all disclosures before continuing.
+                        </p>
+                    </div>
+                </template>
+                <template for:each={promos} for:item="promo">
+                    <div key={promo.id} class="slds-p-around_medium" id="modal-content-id-1">
+                        <h3>{promo.name}</h3>
+                        <lightning-formatted-rich-text value={promo.description}> </lightning-formatted-rich-text>
+                        <lightning-input
+                            class="slds-p-top_medium"
+                            type="checkbox"
+                            variant="standard"
+                            name="AgreeDisclaimer"
+                            label={disclosureAgreementLabel}
+                            onchange={handleAgree}
+                        ></lightning-input>
+                    </div>
+                </template>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick={hideModal}>Continue</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

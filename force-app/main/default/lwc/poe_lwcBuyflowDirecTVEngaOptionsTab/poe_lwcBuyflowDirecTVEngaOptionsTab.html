@@ -1,0 +1,242 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_small">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3 slds-grid slds-wrap slds-m-bottom_small">
+                    <c-poe_lwc-buyflow-direc-t-v-enga-email-validation
+                        origin={origin}
+                        email={email}
+                        verified-email={verifiedEmail}
+                        verbiages={verbiages}
+                        call-information={callInformation}
+                        onemailchange={handleEmailChange}
+                        onpinvalidation={handlePinValidation}
+                        stream={stream}
+                    ></c-poe_lwc-buyflow-direc-t-v-enga-email-validation>
+                    <div class="slds-size_12-of-12 slds-grid slds-wrap">
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Address Selection
+                        </div>
+                        <div class="slds-col slds-size_12-of-12 slds-m-vertical_x-small slds-grid slds-wrap">
+                            <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12 slds-m-bottom_small">
+                                <b>Service Address: </b>
+                            </div>
+                            <div class="slds-col slds-small-size_8-of-12 slds-size_12-of-12">{address}</div>
+                            <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12 slds-p-vertical_small">
+                                <b>Shipping Address: </b>
+                            </div>
+                            <div class="slds-col slds-small-size_8-of-12 slds-size_12-of-12">
+                                <lightning-radio-group
+                                    name="shipping"
+                                    label="Does customer want to use Service Address?"
+                                    options={addressOptions}
+                                    value={sameShipping}
+                                    required="true"
+                                    onchange={handleRadio}
+                                    type="radio"
+                                ></lightning-radio-group>
+                            </div>
+                            <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12"></div>
+                            <div
+                                class="slds-col slds-small-size_8-of-12 slds-size_12-of-12 slds-m-top_xx-small slds-m-bottom_small"
+                            >
+                                This is the address where DIRECTV will ship the DIRECTV Via Internet Streaming devices.
+                                Note: The shipping address cannot be a PO BOX.
+                            </div>
+                            <template lwc:if={showShipping}>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12"></div>
+                                <div class="slds-col slds-small-size_8-of-12 slds-size_12-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="shippingAddress"
+                                        value={shippingAddress}
+                                        required="true"
+                                        label="Address"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12"></div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="shippingApt"
+                                        value={shippingApt}
+                                        label="Apt"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="shippingZip"
+                                        value={shippingZip}
+                                        label="Zip"
+                                        required="true"
+                                        max-length="5"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12"></div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="shippingCity"
+                                        value={shippingCity}
+                                        label="City"
+                                        required="true"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12">
+                                    <lightning-combobox
+                                        name="shippingState"
+                                        label="State"
+                                        value={shippingState}
+                                        onchange={handleChange}
+                                        options={states}
+                                        required
+                                    ></lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12"></div>
+                                <div class="slds-col slds-small-size_8-of-12 slds-size_12-of-12 slds-m-vertical_small">
+                                    <lightning-input
+                                        type="checkbox"
+                                        label="I have confirmed the address above is correct and is where I want my device(s) shipped."
+                                        name="shipConfirm"
+                                        value={shipConfirm}
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                            </template>
+                            <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12 slds-p-bottom_small">
+                                <b>Billing Address: </b>
+                            </div>
+                            <div class="slds-col slds-small-size_8-of-12 slds-size_12-of-12">
+                                <lightning-radio-group
+                                    name="billing"
+                                    label="Does customer want to use Service Address?"
+                                    options={addressOptions}
+                                    value={sameBilling}
+                                    onchange={handleRadio}
+                                    required="true"
+                                    type="radio"
+                                ></lightning-radio-group>
+                            </div>
+                            <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12 slds-m-bottom_small"></div>
+                            <div class="slds-col slds-small-size_8-of-12 slds-size_12-of-12 slds-m-top_xx-small">
+                                The Credit Card billing address used for Auto Billing and possible payment due today
+                                must match this address
+                            </div>
+                            <template lwc:if={showBilling}>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12"></div>
+                                <div class="slds-col slds-small-size_8-of-12 slds-size_12-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingAddress"
+                                        value={billingAddress}
+                                        required="true"
+                                        label="Address"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12"></div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingApt"
+                                        value={billingApt}
+                                        label="Apt"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingZip"
+                                        value={billingZip}
+                                        label="Zip"
+                                        required="true"
+                                        max-length="5"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12"></div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingCity"
+                                        value={billingCity}
+                                        label="City"
+                                        required="true"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-small-size_4-of-12 slds-size_12-of-12">
+                                    <lightning-combobox
+                                        name="billingState"
+                                        label="State"
+                                        value={billingState}
+                                        onchange={handleChange}
+                                        options={states}
+                                        required
+                                    ></lightning-combobox>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-directv-enga-cart cart={cartInfo}> </c-poe_lwc-buyflow-directv-enga-cart>
+                    <div class="slds-grid slds-p-around_medium">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <c-poe_lwc-buyflow-tab-actions
+                disable-next={noCompleteInfo}
+                show-previous="true"
+                show-cancel="true"
+                oncancel={handleCancel}
+                onprevious={handlePrevious}
+                onnext={handleClick}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showPopup}>
+        <c-poe_lwc-buyflow-direc-t-v-info-popup
+            onclose={hideData}
+            description={offerDescription}
+        ></c-poe_lwc-buyflow-direc-t-v-info-popup>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

@@ -1,0 +1,82 @@
+<template>
+    <template lwc:if={showZipInput}>
+        <lightning-card>
+            <template lwc:if={showActions}>
+                <div class="slds-grid slds-size_12-of-12 slds-wrap slds-m-vertical_large">
+                    <div class="slds-col slds-size_4-of-12 slds-text-align_center">
+                        <div class="slds-col slds-size_12-of-12 slds-text-align_center slds-m-vertical_small">
+                            Click here to log an Interaction
+                        </div>
+                        <img 
+                            src={interactionIconUrl} 
+                            class="slds-size_3-of-12 slds-text-align_center" 
+                            onclick={handleLogInteraction}
+                        />
+                    </div>
+                    <div class="slds-col slds-size_4-of-12 slds-text-align_center"></div>
+                    <div class="slds-col slds-size_4-of-12 slds-text-align_center">
+                        <div class="slds-col slds-size_12-of-12 slds-text-align_center slds-m-vertical_small">
+                            {selectModalTitle}
+                        </div>
+                        <img 
+                            src={relatedRecordIconUrl} 
+                            class="slds-size_3-of-12 slds-text-align_center" 
+                            onclick={showSelectionModal}
+                        />
+                    </div>
+                </div>
+            </template>
+            <div class="slds-grid slds-size_12-of-12 slds-wrap">
+                <div class="slds-grid slds-size_12-of-12 slds-wrap">
+                    <div class="slds-col slds-size_4-of-12"></div>
+                    <div class="slds-col slds-size_4-of-12 slds-m-vertical_large">
+                        <lightning-input
+                            type="text"
+                            label="Enter ZIP Code to Begin Sale"
+                            value={zip}
+                            placeholder="ZIP Code"
+                            onchange={handleZipChange}
+                            required
+                            max-length="5"
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12"></div>
+                </div>
+                <div class="slds-grid slds-size_12-of-12 slds-wrap">
+                    <div class="slds-col slds-size_4-of-12"></div>
+                    <div class="slds-col slds-size_4-of-12 slds-text-align_center slds-m-vertical_large">
+                        <lightning-button
+                            label="Begin Sale"
+                            onclick={handleClick}
+                            variant="brand"
+                            disabled={disableButton}
+                        ></lightning-button>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12"></div>
+                </div>
+            </div>
+        </lightning-card>
+    </template>
+    <template lwc:if={showSelectModal}>
+        <c-clicker-modal
+            onselect={handleSelectModal}
+            onclose={hideSelectModal}
+            name={selectName}
+            label={selectLabel}
+            value={selectValue}
+            options={selectOptions}
+            modal-title={selectModalTitle}
+            placeholder={selectModalTitle}
+        ></c-clicker-modal>
+    </template>
+    <template lwc:if={showBuyflowMaster}>
+        <c-poe_lwc-buyflow-master
+            zip-code={zip}
+            clicker-origin={origin}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-master>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

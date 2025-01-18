@@ -1,0 +1,170 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <h2>You need to setup a 4-8 digit security passcode</h2>
+                </div>
+
+                <div class="page-content no-padding-top">
+                    <form>
+                        <div class="form-header">
+                            <img align="left" src={iconFormPassword} />
+
+                            <h3>Security passcode</h3>
+                            <p>
+                                This passcode will be used to verify you whenever you contact DIRECTV about your
+                                account.
+                            </p>
+                        </div>
+
+                        <div class="form-content">
+                            <div class="form-group">
+                                <lightning-input
+                                    type="password"
+                                    name="passcode"
+                                    class="passcode"
+                                    value={data.passcode}
+                                    required
+                                    label="Passcode (*)"
+                                    minlength="4"
+                                    maxlength="8"
+                                    message-when-too-short="Passcode must be between 4-8 digits."
+                                    onchange={handleDataChange}
+                                    onblur={checkInputValidity}
+                                    placeholder="Set 4-8 digit passcode"
+                                ></lightning-input>
+                            </div>
+
+                            <div class="form-group">
+                                <lightning-input
+                                    type="password"
+                                    name="passcodeConfirmation"
+                                    class="passcodeConfirmation"
+                                    value={data.passcodeConfirmation}
+                                    required
+                                    label="Repeat Passcode (*)"
+                                    minlength="4"
+                                    maxlength="8"
+                                    message-when-too-short="Passcode must be between 4-8 digits."
+                                    onchange={handleDataChange}
+                                    onblur={checkInputValidity}
+                                    placeholder="Repeat your passcode"
+                                ></lightning-input>
+                            </div>
+
+                            <template lwc:if={isEventOrD2D}>
+                                <div class="form-group">
+                                    <p>
+                                        You have the option to receive applicable documents and disclosures
+                                        electronically or receive a paper copy. If you would like to receive them
+                                        electronically, please provide your email address so that we can send you a
+                                        6-digit verification PIN that you will need to read to me. You will be asked
+                                        later in the order process to read and accept a Consent to Electronic Delivery
+                                        of Disclosures. If you do not want to consent to electronic delivery, you can
+                                        complete this type of order by visiting an authorized AT&T retail store.
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <lightning-radio-group
+                                        name="radioGroup"
+                                        options={radioOptions}
+                                        value={selectedValue}
+                                        onchange={handleDataChange}
+                                        type="radio"
+                                        class="slds-var-m-top_small"
+                                    >
+                                    </lightning-radio-group>
+                                </div>
+                                <template lwc:if={showEmailValidation}>
+                                    <div class="form-group">
+                                        <lightning-input
+                                            type="email"
+                                            name="email"
+                                            value={email}
+                                            required
+                                            label="Contact Email"
+                                            onchange={handleEmailChange}
+                                            disabled={pinValidated}
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="form-group">
+                                        <lightning-input
+                                            type="email"
+                                            name="confirmationEmail"
+                                            value={confirmationEmail}
+                                            required
+                                            label="Confirm Email"
+                                            onchange={handleEmailChange}
+                                            disabled={pinValidated}
+                                        ></lightning-input>
+                                    </div>
+                                    <template lwc:if={noEqualEmail}>
+                                        <div class="form-group">
+                                            <p style="color: #cc0000">Email must be identical</p>
+                                        </div>
+                                    </template>
+                                    <template lwc:if={notPinValidated}>
+                                        <template lwc:if={pinSent}>
+                                            <div class="form-group">
+                                                <a
+                                                    onclick={sendPin}
+                                                    class="btn-rounded btn-left slds-m-top_xx-small"
+                                                    data-id="resend"
+                                                    >Re-Send PIN</a
+                                                >
+                                            </div>
+                                            <div class="form-group">
+                                                <a
+                                                    onclick={validatePin}
+                                                    class="btn-rounded btn-left btn-disabled slds-m-top_xx-small"
+                                                    data-id="validate"
+                                                    >Validate PIN</a
+                                                >
+                                            </div>
+                                            <div class="form-group">
+                                                <lightning-input
+                                                    type="text"
+                                                    placeholder="Enter PIN"
+                                                    max-length="6"
+                                                    onchange={handlePINInput}
+                                                ></lightning-input>
+                                            </div>
+                                        </template>
+                                        <template lwc:else>
+                                            <div class="form-group">
+                                                <a
+                                                    onclick={sendPin}
+                                                    class="btn-rounded btn-left slds-m-top_xx-small"
+                                                    data-id="send"
+                                                    >Send PIN</a
+                                                >
+                                            </div>
+                                        </template>
+                                    </template>
+                                </template>
+                            </template>
+                        </div>
+                    </form>
+
+                    <a onclick={handleNext} class={nextBtnDesktopClass} data-id="next"> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <a onclick={handleNext} class={nextBtnMobileClass} data-id="next"> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

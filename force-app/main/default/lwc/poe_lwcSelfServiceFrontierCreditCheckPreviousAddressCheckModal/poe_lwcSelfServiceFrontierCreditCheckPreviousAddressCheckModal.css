@@ -1,0 +1,67 @@
+lightning-modal-header {
+    display: none !important;
+}
+
+lightning-modal-body.modal-see-more {
+    max-width: 520px;
+    min-width: 520px;
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 32px;
+}
+
+.modal-see-more img {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 24px;
+}
+
+.modal-see-more h2 {
+    color: #1c2935;
+    font-size: 18px;
+    font-family: "Inter", sans-serif;
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.modal-see-more p {
+    font-size: 16px;
+    color: #636c72;
+    font-family: "Inter", sans-serif;
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.modal-see-more p span {
+    font-weight: 500;
+    color: #1c2935;
+}
+
+.modal-see-more .group-buttons {
+    display: table;
+    width: 100%;
+    text-align: center;
+    margin-top: 32px;
+    margin-bottom: 16px;
+}
+
+.modal-see-more .group-buttons a {
+    display: inline-table;
+    margin: 0 12px;
+    padding: 10px 22px;
+}
+
+form {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    box-shadow: none !important;
+}
+
+form .form-content {
+    padding: 1rem !important;
+    padding-bottom: 0 !important;
+}

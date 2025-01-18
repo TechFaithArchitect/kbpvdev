@@ -1,0 +1,328 @@
+<template>
+    <lightning-card>
+        <h2 slot="title">
+            <lightning-icon icon-name="utility:cart" size="small" class="slds-var-m-right_small"></lightning-icon>
+            Shopping Cart
+        </h2>
+        <div>
+            <div class="slds-border_top slds-grid slds-wrap">
+                <div
+                    class="slds-text-heading_small slds-col slds-text-align_center slds-size_12-of-12 slds-var-p-vertical_xx-small"
+                    style="background-color: #ff8200; color: white"
+                >
+                    <span>Session ID: {cart.orderNumber}</span>
+                </div>
+                <template lwc:if={cart.hasToday}>
+                    <div
+                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                        style="background-color: #ff8200; color: white"
+                    >
+                        <span>Today's Charges</span>
+                    </div>
+                    <template for:each={cart.todayCharges} for:item="charge">
+                        <div
+                            key={charge.id}
+                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                        >
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <b
+                                    ><lightning-formatted-rich-text value={charge.name}></lightning-formatted-rich-text
+                                ></b>
+                            </div>
+                            <template lwc:if={charge.included}>
+                                <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right">
+                                    Included
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <template lwc:if={charge.discount}>
+                                    <div
+                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                        style="color: #00c6b7"
+                                    >
+                                        ${charge.fee}
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div
+                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                    >
+                                        ${charge.fee}
+                                    </div>
+                                </template>
+                            </template>
+
+                            <template lwc:if={charge.hasDescription}>
+                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                    {charge.description}
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium">
+                        <div class="slds-col slds-size_9-of-12">
+                            <b>Today's Total*:</b>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                            <b>${cart.todayTotal}</b>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                        <span>* Plus taxes and surcharges.</span>
+                    </div>
+                </template>
+                <template lwc:if={cart.hasMonthly}>
+                    <div
+                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                        style="background-color: #ff8200; color: white"
+                    >
+                        <span>Monthly Charges</span>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap">
+                        <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                            <b>Internet</b>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small"></div>
+                    </div>
+                    <template for:each={cart.monthlyCharges.internet} for:item="charge">
+                        <div
+                            key={charge.id}
+                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                        >
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <lightning-formatted-rich-text value={charge.name}></lightning-formatted-rich-text>
+                            </div>
+                            <template lwc:if={charge.included}>
+                                <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right">
+                                    Included
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <template lwc:if={charge.discount}>
+                                    <div
+                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                        style="color: #00c6b7"
+                                    >
+                                        ${charge.fee}
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div
+                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                    >
+                                        ${charge.fee}
+                                    </div>
+                                </template>
+                            </template>
+
+                            <template lwc:if={charge.hasDescription}>
+                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                    {charge.description}
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <template lwc:if={hasPhone}>
+                        <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap">
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <b>Voice</b>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small"></div>
+                        </div>
+                    </template>
+                    <template for:each={cart.monthlyCharges.phone} for:item="charge">
+                        <div
+                            key={charge.id}
+                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                        >
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <lightning-formatted-rich-text value={charge.name}></lightning-formatted-rich-text>
+                            </div>
+                            <template lwc:if={charge.included}>
+                                <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right">
+                                    Included
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <template lwc:if={charge.discount}>
+                                    <div
+                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                        style="color: #00c6b7"
+                                    >
+                                        ${charge.fee}
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div
+                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                    >
+                                        ${charge.fee}
+                                    </div>
+                                </template>
+                            </template>
+
+                            <template lwc:if={charge.hasDescription}>
+                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                    {charge.description}
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <template lwc:if={hasMobile}>
+                        <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap">
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <b>Mobile</b>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small"></div>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small slds-p-around_small slds-box"
+                            >
+                                {labels.mobile}
+                            </div>
+                        </div>
+                    </template>
+                    <template for:each={cart.monthlyCharges.mobile} for:item="charge">
+                        <div
+                            key={charge.id}
+                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                        >
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <lightning-formatted-rich-text value={charge.name}></lightning-formatted-rich-text>
+                            </div>
+                            <template lwc:if={charge.included}>
+                                <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right">
+                                    Included
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <template lwc:if={charge.discount}>
+                                    <div
+                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                        style="color: #00c6b7"
+                                    >
+                                        ${charge.fee}
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div
+                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                    >
+                                        ${charge.fee}
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </template>
+                    <template lwc:if={cart.monthlyTaxes}>
+                        <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap">
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <b>Estimated taxes and other fees:</b>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right">
+                                <b>${cart.monthlyTaxes}</b>
+                            </div>
+                        </div>
+                    </template>
+                    <div class="slds-col slds-grid slds-wrap slds-size_12-of-12 slds-m-vertical_xx-small">
+                        <div class="slds-col slds-size_9-of-12">
+                            <b>Monthly Total*:</b>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                            <b>${cart.monthlyTotal}</b>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                        <span>* Plus taxes and surcharges.</span>
+                    </div>
+                </template>
+                <template lwc:if={cart.hasFirstBill}>
+                    <div
+                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                        style="background-color: #ff8200; color: white"
+                    >
+                        <span>Initial Payment</span>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap">
+                        <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                            <b>First Month of Service</b>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right">
+                            ${cart.monthlyTotal}
+                        </div>
+                        <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                            <b>One-Time Charges</b>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"></div>
+                    </div>
+                    <template for:each={cart.firstBillCharges} for:item="charge">
+                        <div
+                            key={charge.id}
+                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                        >
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <lightning-formatted-rich-text value={charge.name}></lightning-formatted-rich-text>
+                            </div>
+                            <template lwc:if={charge.included}>
+                                <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right">
+                                    Included
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <template lwc:if={charge.discount}>
+                                    <div
+                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                        style="color: #00c6b7"
+                                    >
+                                        ${charge.fee}
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div
+                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                    >
+                                        ${charge.fee}
+                                    </div>
+                                </template>
+                            </template>
+                            <template lwc:if={charge.hasDescription}>
+                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                    {charge.description}
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <template lwc:if={cart.firstBillTaxes}>
+                        <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap">
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <b>Estimated taxes and other fees:</b>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right">
+                                <b>${cart.firstBillTaxes}</b>
+                            </div>
+                        </div>
+                    </template>
+                    <div
+                        class="slds-col slds-grid slds-wrap slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                    >
+                        <div class="slds-col slds-size_9-of-12">
+                            <b>Initial Payment Total*:</b>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                            <b>${cart.firstBillTotal}</b>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                        <span>* Plus taxes and surcharges.</span>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </lightning-card>
+    <template lwc:if={logo}>
+        <div class="slds-grid slds-p-around_medium">
+            <div class="slds-col slds-size_12-of-12 slds-text-align_center">
+                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+            </div>
+        </div>
+    </template>
+</template>

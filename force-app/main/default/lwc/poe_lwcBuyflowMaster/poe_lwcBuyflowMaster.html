@@ -1,0 +1,279 @@
+<template>
+    <template lwc:if={showError}>
+        <div class="slds-grid slds-grid_align-center slds-var-m-top_large">
+            <div>
+                <lightning-icon icon-name="utility:error" size="medium"></lightning-icon>
+            </div>
+            <div class="slds-text-heading_medium slds-var-m-left_small">{error}</div>
+        </div>
+    </template>
+    <template lwc:if={showProgramSelection}>
+        <template lwc:if={isGuestUser}>
+            <c-poe_lwc-self-service-products-display
+                record-id={recordId}
+                new-product={newProduct}
+                origin={origin}
+                provider={provider}
+                url-info={urlInfo}
+                programs={programs}
+                zip-code={zipCode}
+                is-mobile={isMobile}
+                self-service-address={selfServiceAddress}
+                is-guest-user={isGuestUser}
+                onclickertrack={handleTracker}
+                onresumeflow={handleResume}
+                onorigin={handleOrigin}
+                onsaveinfo={handleAddressInfo}
+                onzipcode={handleZipCode}
+                onprogramselection={handleProgram}
+                onback={handlePrevious}
+                onhome={handleHome}
+                referral-code-data={referralCodeData}
+                onselfservicestatistic={handleSelfServiceStatistics}
+            ></c-poe_lwc-self-service-products-display>
+        </template>
+        <template lwc:else>
+            <c-poe-products-display
+                record-id={recordId}
+                new-product={newProduct}
+                origin={origin}
+                provider={provider}
+                url-info={urlInfo}
+                programs={programs}
+                zip-code={zipCode}
+                is-guest-user={isGuestUser}
+                onclickertrack={handleTracker}
+                onresumeflow={handleResume}
+                onorigin={handleOrigin}
+                onsaveinfo={handleAddressInfo}
+                onzipcode={handleZipCode}
+                onprogramselection={handleProgram}
+                onback={handlePrevious}
+                onhome={handleHome}
+                referral-code-data={referralCodeData}
+                onselfservicestatistic={handleSelfServiceStatistics}
+            ></c-poe-products-display
+        ></template>
+    </template>
+    <template lwc:if={showAltice}>
+        <c-poe_lwc-buyflow-altice
+            record-id={recordId}
+            origin={origin}
+            contact={contact}
+            ontabupdate={handleTabUpdate}
+            user-id={userId}
+            onnewproduct={handleNewProduct}
+            oncheckip={handleCheckIP}
+            onlogerror={handleLogError}
+            referral-code-data={referralCodeData}
+        ></c-poe_lwc-buyflow-altice>
+    </template>
+    <template lwc:if={showDirecTv}>
+        <template lwc:if={isGuestUser}>
+            <c-poe_lwc-self-service-direc-tv-parent
+                record-id={recordId}
+                contact={contact}
+                user-id={userId}
+                code-n-f-f-l={codeNFFL}
+                code-f-f-l={codeFFL}
+                is-guest-user={isGuestUser}
+                origin={origin}
+                return-url={returnUrl}
+                current-ip={ip}
+                referral-code-data={referralCodeData}
+                zip-code={zipCode}
+                is-f-s-l-dates-enabled={isFSLDatesEnabled}
+                default-work-type-id={defaultWorkTypeId}
+                default-work-type-name={defaultWorkTypeName}
+                default-f-s-l-dealer-code={defaultFSLDealerCode}
+                onnewproduct={handleNewProduct}
+                oncheckip={handleCheckIP}
+                ontabupdate={handleTabUpdate}
+                onlogerror={handleLogError}
+                onselfservicestatistic={handleSelfServiceStatistics}
+                onhome={handleHome}
+            ></c-poe_lwc-self-service-direc-tv-parent>
+        </template>
+        <template lwc:else>
+            <c-poe_lwc-buyflow-direc-tv-enga-parent
+                record-id={recordId}
+                contact={contact}
+                user-id={userId}
+                code-n-f-f-l={codeNFFL}
+                code-f-f-l={codeFFL}
+                is-guest-user={isGuestUser}
+                origin={origin}
+                return-url={returnUrl}
+                current-ip={ip}
+                referral-code-data={referralCodeData}
+                zip-code={zipCode}
+                is-f-s-l-dates-enabled={isFSLDatesEnabled}
+                default-work-type-id={defaultWorkTypeId}
+                default-work-type-name={defaultWorkTypeName}
+                default-f-s-l-dealer-code={defaultFSLDealerCode}
+                onnewproduct={handleNewProduct}
+                oncheckip={handleCheckIP}
+                ontabupdate={handleTabUpdate}
+                onlogerror={handleLogError}
+                onselfservicestatistic={handleSelfServiceStatistics}
+                onhome={handleHome}
+            ></c-poe_lwc-buyflow-direc-tv-enga-parent>
+        </template>
+    </template>
+    <template lwc:if={showEarthlink}>
+        <template lwc:if={isGuestUser}>
+            <c-poe_lwc-self-service-earthlink-parent
+                record-id={recordId}
+                contact={contact}
+                user-id={userId}
+                origin={origin}
+                is-guest-user={isGuestUser}
+                onnewproduct={handleNewProduct}
+                oncheckip={handleCheckIP}
+                ontabupdate={handleTabUpdate}
+                onlogerror={handleLogError}
+                onhome={handleHome}
+                referral-code-data={referralCodeData}
+                onselfservicestatistic={handleSelfServiceStatistics}
+            ></c-poe_lwc-self-service-earthlink-parent>
+        </template>
+        <template lwc:else>
+            <c-poe_lwc-buyflow-earthlink-parent
+                record-id={recordId}
+                contact={contact}
+                user-id={userId}
+                origin={origin}
+                is-guest-user={isGuestUser}
+                onnewproduct={handleNewProduct}
+                ontabupdate={handleTabUpdate}
+                oncheckip={handleCheckIP}
+                onlogerror={handleLogError}
+                onhome={handleHome}
+                referral-code-data={referralCodeData}
+                onselfservicestatistic={handleSelfServiceStatistics}
+            ></c-poe_lwc-buyflow-earthlink-parent>
+        </template>
+    </template>
+    <template lwc:if={showWindstream}>
+        <c-poe_lwc-buyflow-windstream-parent
+            record-id={recordId}
+            national-retail={isNationalRetail}
+            contact={contact}
+            is-guest-user={isGuestUser}
+            user-id={userId}
+            origin={origin}
+            onnewproduct={handleNewProduct}
+            ontabupdate={handleTabUpdate}
+            oncheckip={handleCheckIP}
+            onlogerror={handleLogError}
+            referral-code-data={referralCodeData}
+            onhome={handleHome}
+            onselfservicestatistic={handleSelfServiceStatistics}
+        ></c-poe_lwc-buyflow-windstream-parent>
+    </template>
+    <template lwc:if={showCharter}>
+        <c-poe_lwc-buyflow-charter
+            record-id={recordId}
+            contact={contact}
+            origin={origin}
+            user-id={userId}
+            onnewproduct={handleNewProduct}
+            ontabupdate={handleTabUpdate}
+            oncheckip={handleCheckIP}
+            onlogerror={handleLogError}
+            return-url={returnUrl}
+            referral-code-data={referralCodeData}
+        ></c-poe_lwc-buyflow-charter>
+    </template>
+    <template lwc:if={showFrontier}>
+        <template lwc:if={isGuestUser}>
+            <c-poe_lwc-self-service-frontier-parent
+                record-id={recordId}
+                contact={contact}
+                user-id={userId}
+                origin={origin}
+                is-guest-user={isGuestUser}
+                self-service-address={selfServiceAddress}
+                ontabupdate={handleTabUpdate}
+                onnewproduct={handleNewProduct}
+                oncheckip={handleCheckIP}
+                onlogerror={handleLogError}
+                referral-code-data={referralCodeData}
+                onselfservicestatistic={handleSelfServiceStatistics}
+                onhome={handleHome}
+            ></c-poe_lwc-self-service-frontier-parent>
+        </template>
+        <template lwc:else>
+            <c-poe_lwc-buyflow-frontier-parent
+                record-id={recordId}
+                contact={contact}
+                user-id={userId}
+                origin={origin}
+                is-guest-user={isGuestUser}
+                onnewproduct={handleNewProduct}
+                ontabupdate={handleTabUpdate}
+                oncheckip={handleCheckIP}
+                onlogerror={handleLogError}
+                referral-code-data={referralCodeData}
+                onselfservicestatistic={handleSelfServiceStatistics}
+                onhome={handleHome}
+            ></c-poe_lwc-buyflow-frontier-parent>
+        </template>
+    </template>
+    <template lwc:if={showViasat}>
+        <c-poe_lwc-buyflow-viasat-parent
+            record-id={recordId}
+            contact={contact}
+            user-id={userId}
+            origin={origin}
+            is-guest-user={isGuestUser}
+            onnewproduct={handleNewProduct}
+            ontabupdate={handleTabUpdate}
+            oncheckip={handleCheckIP}
+            onlogerror={handleLogError}
+            onhome={handleHome}
+            referral-code-data={referralCodeData}
+            onselfservicestatistic={handleSelfServiceStatistics}
+        ></c-poe_lwc-buyflow-viasat-parent>
+    </template>
+    <template lwc:if={showSpectrumAPI}>
+        <c-poe_lwc-buyflow-spectrum-api-parent
+            record-id={recordId}
+            contact={contact}
+            user-id={userId}
+            origin={origin}
+            return-url={returnUrl}
+            is-guest-user={isGuestUser}
+            ontabupdate={handleTabUpdate}
+            onnewproduct={handleNewProduct}
+            oncheckip={handleCheckIP}
+            onlogerror={handleLogError}
+            referral-code-data={referralCodeData}
+            onselfservicestatistic={handleSelfServiceStatistics}
+            onhome={handleHome}
+        ></c-poe_lwc-buyflow-spectrum-api-parent>
+    </template>
+    <template lwc:if={showOther}>
+        <c-poe_lwc-buyflow-other
+            record-id={recordId}
+            contact={contact}
+            user-id={userId}
+            ontabupdate={handleTabUpdate}
+            origin={origin}
+            onnewproduct={handleNewProduct}
+            oncheckip={handleCheckIP}
+            onlogerror={handleLogError}
+        ></c-poe_lwc-buyflow-other>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showShopIdModal}>
+        <c-poe_lwc-buyflow-shop-id-modal
+            agent-referral-codes={agentReferralCodes}
+            onclose={handleShowShopIdModal}
+            onconfirm={handleShopIdSelection}
+            program-selected={programSelected}
+        ></c-poe_lwc-buyflow-shop-id-modal>
+    </template>
+</template>

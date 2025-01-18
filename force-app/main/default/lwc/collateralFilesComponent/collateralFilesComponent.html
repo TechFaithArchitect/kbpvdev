@@ -1,0 +1,33 @@
+<template>
+    <div class="slds-m-left_none slds-m-bottom_small">
+        <lightning-button
+        label="Previous"
+        onclick={handleCancel}
+    ></lightning-button>
+    </div>
+    <lightning-card title="File Preview">
+        <template for:each={filesList} for:item="file">
+            <div key={file.value} class="slds-box" style="margin: 10px 10px 10px 10px">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-large-size_4-of-12 slds-medium-size_6-of-12 slds-size_12-of-12">
+                        <p><strong>File Name: </strong>{file.label}</p>
+                    </div>
+                    <div class="slds-col slds-large-size_4-of-12 slds-medium-size_6-of-12 slds-size_12-of-12">
+                        <lightning-button
+                            label="Preview"
+                            variant="brand"
+                            data-id={file.value}
+                            onclick={previewHandler}
+                        ></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </lightning-card>
+    <template lwc:if={showFilePreview}>
+        <c-poe_lwc-buyflow-modal-file-preview url={selectedUrl} title={selectedTitle} onhidemodal={handleHideModal}></c-poe_lwc-buyflow-modal-file-preview>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

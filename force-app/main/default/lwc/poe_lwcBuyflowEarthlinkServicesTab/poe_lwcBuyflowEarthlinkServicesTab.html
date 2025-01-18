@@ -1,0 +1,93 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="earthlink"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_x-small">
+            <template lwc:if={showSBS}>
+                <c-poe_lwc-buyflow-earthlink-s-b-s-button
+                    ongoback={hideSBS}
+                    record-id={recordId}
+                ></c-poe_lwc-buyflow-earthlink-s-b-s-button>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-wrap slds-gutters slds-p-around_small">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3 slds-p-horizontal_none">
+                        <lightning-accordion
+                            id="accordionListItems"
+                            allow-multiple-sections-open
+                            active-section-name={activeSections}
+                        >
+                            <lightning-accordion-section
+                                name="EarthLinkStandalone"
+                                label={labels.SERVICES_TAB_ACCORDION_SECTION_TITLE}
+                                class="lighning-accordion-section"
+                            >
+                                <div class="slds-form-element__control">
+                                    <template for:each={services} for:item="service">
+                                        <c-poe_lwc-product-item
+                                            key={service.Id}
+                                            allow-multiple-selection="true"
+                                            product={service}
+                                            onproductselectchange={handlePriceChange}
+                                        >
+                                        </c-poe_lwc-product-item>
+                                    </template>
+                                </div>
+                            </lightning-accordion-section>
+                        </lightning-accordion>
+                    </div>
+                    <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-earthlink-cart cart={cart}> </c-poe_lwc-buyflow-earthlink-cart>
+                        <template lwc:if={isGuestUser}></template>
+                        <template lwc:else>
+                            <button
+                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                onclick={sbsHandler}
+                            >
+                                <lightning-formatted-text
+                                    value={labels.T_CHART_BUTTON_LABEL}
+                                ></lightning-formatted-text>
+                            </button>
+                        </template>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    show-cancel="true"
+                    show-previous="true"
+                    oncancel={handleCancel}
+                    onprevious={handlePrevious}
+                    onnext={handleClick}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.SELF_SERVICE_VALIDATE_LEAVING_MESSAGE}
+            modal-title={labels.SELF_SERVICE_VALIDATE_LEAVING_TITLE}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

@@ -1,0 +1,39 @@
+<template>
+    <template if:true={showWorkPlan}>
+    <lightning-card>
+    <div class="slds-wrap slds-grid slds-p-around_large">
+        <div class="slds-col slds-size_1-of-1">
+            <image src={chuzoImage}></image>
+
+        </div>
+      
+        <br><br>
+        <div class="slds-col slds-size_1-of-1" style="font-size: large;">
+            <h1>Hi <b>{currentUserName}</b>, Please read below Work Plan for your Service Appointment</h1>
+        </div>
+        <br>
+    </div>
+    <template for:each={records} for:item="getWorkPlan" for:index="index">
+        <div class="slds-col slds-size_1-of-1 slds-p-around_xx-small" key={getWorkPlan.Id}>
+           
+            <lightning-tile class="slds-tabs_card slds-p-around_xx-small "  >
+                <div class="slds-p-around_xx-small">
+                <lightning-icon icon-name="standard:maintenance_plan" style="float: left;"></lightning-icon>
+                </div> 
+                <div class="slds-p-left_x-large"  style="margin-left: 20px;">
+                    {getWorkPlan.Work_Plan__c}
+                </div>
+                <div class="slds-p-around_xx-small">
+                </div>
+           
+            </lightning-tile>
+        </div>
+    </template>
+</lightning-card>
+</template>
+<template if:false={showWorkPlan}>
+    <div>
+   <p> Work Plan is not available for this work type</p>
+</div>
+</template>
+</template>

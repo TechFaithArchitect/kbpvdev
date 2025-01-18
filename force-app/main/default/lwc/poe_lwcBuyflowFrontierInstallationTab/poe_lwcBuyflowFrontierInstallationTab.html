@@ -1,0 +1,198 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="frontier"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <div class="slds-grid slds-grid_align-spread">
+            <div class="slds-col">
+                <lightning-button
+                    variant="neutral"
+                    label="Quote Assistance"
+                    onclick={handleShowCCQuoteAssistanceModal}
+                ></lightning-button>
+            </div>
+            <template lwc:if={isNotGuestUser}>
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </template>
+        </div>
+        <div class="slds-box slds-theme_default slds-p-around_x-small">
+            <div class="slds-grid slds-gutters slds-wrap slds-var-p-around_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                    <div class="slds-box slds-theme_default slds-p-around_small">
+                        <div class="slds-text-heading_medium slds-p-bottom_medium">Installation</div>
+                        <div class="slds-m-bottom_small">
+                            <lightning-radio-group
+                                name="installationOption"
+                                label="Please select an installation method"
+                                options={installationValues}
+                                value={installationOption}
+                                disabled={oneInstallationOption}
+                                required
+                                type="radio"
+                                onchange={handleOption}
+                            >
+                            </lightning-radio-group>
+                        </div>
+
+                        <template lwc:if={showInstall}>
+                            <template lwc:if={showPicker}>
+                                <div class="slds-m-bottom_small">
+                                    <c-poe_lwc-installation-date-time-picker
+                                        date-time-label={labels.SELECT_AVAILABLE_DATE_TIME_FIELD_LABEL}
+                                        required="true"
+                                        value={value}
+                                        available-date-times={availableDateTimeOptions}
+                                        ondatetimechange={handleInstallationTimeChange}
+                                    >
+                                    </c-poe_lwc-installation-date-time-picker>
+                                </div>
+                            </template>
+                            <template lwc:if={timeOut}>
+                                <div class="slds-m-bottom_medium">
+                                    <lightning-button
+                                        variant="brand"
+                                        label="Refresh Dates"
+                                        onclick={handleRefreshDates}
+                                    ></lightning-button>
+                                </div>
+                            </template>
+                            <template lwc:if={isFullInstall}>
+                                <lightning-input
+                                    class="slds-m-bottom_small"
+                                    required
+                                    type="checkbox"
+                                    label="Someone 18 or older must be present at the home during the entire installation period who can authorize work and provide inside access to your property."
+                                    name="someoneOlderWillBePresent"
+                                    checked={someoneOlderWillBePresent}
+                                    onchange={handleCheckboxChange}
+                                ></lightning-input>
+                                <lightning-input
+                                    class="slds-m-bottom_medium"
+                                    type="checkbox"
+                                    label="Someone other than the customer will be at the service address during the installation appointment."
+                                    name="anotherPersonWillBeAtInstallationAppointment"
+                                    checked={anotherPersonWillBeAtInstallationAppointment}
+                                    onchange={handleCheckboxChange}
+                                ></lightning-input>
+                                <template lwc:if={anotherPersonWillBeAtInstallationAppointment}>
+                                    <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_large">
+                                        <label class="slds-col slds-size_1-of-1">
+                                            Please provide information for the person who will be at the service address
+                                            during the installation date and time.
+                                        </label>
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                            <lightning-input
+                                                required
+                                                class="slds-m-bottom_x-small"
+                                                type="text"
+                                                name="firstName"
+                                                value={firstName}
+                                                label="First Name"
+                                                placeholder="First Name"
+                                                onchange={handleChange}
+                                                pattern={onlyLettersRegExPattern}
+                                                message-when-pattern-mismatch={onlyLettersRegExErrorMessage}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                            <lightning-input
+                                                required
+                                                class="slds-m-bottom_x-small"
+                                                type="text"
+                                                name="lastName"
+                                                value={lastName}
+                                                label="Last Name"
+                                                placeholder="Last Name"
+                                                onchange={handleChange}
+                                                pattern={onlyLettersRegExPattern}
+                                                message-when-pattern-mismatch={onlyLettersRegExErrorMessage}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                            <lightning-input
+                                                required
+                                                type="text"
+                                                max-length="10"
+                                                name="primaryPhoneNumber"
+                                                value={primaryPhoneNumber}
+                                                label="Primary Phone Number"
+                                                placeholder="(000) 000-0000"
+                                                onchange={handleChange}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                            <lightning-input
+                                                type="text"
+                                                max-length="10"
+                                                name="secondaryPhoneNumber"
+                                                value={secondaryPhoneNumber}
+                                                label="Secondary Phone Number"
+                                                placeholder="(000) 000-0000"
+                                                onchange={handleChange}
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+                                </template>
+                            </template>
+                        </template>
+                        <div class="slds-text-align_right slds-m-around_medium slds-grid slds-wrap">
+                            <div class="slds-col">
+                                <div class="slds-text-heading_small slds-text-align_right slds-p-vertical_x-small">
+                                    <b>Service Info</b>
+                                </div>
+                                <p>{customer.contactInfo.firstName}</p>
+                                <p>{customer.contactInfo.lastName}</p>
+                                <p>{customer.address.addressLine1}</p>
+                                <p>{customer.address.city}, {customer.address.state}, {customer.address.zipCode}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-frontier-cart cart={cart}> </c-poe_lwc-buyflow-frontier-cart>
+                    <div class="slds-grid slds-p-around_medium">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <c-poe_lwc-buyflow-tab-actions
+                disable-next={noCompleteInfo}
+                show-cancel="true"
+                oncancel={handleCancel}
+                onnext={handleClick}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+            <template lwc:if={loaderSpinner}>
+                <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={showCreditCheckQuoteAssistanceModal}>
+        <c-poe_lwc-buyflow-frontier-credit-check-quote-assistance-modal
+            frontier-user-id={frontierUserId}
+            quote-id={quoteId}
+            quote-number={quoteNumber}
+            customer-t-n={customerTN}
+            onclose={handleCloseCCQuoteAssistanceModal}
+            onlogerror={handleLogError}
+        >
+        </c-poe_lwc-buyflow-frontier-credit-check-quote-assistance-modal>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

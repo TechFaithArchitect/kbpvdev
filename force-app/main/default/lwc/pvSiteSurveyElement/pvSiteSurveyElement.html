@@ -1,0 +1,67 @@
+<template>
+    <div class="slds-section__title slds-theme_shade" if:true={input.header}>
+        <h1>{input.header}</h1>
+    </div>
+    <div class ='slds-p-bottom_small'>
+        <template if:true={isCheckBox}>
+            <lightning-checkbox-group name="Checkbox Group"
+                label={input.question}
+                options={options}
+                value={responseValue}
+                onchange={handleCheckBox}
+                class = 'inputCmp'
+                required>
+            </lightning-checkbox-group>
+        </template>
+        <template if:true={isDropDown}>
+            <lightning-combobox
+                label={input.question}
+                name="dropDown"
+                options={options}
+                value={responseValue}
+                onchange={handleCheckboxChange}
+                placeholder="Select" 
+                class = 'inputCmp'
+                required>
+            </lightning-combobox>
+        </template>
+        <template if:true={isRadio}>
+            
+            <lightning-radio-group name={input.id}
+                label={input.question}
+                options={options}
+                value={value}
+                class = 'inputCmp'
+                onchange={handleCheckboxChange}
+                variant="label-stacked"
+                          type="radio" required></lightning-radio-group>
+        </template>
+        <template if:true={isInputText}>
+            <lightning-input
+                type="text"
+                label={input.question}
+                onchange={handleCheckboxChange}
+                variant="label-stacked"
+                class = 'inputCmp'
+                value={value} 
+            required></lightning-input>
+        </template>
+        <template if:true={isNumberBox}>
+            <lightning-input
+                type="number"
+                label={input.question}
+                onchange={handleCheckboxChange}
+                variant="label-stacked"
+                class = 'inputCmp'
+                value={value} 
+            required></lightning-input>
+        </template>
+       
+        <div if:true={showOtherTextBox}>
+            <lightning-input type="text" label="Other" value={value} name="otherText"
+                onchange={handleCheckBox}>
+            </lightning-input>
+        </div>
+    </div>
+    
+</template>

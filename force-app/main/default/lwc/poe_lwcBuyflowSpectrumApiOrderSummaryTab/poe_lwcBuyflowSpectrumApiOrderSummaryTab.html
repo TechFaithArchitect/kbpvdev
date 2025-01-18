@@ -1,0 +1,141 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider={labels.CHARTER}
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <lightning-card title={labels.ORDER_REVIEW}>
+            <div class="slds-p-around_small slds-theme_default">
+                <div class="slds-grid slds-wrap slds-gutters slds-p-around_none">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                        <div class="slds-box slds-p-around_small">
+                            <div
+                                class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                                style="background-color: #ff8200; color: white"
+                            >
+                                {labels.CUSTOMER_INFORMATION}
+                            </div>
+                            <div class="slds-grid slds-wrap slds-p-around_small">
+                                <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                    <p><strong>{labels.CUSTOMER_NAME_ADDRESS}</strong></p>
+                                </div>
+                                <div
+                                    class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_none"
+                                >
+                                    <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                        <p>{orderInfo.customer.firstName} {orderInfo.customer.lastName}</p>
+                                    </div>
+                                    <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                        <p>
+                                            {orderInfo.address.addressLine1} {orderInfo.address.addressLine2}
+                                            {orderInfo.address.city} {orderInfo.address.state},
+                                            {orderInfo.address.zipCode}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div
+                                    class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_none"
+                                >
+                                    <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                        <p><strong>{labels.PRIMARY_PHONE} </strong> {orderInfo.customer.phoneNumber}</p>
+                                    </div>
+                                    <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                        <p><strong>{labels.EMAIL} </strong>{orderInfo.customer.emailAddress}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-m-bottom_xx-small slds-text-align_center"
+                                style="background-color: #ff8200; color: white"
+                            >
+                                {labels.SERVICES_ORDERED}
+                            </div>
+                            <div class="slds-grid slds-wrap slds-p-around_small">
+                                <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <p><strong>{labels.PACKAGE_OPTION} </strong>{productSelection.name}</p>
+                                </div>
+                                <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <p><strong>{labels.SESSION_ID} </strong>{productSelection.sessionId}</p>
+                                </div>
+                                <template lwc:if={showWorkOrderNumber}>
+                                    <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <p><strong>{labels.WORK_ORDER_NUMBER} </strong>{orderId}</p>
+                                    </div>
+                                </template>
+                                <template lwc:if={showAccountId}>
+                                    <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <p><strong>{labels.ACCOUNTNUMBER}  </strong>{accountNumber}</p>
+                                    </div>
+                                </template>
+                                <template lwc:if={hasInstallation}>
+                                    <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <p><strong>{installationLabel}: </strong>{installationValue}</p>
+                                    </div>
+                                </template>
+                                <template lwc:if={hasAlternativeInstallation}>
+                                    <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <p>
+                                            <strong>{labels.ALTERNATIVE_INSTALLATION_DATE} </strong
+                                            >{alternativeInstallationInfo.installationDetail.date}
+                                            {alternativeInstallationInfo.installationDetail.startTime}-{alternativeInstallationInfo.installationDetail.endTime}
+                                        </p>
+                                    </div>
+                                </template>
+                                <div class="slds-col slds-p-bottom_small slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <p><strong>{labels.INSTALLATION_OPTION} </strong>{installationType}</p>
+                                </div>
+                                <div class="slds-col slds-p-bottom_small slds-size_1-of-1">
+                                    <p>{labels.selfInstallVerbiage}</p>
+                                </div>
+                            </div>
+                            <template lwc:if={showMobile}>
+                                <div class="slds-m-bottom_small">
+                                    <lightning-button
+                                        variant="brand"
+                                        label={labels.MOBILE_SALE_BUTTON_LABEL}
+                                        onclick={handleMobile}
+                                    ></lightning-button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <!-- This is a small margin left between the products and the cart when vertically aligned -->
+                    <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <div class="slds-box">
+                            <c-poe_lwc-buyflow-spectrum-cart cart={cart} has-phone={hasPhone} has-mobile={hasMobile}>
+                            </c-poe_lwc-buyflow-spectrum-cart>
+                        </div>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_1-of-1 slds-text-align_center">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <c-poe_lwc-buyflow-tab-actions show-cancel="true" oncancel={handleCancel} onnext={handleClick}>
+            </c-poe_lwc-buyflow-tab-actions>
+        </lightning-card>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text={labels.SPINNER_ALT_TEXT} size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

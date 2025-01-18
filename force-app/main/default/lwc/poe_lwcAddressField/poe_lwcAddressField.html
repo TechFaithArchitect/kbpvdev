@@ -1,0 +1,26 @@
+<template>
+    <div>
+        <lightning-input-address
+            show-address-lookup
+            show-compact-address
+            address-label="Fields with (*) are mandatory."
+            street-label="Street Address (*)"
+            subpremise-label="Address Line 2"
+            city-label="City (*)"
+            country-label="Country (*)"
+            province-label="State (*)"
+            postal-code-label="Zip Code (*)"
+            street={currentStreet}
+            subpremise={currentAddressLine2}
+            city={currentCity}
+            province={currentProvince}
+            postal-code={currentPostalCode}
+            country={currentCountry}
+            disabled={disabled}
+            onchange={handleAddressChange}
+        ></lightning-input-address>
+    </div>
+    <template lwc:if={isLoading}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

@@ -1,0 +1,71 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        class="slds-modal slds-fade-in-open slds-modal_x-small"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">
+                    <lightning-formatted-text
+                        value={labels.EMAIL_BROADBAND_LABEL_TITLE}
+                    ></lightning-formatted-text>
+                </h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-text-heading_small">
+                    <lightning-formatted-text
+                        value={labels.EMAIL_BROADBAND_LABEL_INSTRUCTIONS}
+                    ></lightning-formatted-text>
+                </div>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_12-of-12 slds-vertical_small">
+                        <lightning-combobox
+                            name="products"
+                            label={labels.PRODUCT_FIELD_LABEL}
+                            value={product}
+                            options={productOptions}
+                            onchange={handleChange}
+                            required
+                        ></lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-bottom_small">
+                        <lightning-input
+                            type="email"
+                            name="email"
+                            value={email}
+                            required
+                            label={labels.EMAIL_FIELD_LABEL}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" disabled={noInfo} onclick={handleConfirm}>
+                    <lightning-formatted-text
+                        value={labels.CONFIRM_BUTTON_LABEL}
+                    ></lightning-formatted-text>
+                </button>
+            </div>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

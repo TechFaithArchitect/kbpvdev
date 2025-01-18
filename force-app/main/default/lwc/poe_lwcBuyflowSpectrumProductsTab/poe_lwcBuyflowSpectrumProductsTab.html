@@ -1,0 +1,181 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider={labels.CHARTER}
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_small">
+            <template lwc:if={showSBS}>
+                <c-poe_lwc-buyflow-charter-s-b-s-button
+                    ongoback={hideSBS}
+                    is-guest-user={isGuestUser}
+                    record-id={recordId}
+                ></c-poe_lwc-buyflow-charter-s-b-s-button>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-wrap slds-gutters slds-p-vertical_small slds-p-horizontal_none">
+                    <div
+                        class="slds-col slds-grid slds-wrap slds-p-bottom_none slds-size_1-of-1 slds-medium-size_2-of-3"
+                    >
+                        <div class="slds-box slds-size_1-of-1 slds-p-around_x-small">
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-grid slds-wrap slds-grid_align-spread slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_none slds-m-horizontal_none"
+                            >
+                                <div class="slds-col slds-text-heading_medium">{labels.PRODUCT_SELECTION_TITLE}</div>
+                            </div>
+                            <template lwc:if={isGuestUser}>
+                                <div
+                                    class="slds-grid slds-max-small-size_1-of-1 slds-p-horizontal_x-small slds-m-bottom_x-small"
+                                >
+                                    <lightning-button
+                                        class="slds-max-small-size_1-of-1"
+                                        label={labels.VIEW_ALL_BROADBANDS}
+                                        variant="brand"
+                                        onclick={handleShowBroadbandLabels}
+                                        stretch
+                                    >
+                                    </lightning-button>
+                                </div>
+                            </template>
+                            <template lwc:if={showTabs}>
+                                <lightning-tabset
+                                    class="slds-size_1-of-1"
+                                    data-id="tabSet"
+                                    active-tab-value={productType}
+                                    variant="standard"
+                                >
+                                    <template lwc:if={showInternetPhoneMobile}>
+                                        <lightning-tab
+                                            label="Internet + Phone + Mobile"
+                                            value="internet-phone-mobile"
+                                            class="slds-tabs_large"
+                                            onactive={changeOptions}
+                                        >
+                                            <c-poe_lwc-buyflow-spectrum-products-options
+                                                products={products}
+                                                product-type={productType}
+                                                is-guest-user={isGuestUser}
+                                                onproduct={handlePriceChange}
+                                                ondescription={handleDescription}
+                                            ></c-poe_lwc-buyflow-spectrum-products-options>
+                                        </lightning-tab>
+                                    </template>
+                                    <template lwc:if={showInternetMobile}>
+                                        <lightning-tab
+                                            label="Internet + Mobile"
+                                            value="internet-mobile"
+                                            class="slds-tabs_large"
+                                            onactive={changeOptions}
+                                        >
+                                            <c-poe_lwc-buyflow-spectrum-products-options
+                                                products={products}
+                                                product-type={productType}
+                                                is-guest-user={isGuestUser}
+                                                onproduct={handlePriceChange}
+                                                ondescription={handleDescription}
+                                            ></c-poe_lwc-buyflow-spectrum-products-options>
+                                        </lightning-tab>
+                                    </template>
+                                    <template lwc:if={showInternetPhone}>
+                                        <lightning-tab
+                                            label={labels.INTERNET_PHONE}
+                                            value="internet-phone"
+                                            class="slds-tabs_large"
+                                            onactive={changeOptions}
+                                        >
+                                            <c-poe_lwc-buyflow-spectrum-products-options
+                                                products={products}
+                                                product-type={productType}
+                                                is-guest-user={isGuestUser}
+                                                onproduct={handlePriceChange}
+                                                ondescription={handleDescription}
+                                            ></c-poe_lwc-buyflow-spectrum-products-options>
+                                        </lightning-tab>
+                                    </template>
+                                    <template lwc:if={showInternet}>
+                                        <lightning-tab
+                                            label={labels.INTERNET}
+                                            value="internet"
+                                            class="slds-tabs_large"
+                                            onactive={changeOptions}
+                                        >
+                                            <c-poe_lwc-buyflow-spectrum-products-options
+                                                products={products}
+                                                product-type={productType}
+                                                is-guest-user={isGuestUser}
+                                                onproduct={handlePriceChange}
+                                                ondescription={handleDescription}
+                                            ></c-poe_lwc-buyflow-spectrum-products-options>
+                                        </lightning-tab>
+                                    </template>
+                                    <template lwc:if={showPhone}>
+                                        <lightning-tab
+                                            label={labels.PHONE}
+                                            value="phone"
+                                            class="slds-tabs_large"
+                                            onactive={changeOptions}
+                                        >
+                                            <c-poe_lwc-buyflow-spectrum-products-options
+                                                products={products}
+                                                product-type={productType}
+                                                is-guest-user={isGuestUser}
+                                                onproduct={handlePriceChange}
+                                                ondescription={handleDescription}
+                                            ></c-poe_lwc-buyflow-spectrum-products-options>
+                                        </lightning-tab>
+                                    </template> </lightning-tabset
+                            ></template>
+                        </div>
+                    </div>
+                    <!-- This is a small margin left between the products and the cart when vertically aligned -->
+                    <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-spectrum-cart
+                            cart={cart}
+                            has-phone={hasPhone}
+                            has-mobile={hasMobile}
+                            logo={logo}
+                        >
+                        </c-poe_lwc-buyflow-spectrum-cart>
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    disable-next={disableNext}
+                    show-previous="true"
+                    show-cancel="true"
+                    oncancel={handleCancel}
+                    onprevious={handlePrevious}
+                    onnext={handleClick}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={showProductDescription}>
+        <c-poe_lwc-buyflow-frontier-product-description-modal
+            onclosedescription={handleDescription}
+            description={productDescription}
+        ></c-poe_lwc-buyflow-frontier-product-description-modal>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text={labels.SPINNER_TEXT} size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

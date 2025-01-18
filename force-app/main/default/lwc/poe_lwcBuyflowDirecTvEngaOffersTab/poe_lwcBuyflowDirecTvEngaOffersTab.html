@@ -1,0 +1,248 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_none">
+            <template lwc:if={hiddenSBS}>
+                <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_x-small">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                        <lightning-tabset class="slds-size_1-of-1">
+                            <lightning-tab label="Offers">
+                                <template lwc:if={hasRequired}>
+                                    <div
+                                        class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        Selection Required
+                                    </div>
+                                    <c-poe_lwc-buyflow-direc-tv-enga-offer-options
+                                        promos={configurations.offers.required}
+                                        show-full-description="true"
+                                        onshowdata={showData}
+                                        ontogglechange={handleToggleChange}
+                                    >
+                                    </c-poe_lwc-buyflow-direc-tv-enga-offer-options>
+                                </template>
+                                <template lwc:if={hasIncluded}>
+                                    <div
+                                        class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        Included with Selected Plan
+                                    </div>
+                                    <div
+                                        class="slds-grid slds-grid--vertical-stretch slds-gutters slds-wrap slds-m-vertical_small slds-m-horizontal_small"
+                                    >
+                                        <div
+                                            class="slds-col slds-size_2-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            style="background-color: #ffb769; color: white"
+                                        >
+                                            Select
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_8-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            style="background-color: #ffb769; color: white"
+                                        >
+                                            Name
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            style="background-color: #ffb769; color: white"
+                                        >
+                                            Monthly Fee
+                                        </div>
+                                        <template for:each={configurations.offers.included} for:item="promo">
+                                            <template lwc:if={promo.show}>
+                                                <div
+                                                    key={promo.id}
+                                                    class="slds-col slds-size_2-of-12 slds-p-around_small slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                                >
+                                                    <lightning-input
+                                                        type="checkbox"
+                                                        data-id={promo.id}
+                                                        data-choice={promo.choiceCode}
+                                                        checked={promo.checked}
+                                                        disabled
+                                                        name={promo.name}
+                                                        onchange={handleToggleChange}
+                                                        class="slds-align_absolute-center"
+                                                    ></lightning-input>
+                                                </div>
+                                                <div
+                                                    key={promo.id}
+                                                    class="slds-col slds-p-around_small slds-size_8-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                                >
+                                                    <div class="slds-align_absolute-center">
+                                                        <lightning-formatted-rich-text
+                                                            value={promo.name}
+                                                        ></lightning-formatted-rich-text
+                                                        >&nbsp;&nbsp;
+                                                        <template lwc:if={promo.hasDescription}>
+                                                            <lightning-icon
+                                                                icon-name="action:info"
+                                                                data-id={promo.id}
+                                                                onclick={showData}
+                                                                alternative-text="Open Info"
+                                                                title="Open Info"
+                                                                size="xx-small"
+                                                                style="cursor: pointer"
+                                                            ></lightning-icon>
+                                                        </template>
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    key={promo.id}
+                                                    class="slds-col slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                                >
+                                                    <div class="slds-align_absolute-center">{promo.fee}</div>
+                                                </div>
+                                            </template>
+                                        </template>
+                                    </div>
+                                </template>
+                            </lightning-tab>
+                            <lightning-tab label="Premiums" title="2nd tab extended title">
+                                <div
+                                    class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    Premium Channels/Offers
+                                </div>
+
+                                <c-poe_lwc-buyflow-direc-tv-enga-offer-options
+                                    promos={configurations.premiums}
+                                    show-category-column="true"
+                                    onshowdata={showData}
+                                    ontogglechange={handleToggleChange}
+                                >
+                                </c-poe_lwc-buyflow-direc-tv-enga-offer-options>
+                            </lightning-tab>
+                            <lightning-tab label="Sports">
+                                <div
+                                    class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    Sport Options
+                                </div>
+                                <c-poe_lwc-buyflow-direc-tv-enga-offer-options
+                                    promos={configurations.sports}
+                                    show-category-column="true"
+                                    category-label="Sport"
+                                    fee-label="Fee"
+                                    onshowdata={showData}
+                                    ontogglechange={handleToggleChange}
+                                >
+                                </c-poe_lwc-buyflow-direc-tv-enga-offer-options>
+                            </lightning-tab>
+                            <lightning-tab label="International">
+                                <div
+                                    class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    International
+                                </div>
+                                <c-poe_lwc-buyflow-direc-tv-enga-offer-options
+                                    promos={configurations.international}
+                                    show-category-column="true"
+                                    category-label="Language"
+                                    onshowdata={showData}
+                                    ontogglechange={handleToggleChange}
+                                >
+                                </c-poe_lwc-buyflow-direc-tv-enga-offer-options>
+                            </lightning-tab>
+                            <lightning-tab label={DTVEngaProtectionPlansLabel}>
+                                <div
+                                    class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    {DTVEngaProtectionPlansLabel}
+                                </div>
+                                <template lwc:if={beam}>
+                                    <div class="slds-p-around_small">
+                                        <b>
+                                            <lightning-formatted-rich-text
+                                                value={protectionHeader}
+                                            ></lightning-formatted-rich-text>
+                                        </b>
+                                    </div>
+                                </template>
+                                <c-poe_lwc-buyflow-direc-tv-enga-offer-options
+                                    promos={configurations.protectionPlans}
+                                    show-full-description="true"
+                                    onshowdata={showData}
+                                    ontogglechange={handleToggleChange}
+                                >
+                                </c-poe_lwc-buyflow-direc-tv-enga-offer-options>
+                            </lightning-tab>
+                            <template lwc:if={showClosingOffers}>
+                                <lightning-tab label="Closing Offers">
+                                    <div
+                                        class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        Closing Offers
+                                    </div>
+                                    <c-poe_lwc-buyflow-direc-tv-enga-offer-options
+                                        promos={configurations.closingOffers}
+                                        show-full-description="true"
+                                        onshowdata={showData}
+                                        ontogglechange={handleToggleChange}
+                                    >
+                                    </c-poe_lwc-buyflow-direc-tv-enga-offer-options>
+                                </lightning-tab>
+                            </template>
+                        </lightning-tabset>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-directv-enga-cart cart={cart}> </c-poe_lwc-buyflow-directv-enga-cart>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <c-poe_lwc-buyflow-tab-actions
+                    disable-next={noCompleteInfo}
+                    show-previous="true"
+                    show-cancel="true"
+                    oncancel={handleCancel}
+                    onprevious={handlePrevious}
+                    onnext={handleClick}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showPopup}>
+        <c-poe_lwc-buyflow-direc-t-v-info-popup
+            onclose={hideData}
+            description={offerDescription}
+        ></c-poe_lwc-buyflow-direc-t-v-info-popup>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

@@ -1,0 +1,40 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+                </div>
+
+                <div class="page-content no-padding-top">
+                    <c-poe_lwc-self-service-direc-tv-email-validation
+                        origin={origin}
+                        email={email}
+                        verified-email={verifiedEmail}
+                        verbiages={verbiages}
+                        call-information={callInformation}
+                        onemailchange={handleEmailChange}
+                        onpinvalidation={handlePinValidation}
+                        is-guest-user={isGuestUser}
+                        stream={stream}
+                    ></c-poe_lwc-self-service-direc-tv-email-validation>
+
+                    <a onclick={handleNext} class={nextBtnDesktopClass} data-id="next"> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <a onclick={handleNext} class={nextBtnMobileClass} data-id="next"> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

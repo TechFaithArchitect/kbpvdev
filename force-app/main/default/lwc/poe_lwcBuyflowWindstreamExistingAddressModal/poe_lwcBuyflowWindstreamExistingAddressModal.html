@@ -1,0 +1,172 @@
+<template>
+    <div class="custom-modal">
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-p-around_xx-small slds-float_right">
+                    <lightning-icon
+                        icon-name="utility:close"
+                        alternative-text="Close Modal"
+                        title="Close Modal"
+                        variant="inverse"
+                        onclick={hideModal}
+                        size="small"
+                        class="slds-float_right"
+                        style="cursor: pointer"
+                    ></lightning-icon>
+                </div>
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium slds-hyphenate">
+                        {labels.Windstream_an_Existing_account}
+                    </h2>
+                </header>
+                <div class="slds-modal__content slds-var-p-around_medium">
+                    <template lwc:if={errorDisclaimer}>
+                        <div class="slds-var-p-horizontal_medium slds-var-p-vertical_medium">
+                            <template lwc:if={firstStep}>
+                                <lightning-formatted-text 
+                                    value={labels.errorMessage1} 
+                                    class="slds-text-heading_small">
+                                </lightning-formatted-text>
+                            </template>
+                            <template lwc:else>
+                                <lightning-formatted-text 
+                                    value={labels.errorMessage2} 
+                                    class="slds-text-heading_small">
+                                </lightning-formatted-text>
+                                <lightning-input 
+                                    type="checkbox" 
+                                    label={labels.errorMessage3}
+                                    class="slds-m-top_medium"
+                                    checked={checkboxChecked}
+                                    onchange={handleCheckboxChange}>
+                                </lightning-input>
+                            </template>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div class="slds-grid slds-gutters slds-wrap slds-var-p-horizontal_medium slds-var-p-bottom_medium">
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-radio-group
+                                    name="movingInRadio"
+                                    label="Select an option regarding your situation"
+                                    options={options}
+                                    value={movingInValue}
+                                    onchange={handleChange}
+                                    type="radio"
+                                ></lightning-radio-group>
+                            </div>
+                            <template lwc:if={showAddressFields}>
+                                <div class="slds-col slds-size_1-of-1 slds-var-p-vertical_medium">
+                                    <p class="slds-text-heading_small">
+                                        {labels.Windstream_gather_additional_detail}
+                                    </p>
+                                </div>
+                                <div class="slds-size_1-of-1">
+                                    <c-poe_lwc-installation-date-time-picker
+                                        required=true
+                                        date-label="Move in Date (If in the past, please select next day)"
+                                        available-dates-only={availableDates}
+                                        ondatetimechange={handleMoveInDateChange}
+                                    ></c-poe_lwc-installation-date-time-picker>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-var-p-top_medium slds-var-p-bottom_x-small">
+                                    <p><strong> {labels.Windstream_Address_Photo_Id}</strong></p>
+                                </div>
+                                <template lwc:if={isGuestUser}>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <c-poe_lwc-address-field
+                                            options={addressOptions}
+                                            onaddresschange={handleAddressChange}
+                                        ></c-poe_lwc-address-field>
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <lightning-input
+                                            type="text"
+                                            name="address"
+                                            value={address}
+                                            label="Street Address"
+                                            required
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-2">
+                                        <lightning-input
+                                            type="text"
+                                            name="apt"
+                                            value={apt}
+                                            label="Address Line 2"
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <lightning-input
+                                            type="text"
+                                            name="city"
+                                            value={city}
+                                            label="City"
+                                            required
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_2-of-3 slds-medium-size_2-of-6">
+                                        <lightning-combobox
+                                            name="state"
+                                            label="State"
+                                            value={state}
+                                            options={stateOptions}
+                                            onchange={handleChange}
+                                            required
+                                        ></lightning-combobox>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-3 slds-medium-size_1-of-6">
+                                        <lightning-input
+                                            type="text"
+                                            name="zip"
+                                            value={zip}
+                                            label="Zip"
+                                            max-length="5"
+                                            pattern="[0-9]{5}"
+                                            required
+                                            message-when-pattern-mismatch="Please enter a five digits Zip Code"
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button 
+                        class="slds-float_left"
+                        variant="neutral"
+                        label="Cancel"
+                        title="Cancel"
+                        onclick={hideModal}
+                    ></lightning-button>
+                    <template lwc:if={errorDisclaimer}>
+                        <lightning-button
+                            variant="brand"
+                            label="Next"
+                            title="Next"
+                            disabled={noCompleteInfo}
+                            onclick={handleNext}
+                        ></lightning-button>
+                    </template>
+                    <template lwc:else>
+                        <lightning-button
+                            variant="brand"
+                            label="Confirm"
+                            title="Confirm"
+                            disabled={noCompleteInfo}
+                            onclick={handleConfirm}
+                        ></lightning-button>
+                    </template>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</template>

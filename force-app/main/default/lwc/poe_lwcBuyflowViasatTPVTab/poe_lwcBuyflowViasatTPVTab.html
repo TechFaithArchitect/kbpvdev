@@ -1,0 +1,154 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="viasat"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default">
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                    <div class="slds-box slds-theme_default">
+                        <template lwc:if={TPVText}>
+                            <div
+                                class="slds-grid slds-wrap slds-grid_vertical slds-m-around_small slds-align_absolute-center"
+                            >
+                                <div class="slds-text-heading_small slds-p-bottom_x-small">{labels.viasat_Please_call}</div>
+                                <div class="slds-text-heading_small slds-p-bottom_x-small" style="color: #236fa1">
+                                   {labels.viasat_number}
+                                </div>
+                                <div class="slds-text-heading_small slds-p-bottom_x-small">
+                                    {labels.viasat_Provide_this_reference_to_the_TPV_agent}
+                                </div>
+                                <div class="slds-text-heading_small slds-p-bottom_x-small" style="color: #3598db">
+                                    {labels.viasat_Reference}
+                                </div>
+                                <div class="slds-text-heading_small" style="color: #3598db">{referenceNumber}</div>
+                                <lightning-button
+                                    variant="brand"
+                                    label="Refresh TPV Verification"
+                                    onclick={handleRefresh}
+                                    class="slds-m-vertical_medium"
+                                ></lightning-button>
+                            </div>
+                        </template>
+                        <template lwc:else>
+                            <div class="slds-text-heading_medium slds-p-bottom_medium">Installation</div>
+                            <template lwc:if={noSlotsAvailable}>
+                                <div
+                                    class="slds-col slds-size_1-of-1 slds-p-vertical_xx-small slds-p-horizontal_medium"
+                                >
+                                    <b>{labels.viasat_No_installation_slots_available}</b>
+                                </div>
+                                <div
+                                    class="slds-col slds-size_1-of-1 slds-p-vertical_xx-small slds-p-horizontal_medium"
+                                >
+                                    <lightning-formatted-rich-text
+                                        value={noSlotsAvailableDisclosure}
+                                    ></lightning-formatted-rich-text>
+                                </div>
+                            </template>
+                            <lightning-combobox
+                                name="date"
+                                label="Please select an available date/time from the dropdown:"
+                                value={dateValue}
+                                options={options}
+                                class="slds-var-m-around_large"
+                                disabled={noSlotsAvailable}
+                                required
+                                onchange={handleDate}
+                            ></lightning-combobox>
+                            <div class="slds-grid slds-wrap">
+                                <div
+                                    class="slds-col slds-size_1-of-1 slds-p-vertical_xx-small slds-p-horizontal_medium"
+                                >
+                                    <b>{termsAndConditionsInstructions}</b>
+                                </div>
+                                <div
+                                    class="slds-col slds-size_1-of-1 slds-p-vertical_xx-small slds-p-horizontal_medium slds-m-bottom_x-small"
+                                >
+                                    <lightning-formatted-rich-text
+                                        value={installationDisclosure}
+                                        linkify
+                                    ></lightning-formatted-rich-text>
+                                </div>
+                                <div
+                                    class="slds-col slds-size_1-of-1 slds-p-vertical_xx-small slds-p-horizontal_medium"
+                                >
+                                    <lightning-input
+                                        type="checkbox"
+                                        name="installationConsent"
+                                        checked={installationConsent}
+                                        label={checkboxAgreementMessage}
+                                        onchange={handleDate}
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                        </template>
+                        <template lwc:if={timeOut}>
+                            <lightning-button
+                                variant="brand"
+                                class="slds-m-left_medium"
+                                label="Refresh Dates"
+                                onclick={handleRefreshDates}
+                            ></lightning-button>
+                        </template>
+                        <div
+                            class="slds-text-align_right slds-m-around_medium slds-grid slds-wrap slds-grid_vertical-align-end"
+                        >
+                            <div class="slds-col">
+                                <div class="slds-text-heading_small slds-text-align_right slds-p-vertical_x-small">
+                                    <b>Service Info</b>
+                                </div>
+                                <p>{creditCheck.firstName}</p>
+                                <p>{creditCheck.lastName}</p>
+                                <p>{creditCheck.shippingAddress}</p>
+                                <p>
+                                    {creditCheck.shippingCity}, {creditCheck.shippingState}, {creditCheck.shippingZip}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-viasat-cart cart={cartInfo}> </c-poe_lwc-buyflow-viasat-cart>
+                    <div class="slds-grid slds-p-around_medium">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <c-poe_lwc-buyflow-tab-actions
+                disable-next={noCompleteInfo}
+                show-previous="true"
+                show-cancel="true"
+                oncancel={handleCancel}
+                onprevious={handleGoBack}
+                onnext={handleGoToConfirmation}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

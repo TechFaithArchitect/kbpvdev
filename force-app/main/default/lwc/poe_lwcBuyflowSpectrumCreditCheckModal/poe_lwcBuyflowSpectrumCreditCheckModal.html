@@ -1,0 +1,47 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        class="slds-modal slds-fade-in-open slds-modal_x-small"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{modalTitle}</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-text-heading_small">
+                    <template lwc:if={isRichText}>
+                        <lightning-formatted-rich-text value={modalBody}></lightning-formatted-rich-text>
+                    </template>
+                    <template lwc:else>
+                        <lightning-formatted-text value={modalBody} linkify></lightning-formatted-text>
+                    </template>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <template lwc:if={showCancel}>
+                    <button class="slds-button slds-button_neutral" onclick={hideModal}>Cancel</button>
+                </template>
+                <button class="slds-button slds-button_brand" onclick={handleConfirm}>Confirm</button>
+            </div>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

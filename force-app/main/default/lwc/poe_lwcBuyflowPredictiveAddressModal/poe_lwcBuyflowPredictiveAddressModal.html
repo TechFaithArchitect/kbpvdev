@@ -1,0 +1,25 @@
+<template>
+    <lightning-modal-header label="Related Addresses"></lightning-modal-header>
+    <lightning-modal-body class="modal-see-more">
+        <div provider={provider}>
+            <p class="slds-m-horizontal_medium slds-m-top_small">
+                A unique address was not correctly identified. Please choose one of the following:
+            </p>
+
+            <div class="form-group slds-m-vertical_medium slds-m-horizontal_medium">
+                <lightning-radio-group
+                    name="radioGroup"
+                    options={options}
+                    value={selectedAddress}
+                    onchange={handleChange}
+                    type="radio"
+                ></lightning-radio-group>
+            </div>
+
+            <div class="group-buttons">
+                <a class="btn-outline btn-only-rounded" onclick={hideModal}>Close</a>
+                <a onclick={handleSelector} class={confirmBtnClass}>Confirm</a>
+            </div>
+        </div>
+    </lightning-modal-body>
+</template>

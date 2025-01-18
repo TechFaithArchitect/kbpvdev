@@ -1,0 +1,7 @@
+.textAreaBody {
+    --sds-c-textarea-sizing-min-height: 100px;
+}
+
+.successButtons {
+    width: 30% !important;
+}

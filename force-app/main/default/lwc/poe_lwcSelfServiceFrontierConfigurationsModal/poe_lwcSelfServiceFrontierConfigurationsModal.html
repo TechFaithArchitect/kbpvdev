@@ -1,0 +1,132 @@
+<template>
+    <lightning-modal-header label={label}></lightning-modal-header>
+    <lightning-modal-body class="modal-see-more">
+        <div provider="frontier">
+            <div class="slds-scrollable">
+                <form class="slds-m-bottom_small form-remove-box-shadow">
+                    <div class="form-content form-content-padding">
+                        <template lwc:if={hasPhone}>
+                            <h3>
+                                Unlimited Digital Voice Configurations
+                            </h3>
+                            <div>
+                                <template lwc:if={hasFreezeOptions}>
+                                    <div class="form-group">
+                                        <lightning-radio-group
+                                            name="freezeGroup"
+                                            label="Please select a Local Freeze Option"
+                                            class="label-semi-bold"
+                                            options={freezeOptions}
+                                            required="true"
+                                            value={freezeOption}
+                                            type="radio"
+                                            onchange={handleFreeze}
+                                        ></lightning-radio-group>
+                                    </div>
+                                </template>
+                                <template lwc:if={hasListingOptions}>
+                                    <div class="form-group">
+                                        <lightning-radio-group
+                                            name="listingGroup"
+                                            label="Please select a Listing Option"
+                                            class="label-semi-bold"
+                                            options={listingOptions}
+                                            value={listingOption}
+                                            required="true"
+                                            type="radio"
+                                            onchange={handleListing}
+                                        ></lightning-radio-group>
+                                    </div>
+                                    <template lwc:if={showAdditional}>
+                                        <div class="form-group">
+                                            <lightning-input
+                                                type="checkbox"
+                                                checked={additionalWanted}
+                                                label={additionalLabel}
+                                                class="label-semi-bold"
+                                                name="additionalCheckbox"
+                                                onchange={handleAdditional}
+                                            ></lightning-input>
+                                        </div>
+                                    </template>
+                                </template>
+                                <template lwc:if={hasInternational}>
+                                    <h3>International Plans</h3>
+                                    <template for:each={internationalOptions} for:item="option">
+                                        <div key={option.id} class="form-group">
+                                            <lightning-input
+                                                type="checkbox"
+                                                checked={option.isChecked}
+                                                disabled={option.required}
+                                                label={option.label}
+                                                class="label-semi-bold"
+                                                name={option.name}
+                                                data-id={option.id}
+                                                onchange={handleInternational}
+                                            ></lightning-input>
+                                        </div>
+                                    </template>
+                                </template>
+                                <template lwc:if={hasVoiceMail}>
+                                    <div class="form-group">
+                                        <lightning-radio-group
+                                            name="voiceGroup"
+                                            label="Add Voicemail - Unified Messaging?"
+                                            class="label-semi-bold"
+                                            options={voiceMailOptions}
+                                            value={voiceMailSelection}
+                                            disabled={voiceMailOption.required}
+                                            type="radio"
+                                            onchange={handleVoiceMail}
+                                        ></lightning-radio-group>
+                                    </div>
+                                    <template lwc:if={voiceMailSelected}>
+                                        <div class="form-group">
+                                            <lightning-select
+                                                name="rings"
+                                                label="Number of Rings"
+                                                class="label-semi-bold"
+                                                value={ring}
+                                                dropdown-alignment="auto"
+                                                required="true"
+                                                options={voiceMailOption.ringValues}
+                                                onchange={handleRing}
+                                            ></lightning-select>
+                                        </div>
+                                    </template>
+                                </template>
+                            </div>
+                        </template>
+                        <template lwc:if={hasSecurityOptions}>
+                            <h3>
+                                Frontier Secure Configurations
+                            </h3>
+                            <template lwc:if={hasHomeOption}>
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="checkbox"
+                                        checked={homeOption.isChecked}
+                                        class="label-semi-bold"
+                                        disabled={homeOption.required}
+                                        label={homeOption.label}
+                                        name={homeOption.name}
+                                        data-id={homeOption.id}
+                                        onchange={handleHome}
+                                    ></lightning-input>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                </form> 
+            </div>        
+            <template lwc:if={loaderSpinner}>
+                <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+            </template>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <div provider="frontier">
+            <a class={nextButtonClass} onclick={handleConfirm} disabled={noInfo}>Confirm</a>
+        </div>
+    </lightning-modal-footer>
+</template>

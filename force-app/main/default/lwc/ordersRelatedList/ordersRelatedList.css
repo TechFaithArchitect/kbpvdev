@@ -1,0 +1,7 @@
+.slds-card__header.slds-grid{
+    background: #F3F3F3;
+    padding-bottom: 8px;
+    border-bottom: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #c9c9c9;
+}

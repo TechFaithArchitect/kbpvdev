@@ -1,0 +1,330 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider={labels.CHARTER}
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default">
+            <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_medium">
+                <div
+                    class="slds-col slds-grid slds-wrap slds-box slds-size_1-of-1 slds-medium-size_2-of-3 slds-p-horizontal_none"
+                >
+                    <div class="container">
+                        <template for:each={linesOfBusiness} for:item="line">
+                            <div key={line.id} class="line-section">
+                                <div class="slds-p-horizontal_none">
+                                    <div class="slds-text-heading_medium">
+                                        <lightning-formatted-rich-text
+                                            value={line.name}
+                                        ></lightning-formatted-rich-text>
+                                    </div>
+                                    <div class="slds-text-heading_small slds-m-vertical_small">
+                                        <lightning-formatted-rich-text
+                                            value={line.description}
+                                        ></lightning-formatted-rich-text>
+                                    </div>
+                                    <template for:each={line.configurations} for:item="config">
+                                        <div key={config.id} class="config-section">
+                                            <template lwc:if={config.isCheckbox}>
+                                                <div class="slds-text-heading_small slds-var-m-bottom_medium">
+                                                    {config.name}
+                                                </div>
+                                                <div class="slds-var-m-bottom_medium">
+                                                    <lightning-formatted-rich-text
+                                                        value={config.description}
+                                                    ></lightning-formatted-rich-text>
+                                                </div>
+                                                <ul class="product-list">
+                                                    <template lwc:if={config.isMultipleChoice}>
+                                                        <div class="slds-text-heading_small">{config.name}</div>
+                                                        <div>
+                                                            <lightning-formatted-rich-text
+                                                                value={config.description}
+                                                            ></lightning-formatted-rich-text>
+                                                        </div>
+                                                        <template for:each={config.product} for:item="product">
+                                                            <li key={product.id}>
+                                                                <div class="slds-box">
+                                                                    <lightning-input
+                                                                        data-configid={product.configurationId}
+                                                                        data-id={product.id}
+                                                                        type="checkbox"
+                                                                        name={product.name}
+                                                                        value={product.id}
+                                                                        required={config.isRequired}
+                                                                        label={product.name}
+                                                                        onchange={handleChange}
+                                                                        checked={product.checked}
+                                                                        disabled={product.disabled}
+                                                                    ></lightning-input>
+                                                                    <div
+                                                                        class="slds-text-align_right slds-m-vertical_x-small"
+                                                                    >
+                                                                        <template lwc:if={product.showPrice}>
+                                                                            <p>
+                                                                                {labels.PRICE_LABEL}{config.product.netPriceText}
+                                                                            </p>
+                                                                        </template>
+                                                                        <template lwc:else
+                                                                            ><p>(No additional cost)</p></template
+                                                                        >
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </template>
+                                                    </template>
+                                                    <template lwc:else>
+                                                        <div class="slds-box">
+                                                            <lightning-input
+                                                                type="checkbox"
+                                                                data-configid={config.product.configurationId}
+                                                                data-id={config.product.id}
+                                                                name={config.product.name}
+                                                                value={config.product.id}
+                                                                required={config.isRequired}
+                                                                label={config.product.name}
+                                                                onchange={handleChange}
+                                                                checked={config.product.checked}
+                                                                disabled={config.product.disabled}
+                                                            ></lightning-input>
+                                                            <div class="slds-text-align_right slds-m-vertical_x-small">
+                                                                <template lwc:if={config.product.showPrice}>
+                                                                    <p>
+                                                                        {labels.PRICE_LABEL}{config.product.netPriceText}
+                                                                    </p>
+                                                                </template>
+                                                                <template lwc:else
+                                                                    ><p>(No additional cost)</p></template
+                                                                >
+                                                            </div>
+                                                        </div>
+                                                    </template>
+                                                </ul>
+                                            </template>
+                                            <template lwc:if={config.isRadio}>
+                                                <div class="slds-grid slds-var-m-bottom_medium">
+                                                    <div class="slds-text-heading_small">{config.name}</div>
+                                                    <template lwc:if={config.isRequired}
+                                                        ><div
+                                                            class="slds-col slds-p-horizontal_none"
+                                                            style="color: red"
+                                                        >
+                                                            *
+                                                        </div></template
+                                                    >
+                                                </div>
+                                                <div class="slds-m-bottom_x-small">
+                                                    <lightning-formatted-rich-text
+                                                        value={config.description}
+                                                    ></lightning-formatted-rich-text>
+                                                </div>
+                                                <div
+                                                    class="slds-box slds-form-element__control slds-grid slds-wrap slds-p-horizontal_xx-small"
+                                                >
+                                                    <template for:each={config.radioOptions} for:item="option">
+                                                        <span
+                                                            key={option.id}
+                                                            class="slds-radio slds-col slds-size_12-of-12 slds-p-horizontal_none"
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                id={option.id}
+                                                                data-id={option.id}
+                                                                data-configid={config.id}
+                                                                value={option.value}
+                                                                name={option.name}
+                                                                checked={option.checked}
+                                                                onchange={handleChange}
+                                                            />
+                                                            <label class="slds-radio__label" for={option.id}>
+                                                                <span class="slds-form-element__label">
+                                                                    <div class="slds-grid slds-wrap">
+                                                                        <div
+                                                                            class="slds-col slds-size_1-of-12 slds-grid slds-grid_vertical-align-center slds-align_left slds-p-horizontal_none"
+                                                                        >
+                                                                            <span
+                                                                                class="slds-radio_faux slds-m-right_none"
+                                                                            ></span>
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-col slds-grid slds-grid_vertical-align-center slds-p-horizontal_none slds-text-align_left slds-size_10-of-12 slds-small-size_11-of-12 slds-medium-size_5-of-12 slds-p-horizontal_xx-small"
+                                                                        >
+                                                                            {option.name}
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12 slds-text-align_left slds-p-horizontal_none"
+                                                                        >
+                                                                            {option.feeText}
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-col slds-var-p-top_small slds-var-p-left_large slds-size_12-of-12"
+                                                                        >
+                                                                            <lightning-formatted-rich-text
+                                                                                value={option.description}
+                                                                            ></lightning-formatted-rich-text>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </template>
+                                                    <template lwc:if={config.isPortableRadio}>
+                                                        <template lwc:if={showPortableNumber}>
+                                                            <div class="slds-grid slds-wrap">
+                                                                <div class="slds-col slds-size_12-of-12">
+                                                                    <b>{labels.CHECK_PORTABILITY_MESSAGE}</b>
+                                                                </div>
+                                                                <div
+                                                                    class="slds-col slds-medium-size_6-of-12 slds-m-vertical_x-small slds-small-size_8-of-12 slds-size_12-of-12"
+                                                                >
+                                                                    <lightning-input
+                                                                        type="tel"
+                                                                        pattern="[0-9]{10}"
+                                                                        max-length="10"
+                                                                        label={labels.PHONE_NUMBER}
+                                                                        name="phone"
+                                                                        required
+                                                                        value={phone}
+                                                                        onchange={handlePhone}
+                                                                        message-when-pattern-mismatch={labels.GENERIC_INVALID_PHONE_ERROR}
+                                                                    ></lightning-input>
+                                                                </div>
+                                                                <div class="slds-col slds-size_6-of-12"></div>
+                                                                <div
+                                                                    class="slds-col slds-medium-size_6-of-12 slds-small-size_8-of-12 slds-size_12-of-12 slds-m-top_x-small slds-max-small-size_1-of-1 slds-small-order_3"
+                                                                >
+                                                                    <lightning-button
+                                                                        class="slds-size_1-of-1"
+                                                                        label={labels.CHECK_PORTABILITY_BUTTON_LABEL}
+                                                                        variant="brand"
+                                                                        disabled={invalidPhone}
+                                                                        onclick={handlePortability}
+                                                                    ></lightning-button>
+                                                                </div>
+                                                            </div>
+                                                        </template>
+                                                    </template>
+                                                </div>
+                                            </template>
+                                            <template lwc:if={config.isMultiSelect}>
+                                                <div class="slds-text-heading_small slds-var-m-bottom_medium">
+                                                    {config.name}
+                                                </div>
+                                                <div class="slds-var-m-bottom_medium">
+                                                    <lightning-formatted-rich-text
+                                                        value={config.description}
+                                                    ></lightning-formatted-rich-text>
+                                                </div>
+
+                                                <div class="slds-box slds-grid slds-wrap">
+                                                    <div
+                                                        class="slds-text-align_left slds-var-m-bottom_medium slds-col slds-size_12-of-12"
+                                                    >
+                                                        {config.product.name}
+                                                    </div>
+
+                                                    <lightning-button-icon
+                                                        name="remove"
+                                                        data-id={config.product.id}
+                                                        data-configid={config.id}
+                                                        icon-name="utility:dash"
+                                                        alternative-text={labels.REMOVE_PRODUCT_ALT_TEXT}
+                                                        size="small"
+                                                        disabled={config.product.minReached}
+                                                        class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                        onclick={handleChange}
+                                                    ></lightning-button-icon>
+
+                                                    <lightning-input
+                                                        data-id={config.product.id}
+                                                        data-configid={config.id}
+                                                        type="number"
+                                                        label=""
+                                                        onchange={handleChange}
+                                                        class="slds-col slds-size_2-of-12 slds-align_absolute-center slds-var-p-bottom_large"
+                                                        value={config.product.selectedQuantity}
+                                                    ></lightning-input>
+
+                                                    <lightning-button-icon
+                                                        name="add"
+                                                        data-id={config.product.id}
+                                                        data-configid={config.id}
+                                                        icon-name="utility:add"
+                                                        disabled={config.product.maxReached}
+                                                        alternative-text={labels.ADD_PRODUCT_ALT_TEXT}
+                                                        size="small"
+                                                        class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                        onclick={handleChange}
+                                                    ></lightning-button-icon>
+
+                                                    <div
+                                                        class="slds-text-align_right slds-col slds-size_12-of-12 slds-m-vertical_x-small"
+                                                    >
+                                                        <template lwc:if={config.product.showPrice}>
+                                                            <p>{labels.PRICE_LABEL}{config.product.netPriceText}</p>
+                                                        </template>
+                                                        <template lwc:else><p>(No additional cost)</p></template>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-spectrum-cart
+                        cart={cart}
+                        has-phone={hasPhone}
+                        has-mobile={hasMobile}
+                        logo={logo}
+                    >
+                    </c-poe_lwc-buyflow-spectrum-cart>
+                </div>
+            </div>
+            <c-poe_lwc-buyflow-tab-actions
+                disable-next={disableNext}
+                show-previous="true"
+                show-cancel="true"
+                oncancel={handleCancel}
+                onprevious={handlePrevious}
+                onnext={handleClick}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text={labels.SPINNER_TEXT} size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showModal}>
+        <c-poe_lwc-buyflow-spectrum-portability-modal
+            modal-body={modalBody}
+            modal-title={modalTitle}
+            onclose={hideModal}
+            is-guest-user={isGuestUser}
+            onconfirm={handleModalConfirm}
+            portable-attributes={portableConfigurations}
+        ></c-poe_lwc-buyflow-spectrum-portability-modal>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

@@ -1,0 +1,32 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        class="slds-modal slds-fade-in-open slds-modal_x-small"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+    >
+        <div class="slds-modal__container slds-p-top_none">
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{title}</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_large slds-is-relative" id="modal-content-id-1">
+                <lightning-formatted-rich-text value={description}></lightning-formatted-rich-text>
+                <template lwc:if={isFee}>
+                    <p class="slds-p-top_x-small"><b>Fee Amount: ${creditFee}</b></p>
+                </template>
+            </div>
+            <div class="slds-modal__footer">
+                <template lwc:if={isFee}>
+                    <button class="slds-button slds-button_neutral" onclick={handleChangeCredit}>Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={handleClick}>Submit</button>
+                </template>
+                <template lwc:else>
+                    <button class="slds-button slds-button_brand" onclick={handleClick}>Next</button></template
+                >
+            </div>
+        </div>
+    </section>
+
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

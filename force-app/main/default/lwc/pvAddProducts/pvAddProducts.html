@@ -1,0 +1,164 @@
+<!--
+  @description       : 
+  @author            : Impaqtive dev team
+  @group             : 
+  @last modified on  : 08-08-2023
+  @last modified by  : 
+--> 
+<template>
+    <lightning-card if:true={LocationError}> 
+
+        <div class="slds-illustration slds-illustration_small" aria-hidden="true">
+          
+            <div class="slds-text-color_weak">
+                <h3 class="slds-text-heading_medium">{techerror}</h3>
+            </div>
+        </div>
+    </lightning-card>
+<lightning-card if:false={LocationError}> 
+<lightning-spinner if:true={isLoading}></lightning-spinner>
+
+    <lightning-layout multiple-rows>
+
+        <lightning-layout-item size="12" small-device-size="6" medium-device-size="4" large-device-size="3" >
+            <div class=" slds-text-align_center slds-p-horizontal_x-small ">
+            <c-pv-location-search if:false={readonly}  fieldlabel={Location} select-record-name={selectedPrimaryName} is-disabled={readonly}  input-read-only={readonly} select-record-id={locationId} clear-icon-flag=true icon-flag=false  onlocationselect={parentlocationselected}></c-pv-location-search>
+            <legend if:true={readonly}  class="slds-form-element__legend slds-form-element__label slds-text-align_center ">{fieldlabel}</legend>
+            <lightning-input type="text" if:true={readonly}  label="" value={selectedPrimaryName} disabled></lightning-input>
+
+        </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item if:true={transfer} size="12" small-device-size="6" medium-device-size="4" large-device-size="3" >
+            <div class=" slds-text-align_center slds-p-horizontal_x-small ">
+            <c-pv-location-search fieldlabel='Destination Location' onlocationselect={targetlocationselected}></c-pv-location-search>
+        </div>
+        </lightning-layout-item>
+        </lightning-layout>
+               
+        <!-- style="margin-left:6px;margin-right:6px" -->
+        <!-- class="slds-p-around_x-small -->
+    <template for:each={itemList} for:item="item" for:index="index">
+        <div class="slds-p-around_none  slds-m-top_x-small slds-m-bottom_medium slds-p-horizontal_x-small slds-theme_shade"  key={item.id} >
+
+            <lightning-layout multiple-rows class={style}>
+
+                <lightning-layout-item size="12" small-device-size="6" medium-device-size="4" large-device-size="3" >
+                    <div class="slds-text-align_center slds-p-horizontal_x-small">
+                        <c-pv-product-search rowindex={index} search-key={item.ProductName} onproductselect={productselected}></c-pv-product-search>
+                    </div>
+                </lightning-layout-item>
+                <!-- <lightning-layout-item size="3" small-device-size="6" medium-device-size="4" large-device-size="2" >
+                    <div class="slds-text-align_center slds-p-horizontal_x-small">
+                        <lightning-input data-id={index}  label="Quantity" type="number" class="validateInput" value={item.Quantity} onchange={quantitychange} disabled={item.IsSerialized}></lightning-input>
+                    </div>
+                </lightning-layout-item> -->
+                <lightning-layout-item size="12" small-device-size="6" medium-device-size="5" large-device-size="3" >
+                    <div class=" slds-text-align_center slds-p-horizontal_x-small">
+                        <lightning-layout>
+                            <lightning-layout-item  if:false={RMA} size="3">
+                                <div class="slds-text-align_center ">
+                                    <legend class="slds-form-element__legend slds-form-element__label slds-text-align_center ">Quantity</legend>
+
+                                    <lightning-input data-id={index}  label="" type="number" class="validateInput" value={item.Quantity} onchange={quantitychange}  onkeydown={quantitychange}  disabled={item.IsSerialized}  min="0" max="999"></lightning-input>
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item size={SerialNumberSize} class={SerialNumberClass}>
+                                <legend class="slds-form-element__legend slds-form-element__label slds-text-align_center ">Serial Number</legend>
+
+                                <lightning-input label="" data-id={index}  type="text" class="validateInput" value={item.SerialNumber} onchange={slnumberchange} disabled={item.NotSerialized}></lightning-input>
+
+                            </lightning-layout-item>
+                            
+                            <lightning-layout-item if:false={item.NotSerialized} size="1" class="slds-m-top_medium slds-p-left_small">
+                                <lightning-icon  data-id={index} 
+                                icon-name="action:scan_enabled" 
+                                alternative-text="Scan" 
+                                size="small" title="Scan"
+                                onclick={scanbarcode}>
+                                </lightning-icon>
+
+                            </lightning-layout-item>
+                        </br>
+                        </lightning-layout>                     
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" if:true={RMA} small-device-size="6" medium-device-size="3" large-device-size="2">
+                    <div class=" slds-text-align_center slds-p-horizontal_x-small slds-is-relative ">
+                        <legend class="slds-form-element__legend slds-form-element__label slds-text-align_center slds-is-relative">RMA Number</legend>
+
+                        <lightning-input label="" data-id={index}  type="text" class="validateInput" value={item.rmaNumber} onchange={rmaNumberchange} disabled={item.NotSerialized}></lightning-input>
+                        </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" class=" slds-is-relative" small-device-size="12" medium-device-size="12" large-device-size="4" >
+
+                        <div class="slds-m-top_large slds-is-relative">
+                    <lightning-button-group  class="slds-p-left_x-small slds-is-relative">
+                        <lightning-button data-id={index} variant="brand" label="Add Product" onclick={addRow}></lightning-button>
+                        <lightning-button data-id={index}  label="New Serial No."  onclick={addSl} disabled={item.NotSerialized}></lightning-button>
+                        <lightning-button data-id={index}  label="Delete" variant="destructive" icon-name="utility:delete"   onclick={removeRow}></lightning-button>
+                    </lightning-button-group>
+                </div>
+                </lightning-layout-item>
+                
+            </br>
+            </lightning-layout>
+            
+        </div>         
+    </template>
+
+    <div if:true={RMA}>
+        <c-file-uploader title="Packaging photo" onfileupload={handleFileUpload} onfiledelete={handleFileDelete}></c-file-uploader>
+    </div>
+
+    <div class=" slds-p-around_medium slds-text-align_center">
+
+        <lightning-button
+        variant="brand"
+        label="Submit"
+        title="Submit"
+        onclick={Submit}
+        class="slds-p-around_xxx-small">
+    </lightning-button>
+
+
+    </div>
+
+</lightning-card>
+
+    <template if:true={showmodal}>
+
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open ">
+            <div class="slds-modal__container scannerheight">
+             <!-- modal header start -->
+               <header class="slds-modal__header footerstyle ">
+                  <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideModalBox}>
+                     <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        onclick={handleOkay}
+                        size="small" ></lightning-icon>
+                     <span class="slds-assistive-text">Close</span>
+                  </button>
+                  <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Scanner</h2>
+               </header>
+           
+               <!-- modal body start -->
+               <div class="slds-modal__content scannerheight " id="modal-content-id-1">
+                 <!-- <iframe id="scan"  allow="camera; microphone" src="https://perfectvisionpoe--impdev--c.sandbox.vf.force.com/apex/pvScanner" width="100%" height="100%"> </iframe> -->
+                <iframe id="scan1" allow="camera; microphone; "  src={scanurl} style="width:100%;height:100%;border:none;overflow-y:auto;overflow-x:hidden; "></iframe>
+                 
+               </div>
+         
+               <!-- modal footer start-->
+               <footer class="slds-modal__footer footerstyle">
+                  <button class="slds-button slds-button_neutral" onclick={handleOkay}>Close</button>
+               </footer>
+            
+            </div>
+         </section>
+
+
+</template>
+
+</template>

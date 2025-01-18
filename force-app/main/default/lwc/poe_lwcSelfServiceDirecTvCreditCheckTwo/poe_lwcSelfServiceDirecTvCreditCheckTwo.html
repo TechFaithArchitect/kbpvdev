@@ -1,0 +1,274 @@
+<template>
+    <template lwc:if={isLoading}>
+        <lightning-spinner
+            alternative-text="Loading"
+            variant="brand"
+        ></lightning-spinner>
+    </template>    
+    <div class="page pages-nav">
+        <div class="nav-bar">
+            <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                <img src={iconBtnBack} alt="Back button" />
+            </a>
+
+            <h2>Where should we service?</h2>
+        </div>
+
+        <div class="page-content no-padding-top">
+            <form class="slds-m-bottom_medium">
+                <div class="form-header">
+                    <img align="left" src={iconFormCreditCard} />
+
+                    <h3>Credit verification</h3>
+                    <p>Provide your current residential and billing address.</p>
+                </div>
+
+                <div class="form-content">
+                    <template lwc:if={isNotGuestUser}>
+                        <div class="form-group">
+                            <lightning-radio-group
+                                class="radio-two-options"
+                                label="Select your client's preferred input method:"
+                                type="radio"
+                                data-field-name="pciInputMethod"
+                                options={pciInputOptions}
+                                value={pciInputMethod}
+                                onchange={handleChange}
+                            ></lightning-radio-group>
+                        </div>
+                    </template>
+
+                    <template lwc:if={isNotPCI}>
+                        <div class="form-group">
+                            <lightning-radio-group
+                                label="Verify credit by"
+                                options={creditCheckMethodOptions}
+                                type="radio"
+                                class="radio-two-options"
+                                data-field-name="creditCheckMethod"
+                                value={creditCheckMethod}
+                                onchange={handleChange}
+                            ></lightning-radio-group>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <p class="slds-text-body_small form-group">
+                            <lightning-formatted-rich-text
+                                value={phoneDisclaimer}
+                            ></lightning-formatted-rich-text>
+                        </p>
+                        <div class="form-group">
+                            <lightning-input
+                                type="checkbox"
+                                label={phoneDisclaimer2}
+                                checked={hasOptedInSMS}
+                                data-field-name="hasOptedInSMS"
+                                onchange={handleChange}
+                            >
+                            </lightning-input>
+                        </div>
+
+                        <div class="slds-grid slds-wrap slds-size_1-of-1 slds-m-bottom_small slds-grid_align-space">
+                            <div class="slds-col slds-max-medium-size_1-of-1 slds-m-bottom_small">
+                                <a class="btn-rounded slds-max-medium-size_1-of-1" onclick={sendPCIEmail}>
+                                    Send Email
+                                </a>
+                            </div>
+                            <div class="slds-col slds-max-medium-size_1-of-1 slds-m-bottom_small">
+                                <a class={smsBtnClass} onclick={handleSMS}>
+                                    Send SMS
+                                </a>
+                            </div>
+                            <div class="slds-col slds-max-medium-size_1-of-1 slds-m-bottom_small">
+                                <a class="btn-rounded slds-max-medium-size_1-of-1" onclick={handleRefresh}>
+                                    Refresh Fields
+                                </a>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template lwc:if={isSSNCreditCheck}>
+                        <div class="form-group">
+                            <lightning-input
+                                type="password"
+                                required
+                                placeholder="Write the SSN"
+                                label="SSN (*)"
+                                data-field-name="ccSSN"
+                                min-length="9"
+                                max-length="9"
+                                disabled={isPCI}
+                                value={ccSSN}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+
+                        <template lwc:if={isNotPCI}>
+                            <div class="form-group">
+                                <lightning-input
+                                    type="password"
+                                    required
+                                    placeholder="Repeat the SSN"
+                                    label="Repeat SSN (*)"
+                                    data-field-name="repeatSSN"
+                                    min-length="9"
+                                    max-length="9"
+                                    value={repeatSSN}
+                                    onchange={handleChange}
+                                    onblur={handleSSNRepeatValidation}
+                                ></lightning-input>
+                            </div>
+                        </template>
+    
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="date"
+                                date-style="short"
+                                label="Date of Birth (*)"
+                                placeholder="Select your date of birth"
+                                data-field-name="ccDOB"
+                                min="1901-01-01"
+                                disabled={isPCI}
+                                value={ccDOB}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="date"
+                                date-style="short"
+                                label="Date of Birth (*)"
+                                placeholder="Select your date of birth"
+                                data-field-name="ccDOB"
+                                min="1901-01-01"
+                                disabled={isPCI}
+                                value={ccDOB}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                        <div class="form-group">
+                            <lightning-input
+                                type="text"
+                                label="Driver's License Number (*)"
+                                required
+                                data-field-name="ccDL"
+                                disabled={isPCI}
+                                value={ccDL}
+                                onchange={handleChange}
+                            >
+                            </lightning-input>
+                        </div>
+                        <div class="form-group">
+                            <lightning-select
+                                label="DL State (*)"
+                                required
+                                data-field-name="ccDLstate"
+                                value={ccDLstate}
+                                disabled={isPCI}
+                                options={stateOptions}
+                                onchange={handleChange}
+                            ></lightning-select>
+                        </div>
+                        <div class="form-group">
+                            <lightning-input
+                                type="date"
+                                date-style="short"
+                                label="DL Expiration Date (*)"
+                                required
+                                data-field-name="ccDLexpDate"
+                                value={ccDLexpDate}
+                                disabled={isPCI}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                    </template>
+
+                    <hr />
+
+                    <h3>Billing Address</h3>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="checkbox"
+                            label={labels.BILLING_ADDRESS_SAME_AS_SERVICE_ADDRESS_FIELD}
+                            checked={billingAddressIsSameAsService}
+                            onchange={handleBillingAddressSameAsServiceChange}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="slds-col slds-size_1-of-1">
+                            <c-poe_lwc-address-field
+                                always-send-changes="true"
+                                disabled={billingAddressIsSameAsService}
+                                postal-code={billingAddress.zipCode}
+                                street={billingAddress.addressLine1}
+                                address-line-2={billingAddress.addressLine2}
+                                city={billingAddress.city}
+                                province={billingAddress.state}
+                                country={displayCountry}
+                                onaddresschange={handlePredictiveShippingAddressChange}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-address-field>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="checkbox"
+                            label="Is this a Previous address?"
+                            data-field-name="isPreviousAddress"
+                            checked={isPreviousAddress}
+                            disabled={billingAddressIsSameAsService}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+
+                    <template lwc:if={isNotPCI}>
+                        <template lwc:if={isNotCallCenterOrigin}>
+                            <p class="slds-text-body_small form-group">
+                                <lightning-formatted-text
+                                    value="This is private information and is only visible to you. We only use this information to confirm your identity."
+                                >
+                                </lightning-formatted-text>
+                            </p>
+                            <div class="form-group">
+                                <lightning-input
+                                    type="checkbox"
+                                    label="I have read the statement"
+                                    data-field-name="isStatementRead"
+                                    checked={isStatementRead}
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </form>
+
+            <a onclick={handleNext} class={nextBtnDesktopClass}>
+                Next step
+            </a>
+        </div>
+
+        <div class="footer-mobile">
+            <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                <img src={iconBtnBack} alt="Back button" />
+            </a>
+
+            <a onclick={handleNext} class={nextBtnMobileClass}> Next step </a>
+        </div>
+    </div>
+
+    <template lwc:if={showPredictiveAddress}>
+        <c-poe_lwc-buyflow-windstream-predictive-address-modal
+            onclose={hideAddressModal}
+            onconfirm={selectAddressHandler}
+            addresses={predictiveAddresses}
+        ></c-poe_lwc-buyflow-windstream-predictive-address-modal>
+    </template>        
+</template>

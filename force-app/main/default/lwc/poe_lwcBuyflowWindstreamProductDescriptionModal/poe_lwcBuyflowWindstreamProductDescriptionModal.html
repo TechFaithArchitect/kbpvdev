@@ -1,0 +1,50 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        class="slds-modal slds-fade-in-open slds-modal_x-small"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{labels.Windstream_Disclaimers}</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-grid slds-wrap">
+                    <template lwc:if={hasTech}>
+                        <h2>{labels.Tech_Disclaimer_Title}</h2>
+                        <div class="slds-col slds-text-body_medium slds-p-around_small slds-size_12-of-12">{tech}</div>
+                    </template>
+                    <template for:each={description} for:item="disclaimer">
+                        <div key={disclaimer.number}>
+                            <h2>{disclaimer.name}</h2>
+                            <div class="slds-col slds-text-body_medium slds-p-around_small slds-size_12-of-12">
+                                {disclaimer.description}
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick={closeModal}>{modalLabel}</button>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

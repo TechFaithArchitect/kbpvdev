@@ -1,0 +1,174 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default">
+            <template lwc:if={showSBS}>
+                <c-poe_lwc-buyflow-direc-tv-enga-s-b-s-button
+                    record-id={recordId}
+                    is-guest-user={isGuestUser}
+                    ongoback={hideSBS}
+                    onlogerror={handleLogError}
+                ></c-poe_lwc-buyflow-direc-tv-enga-s-b-s-button>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_1-of-1 slds-small-size_2-of-3">
+                        <div
+                            class="slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Number of Devices
+                        </div>
+                        <div class="slds-grid slds-wrap slds-gutters slds-p-around_xx-small">
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-grid_align-center"
+                            >
+                                <p class="slds-p-around_medium">
+                                    First device included for well-qualified customers. Leased devices are Subject to
+                                    Equipment Lease Agreement and DIRECTV Residential Terms of Service. $7/mo. for each
+                                    additional TV connection on your account. If service is cancelled you must return
+                                    the included and leased device(s) to avoid a non-return fee of $120 per device.
+                                </p>
+                            </div>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-grid_align-center"
+                            >
+                                <div class="slds-form-element__control slds-col slds-size_12-of-12">
+                                    <template for:each={hardwareOptions} for:item="product">
+                                        <span key={product.iterId} class="slds-radio">
+                                            <input
+                                                type="radio"
+                                                data-id={product.iterId}
+                                                id={product.iterId}
+                                                value={product.iterId}
+                                                checked={product.isChecked}
+                                                name="products"
+                                                onchange={handleHardwareSelection}
+                                            />
+                                            <label class="slds-radio__label" for={product.iterId}>
+                                                <span class="slds-form-element__label">
+                                                    <div class="slds-box slds-grid slds-wrap">
+                                                        <div
+                                                            class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                        >
+                                                            <span class="slds-radio_faux slds-m-right_none"></span>
+                                                        </div>
+                                                        <div
+                                                            class="slds-col slds-size_10-of-12 slds-small-size_7-of-12"
+                                                        >
+                                                            <b>{product.quantity}</b>
+                                                        </div>
+                                                        <div
+                                                            class="slds-col slds-size_1-of-1 slds-small-size_4-of-12 slds-text-align_right"
+                                                        >
+                                                            {product.price}
+                                                        </div>
+                                                        <div
+                                                            class="slds-col slds-size_12-of-12 slds-p-left_large slds-p-top_medium"
+                                                        >
+                                                            {product.description}
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            </label>
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+                            <template lwc:if={deviceSelected}>
+                                <div
+                                    class="slds-col slds-size_12-of-12 slds-var-m-bottom_x-small slds-var-m-left_small"
+                                >
+                                    <lightning-input
+                                        type="checkbox"
+                                        label="Will Dealer Inventory be used for this order?"
+                                        checked={checkedDealerInventory}
+                                        onchange={handleDealerInventory}
+                                    ></lightning-input>
+                                </div>
+                                <template lwc:if={checkedDealerInventory}>
+                                    <div
+                                        class="slds-col slds-grid slds-wrap slds-gutters slds-size_12-of-12 slds-var-m-bottom_x-small slds-var-m-horizontal_small"
+                                    >
+                                        <template for:each={serials} for:item="serial">
+                                            <div
+                                                class="slds-col slds-size_11-of-12 slds-small-size_6-of-12"
+                                                key={serial.id}
+                                            >
+                                                <lightning-input
+                                                    type="text"
+                                                    data-id={serial.id}
+                                                    label={serial.label}
+                                                    value={serial.value}
+                                                    disabled={serialValidationComplete}
+                                                    onchange={handleSerial}
+                                                ></lightning-input>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <div class="slds-col slds-size_6-of-12 slds-m-vertical_x-small slds-m-left_small">
+                                        <lightning-button
+                                            disabled={noValidate}
+                                            label="Validate"
+                                            variant="brand"
+                                            onclick={validateSerialNumber}
+                                        ></lightning-button>
+                                    </div>
+                                </template>
+                            </template>
+                            <template lwc:if={chosenOption}>
+                                <div
+                                    class="slds-col slds-size_12-of-12 slds-m-bottom_xxx-small slds-grid slds-grid_align-center"
+                                >
+                                    <lightning-formatted-rich-text
+                                        value={verbiages.streamEquipmentTerms}
+                                    ></lightning-formatted-rich-text>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-3">
+                        <c-poe_lwc-buyflow-directv-enga-cart cart={cart}></c-poe_lwc-buyflow-directv-enga-cart>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    show-cancel="true"
+                    show-previous="true"
+                    onnext={handleNext}
+                    onprevious={handlePrevious}
+                    oncancel={handleCancel}
+                    disable-next={noCompleteInfo}
+                ></c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

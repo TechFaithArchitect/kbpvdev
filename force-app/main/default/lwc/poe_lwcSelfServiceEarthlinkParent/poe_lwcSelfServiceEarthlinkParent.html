@@ -1,0 +1,260 @@
+<template>
+    <header class={headerMode} provider={providerStyle}>
+        <div class="content-header">
+            <div class="content-logo">
+                <a onclick={handleCancel} title="Logo" class="logo">
+                    <img src={logoHeader} alt="Logo" />
+                </a>
+            </div>
+
+            <div class="content-menu">
+                <!-- content-menu has display: none -->
+                <ul>
+                    <li>
+                        <button>Providers</button>
+                    </li>
+
+                    <li>
+                        <button>About</button>
+                    </li>
+
+                    <li>
+                        <button>FAQ’s</button>
+                    </li>
+
+                    <li>
+                        <button>Contact us</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="content-steps-information">
+                <ul>
+                    <template lwc:if={isNotGuestUser}>
+                        <li>
+                            <i style="width: 50%" data-id="service-item"></i>
+                            <lightning-formatted-text
+                                value={labels.SERVICE_INFORMATION_TAB_NAME_LABEL}
+                            ></lightning-formatted-text>
+                        </li>
+                        <li>
+                            <i style="width: 0%" data-id="customizations-item"></i>
+                            <lightning-formatted-text
+                                value={labels.PLAN_CUSTOMIZATION_TAB_NAME_LABEL}
+                            ></lightning-formatted-text>
+                        </li>
+                    </template>
+                    <template lwc:else>
+                        <li>
+                            <i style="width: 25%" data-id="customizations-item"></i>
+                            <lightning-formatted-text
+                                value={labels.PLAN_CUSTOMIZATION_TAB_NAME_LABEL}
+                            ></lightning-formatted-text>
+                        </li>
+                    </template>
+                    <li>
+                        <i style="width: 0%" data-id="personal-item"></i>
+                        <lightning-formatted-text
+                            value={labels.PERSONAL_INFORMATION_TAB_NAME_LABEL}
+                        ></lightning-formatted-text>
+                    </li>
+                    <li>
+                        <i style="width: 0%" data-id="payment-item"></i>
+                        <lightning-formatted-text
+                            value={labels.PAYMENT_TAB_NAME_LABEL}
+                        ></lightning-formatted-text>
+                    </li>
+                    <li>
+                        <i style="width: 0%" data-id="confirmation-item"></i>
+                        <lightning-formatted-text
+                            value={labels.CONFIRMATION_TAB_NAME_LABEL}
+                        ></lightning-formatted-text>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="content-steps-information-mobile">
+                <template lwc:if={currentCart}>
+                    <div class="cart-right-float" onclick={toggleCart}>
+                        <img src={iconCart} />
+                        <p class="float-label">{cartItemsCount}</p>
+                    </div>
+                </template>
+
+                <p class="current-step">
+                    <i style="width: 0%" data-id="mobile-path"></i>
+                    {mobileStep} <span>{labels.STEP_LABEL} {currentStep}/{buyflowSteps}</span>
+                </p>
+            </div>
+        </div>
+    </header>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class={pageClass}>
+                <template lwc:if={showCollateral}>
+                    <c-collateral-files-component
+                        provider="frontier"
+                        onshowcollateral={handleCollateral}
+                    ></c-collateral-files-component>
+                </template>
+                <template lwc:else>
+                    <template lwc:if={isNotGuestUser}>
+                        <div class="slds-grid slds-grid_align-end">
+                            <div class="slds-col">
+                                <c-collateral-files-button
+                                    onshowcollateral={handleCollateral}
+                                ></c-collateral-files-button>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Info Tab - Chuzo Agent Only -->
+                    <template lwc:if={isViewInfoTab}>
+                        <c-poe_lwc-self-service-earthlink-info-tab
+                            record-id={recordId}
+                            logo={logo}
+                            origin={origin}
+                            referral-code-data={referralCodeData}
+                            oncheckserviceability={handleCheckServiceability}
+                            onback={handleBack}
+                            onlogerror={handleLogError}
+                            is-guest-user={isGuestUser}
+                            onhome={handleHome}
+                        ></c-poe_lwc-self-service-earthlink-info-tab>
+                    </template>
+                    <!--  Products Tab -->
+                    <template lwc:if={isViewProductsTab}>
+                        <c-poe_lwc-self-service-earthlink-products-tab
+                            record-id={recordId}
+                            logo={logo}
+                            user-id={userId}
+                            address-info={clientInfo.addressInfo}
+                            selected={selectedProduct}
+                            origin={origin}
+                            promo-codes={promoCodes}
+                            referral-code-data={referralCodeData}
+                            onproductselection={handleProductSelection}
+                            onnormalizedaddress={handleNormalizedAddress}
+                            onback={handleBack}
+                            onlogerror={handleLogError}
+                            is-guest-user={isGuestUser}
+                            onhome={handleHome}
+                        ></c-poe_lwc-self-service-earthlink-products-tab>
+                    </template>
+                    <!-- Services Tab - Wired Products Only -->
+                    <template lwc:if={isViewServiceTab}>
+                        <c-poe_lwc-self-service-earthlink-services-tab
+                            record-id={recordId}
+                            logo={logo}
+                            user-id={userId}
+                            cart-info={cartProducts}
+                            services={services}
+                            bundles={bundles}
+                            selected-services={selectedServices}
+                            selected={selectedProduct}
+                            origin={origin}
+                            is-guest-user={isGuestUser}
+                            onserviceselection={handleServiceSelection}
+                            onback={handleBack}
+                            onlogerror={handleLogError}
+                            onhome={handleHome}
+                            oncartupdate={handleCartUpdate}
+                        ></c-poe_lwc-self-service-earthlink-services-tab>
+                    </template>
+                    <!--  Credit Check Tab  -->
+                    <template lwc:if={isViewCreditCheckTab}>
+                        <c-poe_lwc-self-service-earthlink-credit-check-tab
+                            record-id={recordId}
+                            origin={origin}
+                            contact={contact}
+                            is-wireless={isWireless}
+                            selected-product={selectedProduct}
+                            selected-services={selectedServices}
+                            address-info={clientInfo.addressInfo}
+                            contact-info={clientInfo.contactInfo}
+                            contact-email={clientInfo.contactEmail}
+                            use-earthlink-domain={useEarthlinkDomain}
+                            is-guest-user={isGuestUser}
+                            referral-code-data={referralCodeData}
+                            skip-installation={noInstallation}
+                            oncreditcheckpassed={handleCreditCheckPassed}
+                            onback={handleBack}
+                            onlogerror={handleLogError}
+                            onhome={handleHome}
+                        ></c-poe_lwc-self-service-earthlink-credit-check-tab>
+                    </template>
+                    <!-- Checkout / Payment Tab -->
+                    <template lwc:if={isViewCheckoutTab}>
+                        <c-poe_lwc-self-service-earthlink-checkout-tab
+                            record-id={recordId}
+                            logo={logo}
+                            reference-number={referenceNumber}
+                            client-info={clientInfo}
+                            cart-info={cartServices}
+                            disclaimers={checkoutDisclaimers}
+                            shipping-address={creditCheckCallout.account.shippingAddress}
+                            billing-address={creditCheckCallout.account.billingAddress}
+                            due={cartServices.todayTotal}
+                            origin={origin}
+                            oncreditcardvalidated={handleCheckoutNext}
+                            onback={handleBack}
+                            onlogerror={handleLogError}
+                            is-guest-user={isGuestUser}
+                            onhome={handleHome}
+                        ></c-poe_lwc-self-service-earthlink-checkout-tab>
+                    </template>
+                    <!-- Order Confirmation -->
+                    <template lwc:if={isViewOrderConfirmation}>
+                        <c-poe_lwc-self-service-earthlink-order-confirmation-tab
+                            record-id={recordId}
+                            logo={logo}
+                            product={selectedProduct}
+                            user-id={userId}
+                            cart-info={cartServices}
+                            payment-attempts={paymentAttempts}
+                            first-fee={oneTimeFee}
+                            origin={origin}
+                            selected-services={selectedServices}
+                            callout-info={confirmationCallout}
+                            promo-code={selectedPromoCode}
+                            is-guest-user={isGuestUser}
+                            installation-datetime={dateSelected}
+                            skip-installation={skipInstallation}
+                            onorderconfirmationnext={handleOrderConfirmationNext}
+                            onback={handleBack}
+                            onlogerror={handleLogError}
+                            onhome={handleHome}
+                        ></c-poe_lwc-self-service-earthlink-order-confirmation-tab>
+                    </template>
+                    <!-- Order Success -->
+                    <template lwc:if={isViewOrderSuccessTab}>
+                        <c-poe_lwc-self-service-order-success-tab
+                            order-number={orderNumber}
+                            order-id={orderId}
+                            record-id={recordId}
+                            reference-number={referenceNumber}
+                            origin={origin}
+                            client-info={clientInfo}
+                            onlogerror={handleLogError}
+                            program="earthlink"
+                            is-guest-user={isGuestUser}
+                            onhome={handleHome}
+                        ></c-poe_lwc-self-service-order-success-tab>
+                    </template>
+
+                    <template lwc:if={currentCart}>
+                        <div class="panel-right">
+                            <c-poe_lwc-self-service-direc-tv-cart
+                                cart-info={currentCart}
+                                cart-icon={providerLogoEarthlink}
+                                cart-title={labels.EARTHLINK_PROVIDER_LABEL}
+                                cart-subtitle={labels.INTERNET_CONNECTION_CART_TITLE}
+                            >
+                            </c-poe_lwc-self-service-direc-tv-cart>
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

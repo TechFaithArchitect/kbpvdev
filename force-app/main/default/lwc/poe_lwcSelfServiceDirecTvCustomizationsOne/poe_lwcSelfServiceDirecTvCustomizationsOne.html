@@ -1,0 +1,64 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <a onclick={changeViewToService} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <h2>{title}</h2>
+                </div>
+
+                <div class="page-content">
+                    <div class="group-cards">
+                        <template lwc:if={streamAvailable}>
+                            <div class="card half-card" data-id="stream-container" id="stream" onclick={handleType}>
+                                <img src={iconExistConnection} data-id="stream" />
+                                <div class="card-content" data-id="stream">
+                                    <h3 data-id="stream">Connect without a satellite dish</h3>
+                                    <p data-id="stream">Use my existing Internet connection.</p>
+                                </div>
+                            </div>
+                        </template>
+                        <template lwc:if={beamAvailable}>
+                            <div class="card half-card" data-id="beam-container" id="beam" onclick={handleType}>
+                                <img src={iconConnectionSatellite} data-id="beam" />
+                                <div class="card-content" data-id="beam">
+                                    <h3 data-id="beam">Connect with satellite dish</h3>
+                                    <p data-id="beam">
+                                        Best for residences in rural areas with no access to high-speed internet.
+                                    </p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <p class="text-center">
+                        Internet Connection is required. It is recommended that your connection is 25Mbps or higher.
+                    </p>
+
+                    <a onclick={handleNext} class={nextBtnDesktopClass} data-id="next"> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <a onclick={changeViewToService} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <a onclick={handleNext} class={nextBtnMobileClass} data-id="next"> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={showSuggestedAddressModal}>
+        <c-poe_lwc-buyflow-direc-tv-info-tab-modal
+            onclose={hideModal}
+            onconfirm={handleSuggestedAddress}
+            suggested-addresses={suggestedAddresses}
+        ></c-poe_lwc-buyflow-direc-tv-info-tab-modal>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

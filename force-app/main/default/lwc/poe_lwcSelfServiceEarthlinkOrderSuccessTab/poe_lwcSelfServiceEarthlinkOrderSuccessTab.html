@@ -1,0 +1,22 @@
+<template>
+    <div class="pages-with-provider-style page pages-nav" provider="earthlink">
+        <div class="nav-bar">
+            <h2>Order Success</h2>
+        </div>
+        <div class="page-content no-padding-top">
+            <div class="page-invoice">
+                <img src={iconCheckGreen} />
+                <h3>Thank you for your order, you're going to love your service!</h3>
+                <p>Reference number: <span>{referenceNumber}</span></p>
+                <p>Confirmation number: <span>{orderNumber}</span></p>
+
+                <a class="btn-rounded btn-center hide-mobile" onclick={newOpportunityHandler}> New Product </a>
+                <a class="btn-rounded btn-center hide-mobile" onclick={homeHandler}> {homeButtonLabel} </a>
+            </div>
+        </div>
+        <div class="footer-mobile">
+            <a class="btn-rounded btn-center" onclick={newOpportunityHandler}> New Product </a>
+            <a class="btn-rounded btn-center" onclick={homeHandler}> {homeButtonLabel} </a>
+        </div>
+    </div>
+</template>

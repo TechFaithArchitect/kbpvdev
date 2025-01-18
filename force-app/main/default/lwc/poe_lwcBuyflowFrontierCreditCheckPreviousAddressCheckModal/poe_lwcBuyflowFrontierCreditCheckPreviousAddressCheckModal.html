@@ -1,0 +1,113 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate" tabindex="-1">
+                    Verify Previous Address
+                </h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" style="overflow: initial" id="modal-content-id-1">
+                <div class="slds-form-element__control">
+                    <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                        <div class="slds-grid slds-wrap slds-p-bottom_large">
+                            <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                                <lightning-input
+                                    type="text"
+                                    label="Address"
+                                    name="previousAddress"
+                                    required
+                                    onchange={handleAddressChange}
+                                    value={previousAddress}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                                <lightning-input
+                                    type="text"
+                                    label="Apt/Suite/Unit"
+                                    onchange={handleAddressChange}
+                                    name="previousApt"
+                                    value={previousApt}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                                <lightning-input
+                                    type="text"
+                                    label="City"
+                                    required
+                                    onchange={handleAddressChange}
+                                    name="previousCity"
+                                    value={previousCity}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                                <lightning-combobox
+                                    label="State"
+                                    required="true"
+                                    name="previousState"
+                                    value={previousState}
+                                    onchange={handleAddressChange}
+                                    options={states}
+                                ></lightning-combobox>
+                            </div>
+
+                            <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                                <lightning-input
+                                    type="text"
+                                    max-length="5"
+                                    label="Zip"
+                                    required
+                                    onchange={handleAddressChange}
+                                    name="previousZip"
+                                    value={previousZip}
+                                ></lightning-input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <div class="slds-grid slds-float_right">
+                    <div class="slds-col slds-p-right--medium">
+                        <lightning-button
+                            variant="neutral"
+                            label="Cancel"
+                            onclick={hideModal}
+                            class="slds-float_right"
+                        ></lightning-button>
+                    </div>
+                    <div class="slds-col slds-p-right--medium">
+                        <lightning-button
+                            variant="brand"
+                            label="Verify Previous Address"
+                            onclick={handleVerifyPreviousAddress}
+                            class="slds-float_right"
+                            disabled={noCompleteInfo}
+                        ></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

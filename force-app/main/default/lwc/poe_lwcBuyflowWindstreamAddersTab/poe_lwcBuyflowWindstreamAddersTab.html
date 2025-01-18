@@ -1,0 +1,701 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="windstream"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default">
+            <template lwc:if={showSBS}>
+                <c-poe_lwc-buyflow-windstream-s-b-s-button
+                    ongoback={hideSBS}
+                    record-id={recordId}
+                    onlogerror={handleLogError}
+                ></c-poe_lwc-buyflow-windstream-s-b-s-button>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_medium">
+                    <div class="slds-col slds-box slds-size_1-of-1 slds-medium-size_2-of-3 slds-m-bottom_small">
+                        <div
+                            class="slds-text-heading_medium slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_none slds-m-horizontal_none"
+                        >
+                            {labels.Adders_Selection_label}
+                        </div>
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <template lwc:if={showModemSelection}>
+                                <div class="slds-col slds-medium-size_6-of-12 slds-size_12-of-12">
+                                    <div
+                                        class="slds-text-heading_small slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_x-small slds-m-horizontal_none"
+                                        style="color: #ff8200"
+                                    >
+                                        {labels.Modem_Selection_labels}
+                                    </div>
+                                    <div class="slds-form-element__control">
+                                        <template for:each={installationAdders} for:item="adder">
+                                            <div
+                                                key={adder.Id}
+                                                class="slds-box slds-grid slds-wrap slds-m-bottom_medium slds-p-horizontal_none"
+                                            >
+                                                <div class="slds-col slds-size_12-of-12 slds-wrap">
+                                                    <div>
+                                                        <span class="slds-radio">
+                                                            <input
+                                                                type="radio"
+                                                                id={adder.Id}
+                                                                data-id={adder.Id}
+                                                                data-type={adder.type}
+                                                                value={adder.Id}
+                                                                name="installations"
+                                                                checked={adder.isChecked}
+                                                                onchange={handleChange}
+                                                            />
+                                                            <label class="slds-radio__label" for={adder.Id}>
+                                                                <span class="slds-form-element__label">
+                                                                    <div class="slds-grid">
+                                                                        <div
+                                                                            class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                                        >
+                                                                            <span
+                                                                                class="slds-radio_faux slds-m-right_none"
+                                                                            ></span>
+                                                                        </div>
+                                                                        <div class="slds-col slds-size_8-of-12">
+                                                                            <strong>{adder.Name}</strong>
+                                                                            <template lwc:if={adder.hasDisclaimer}>
+                                                                                &nbsp;&nbsp;&nbsp;<a
+                                                                                    onclick={handleDescription}
+                                                                                    data-name={adder.Name}
+                                                                                    data-id={adder.disclaimerNumber}
+                                                                                    >See Details</a
+                                                                                >
+                                                                            </template>
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-col slds-size_3-of-12 slds-text-align_left slds-p-horizontal_none"
+                                                                        >
+                                                                            <strong> ${adder.Price} </strong>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:if={extenders.length}>
+                                <div class={extendersSelectionClass}>
+                                    <div
+                                        class="slds-text-heading_small slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_x-small slds-m-horizontal_none"
+                                        style="color: #ff8200"
+                                    >
+                                        {labels.Extenders_Selection_labels}
+                                    </div>
+                                    <div class="slds-form-element__control">
+                                        <template for:each={extenders} for:item="adder">
+                                            <div
+                                                key={adder.Id}
+                                                class="slds-box slds-grid slds-wrap slds-m-bottom_medium slds-p-horizontal_none"
+                                            >
+                                                <div class="slds-col slds-size_12-of-12 slds-wrap">
+                                                    <div>
+                                                        <span class="slds-checkbox slds-col slds-size_12-of-12">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={adder.Id}
+                                                                data-id={adder.Id}
+                                                                data-type={adder.type}
+                                                                value={adder.Id}
+                                                                name="extenders"
+                                                                disabled={adder.isDisabled}
+                                                                checked={adder.isChecked}
+                                                                onchange={handleChange}
+                                                            />
+                                                            <label class="slds-checkbox__label" for={adder.Id}>
+                                                                <span class="slds-form-element__label">
+                                                                    <div class="slds-grid">
+                                                                        <div
+                                                                            class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                                        >
+                                                                            <span
+                                                                                class="slds-checkbox_faux slds-m-right_none"
+                                                                            ></span>
+                                                                        </div>
+                                                                        <div class="slds-col slds-size_8-of-12">
+                                                                            <strong>{adder.Name}</strong>
+                                                                            <template lwc:if={adder.hasDisclaimer}>
+                                                                                &nbsp;&nbsp;&nbsp;<a
+                                                                                    onclick={handleDescription}
+                                                                                    data-name={adder.Name}
+                                                                                    data-id={adder.disclaimerNumber}
+                                                                                    >See Details</a
+                                                                                >
+                                                                            </template>
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-col slds-size_3-of-12 slds-text-align_left slds-p-horizontal_none"
+                                                                        >
+                                                                            <strong> ${adder.Price} </strong>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:if={fees.length}>
+                                <div class="slds-col slds-size_12-of-12">
+                                    <div
+                                        class="slds-text-heading_small slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_x-small slds-m-horizontal_none"
+                                        style="color: #ff8200"
+                                    >
+                                        {labels.Installation_Fees_labels}
+                                    </div>
+                                    <div class="slds-form-element__control">
+                                        <template for:each={fees} for:item="adder">
+                                            <div
+                                                key={adder.Id}
+                                                class="slds-grid slds-wrap slds-m-bottom_medium slds-p-horizontal_none"
+                                            >
+                                                <div class="slds-col slds-size_12-of-12 slds-wrap">
+                                                    <div>
+                                                        <span
+                                                            class="slds-checkbox slds-col slds-size_12-of-12 slds-p-left_none"
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                id={adder.Id}
+                                                                data-id={adder.Id}
+                                                                data-type={adder.type}
+                                                                value={adder.Id}
+                                                                name="fees"
+                                                                disabled={adder.isDisabled}
+                                                                checked={adder.isChecked}
+                                                                onchange={handleChange}
+                                                            />
+                                                            <label class="slds-checkbox__label" for={adder.Id}>
+                                                                <span class="slds-form-element__label">
+                                                                    <div class="slds-grid">
+                                                                        <div
+                                                                            class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                                        >
+                                                                            <span
+                                                                                class="slds-checkbox_faux slds-m-right_none"
+                                                                            ></span>
+                                                                        </div>
+                                                                        <div class="slds-col slds-size_8-of-12">
+                                                                            <strong>{adder.Name}</strong>
+                                                                            <template lwc:if={adder.hasDisclaimer}>
+                                                                                &nbsp;&nbsp;&nbsp;<a
+                                                                                    onclick={handleDescription}
+                                                                                    data-name={adder.Name}
+                                                                                    data-id={adder.disclaimerNumber}
+                                                                                    >See Details</a
+                                                                                >
+                                                                            </template>
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-col slds-size_3-of-12 slds-text-align_left slds-p-horizontal_none"
+                                                                        >
+                                                                            <strong> ${adder.Price} </strong>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:if={autoPay.length}>
+                                <div class="slds-col slds-medium-size_7-of-12 slds-size_12-of-12">
+                                    <div
+                                        class="slds-text-heading_small slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_x-small slds-m-horizontal_none"
+                                        style="color: #ff8200"
+                                    >
+                                        {labels.AutoPay_labels}
+                                    </div>
+                                    <div class="slds-form-element__control">
+                                        <template for:each={autoPay} for:item="adder">
+                                            <div key={adder.Id} class="slds-grid slds-wrap slds-m-bottom_medium">
+                                                <div class="slds-col slds-size_12-of-12 slds-wrap">
+                                                    <div>
+                                                        <span class="slds-radio">
+                                                            <input
+                                                                type="radio"
+                                                                id={adder.Id}
+                                                                data-id={adder.Id}
+                                                                data-type={adder.type}
+                                                                value={adder.Id}
+                                                                name="autoPay"
+                                                                checked={adder.isChecked}
+                                                                onchange={handleChange}
+                                                            />
+                                                            <label class="slds-radio__label" for={adder.Id}>
+                                                                <span class="slds-form-element__label">
+                                                                    <div class="slds-grid">
+                                                                        <div
+                                                                            class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                                        >
+                                                                            <span
+                                                                                class="slds-radio_faux slds-m-right_none"
+                                                                            ></span>
+                                                                        </div>
+                                                                        <div class="slds-col slds-size_8-of-12">
+                                                                            <strong>{adder.Name}</strong>
+                                                                            <template lwc:if={adder.hasDisclaimer}>
+                                                                                &nbsp;&nbsp;&nbsp;<a
+                                                                                    onclick={handleDescription}
+                                                                                    data-name={adder.Name}
+                                                                                    data-id={adder.disclaimerNumber}
+                                                                                    >See Details</a
+                                                                                >
+                                                                            </template>
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-col slds-size_3-of-12 slds-text-align_left slds-p-horizontal_none"
+                                                                        >
+                                                                            <strong> ${adder.Price} </strong>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:if={paperless.length}>
+                                <div class="slds-col slds-medium-size_5-of-12 slds-size_12-of-12">
+                                    <div
+                                        class="slds-text-heading_small slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_x-small slds-m-horizontal_none"
+                                        style="color: #ff8200"
+                                    >
+                                        {labels.Paper_Paperless_Billing_labels}
+                                    </div>
+                                    <div class="slds-form-element__control">
+                                        <template for:each={paperless} for:item="adder">
+                                            <div key={adder.Id} class="slds-grid slds-wrap slds-m-bottom_medium">
+                                                <div class="slds-col slds-size_12-of-12 slds-wrap">
+                                                    <div>
+                                                        <span class="slds-radio">
+                                                            <input
+                                                                type="radio"
+                                                                id={adder.Id}
+                                                                data-id={adder.Id}
+                                                                data-type={adder.type}
+                                                                value={adder.Id}
+                                                                name="paperless"
+                                                                checked={adder.isChecked}
+                                                                onchange={handleChange}
+                                                            />
+                                                            <label class="slds-radio__label" for={adder.Id}>
+                                                                <span class="slds-form-element__label">
+                                                                    <div class="slds-grid">
+                                                                        <div
+                                                                            class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                                        >
+                                                                            <span
+                                                                                class="slds-radio_faux slds-m-right_none"
+                                                                            ></span>
+                                                                        </div>
+                                                                        <div class="slds-col slds-size_8-of-12">
+                                                                            <strong>{adder.Name}</strong>
+                                                                            <template lwc:if={adder.hasDisclaimer}>
+                                                                                &nbsp;&nbsp;&nbsp;<a
+                                                                                    onclick={handleDescription}
+                                                                                    data-name={adder.Name}
+                                                                                    data-id={adder.disclaimerNumber}
+                                                                                    >See Details</a
+                                                                                >
+                                                                            </template>
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-col slds-size_3-of-12 slds-text-align_left slds-p-horizontal_none"
+                                                                        >
+                                                                            <strong> ${adder.Price} </strong>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:if={rewards.length}>
+                                <div class="slds-col slds-size_12-of-12">
+                                    <div
+                                        class="slds-text-heading_small slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_x-small slds-m-horizontal_none"
+                                        style="color: #ff8200"
+                                    >
+                                        {labels.Rewards_labels}
+                                    </div>
+                                    <div class="slds-form-element__control">
+                                        <template for:each={rewards} for:item="adder">
+                                            <div
+                                                key={adder.Id}
+                                                class="slds-box slds-grid slds-wrap slds-m-bottom_medium"
+                                            >
+                                                <div class="slds-col slds-size_12-of-12 slds-wrap">
+                                                    <div>
+                                                        <span class="slds-checkbox slds-col slds-size_12-of-12">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={adder.Id}
+                                                                data-id={adder.Id}
+                                                                data-type={adder.type}
+                                                                value={adder.Id}
+                                                                name="rewards"
+                                                                disabled={adder.isDisabled}
+                                                                checked={adder.isChecked}
+                                                                onchange={handleChange}
+                                                            />
+                                                            <label class="slds-checkbox__label" for={adder.Id}>
+                                                                <span class="slds-form-element__label">
+                                                                    <div class="slds-grid">
+                                                                        <div
+                                                                            class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                                        >
+                                                                            <span
+                                                                                class="slds-checkbox_faux slds-m-right_none"
+                                                                            ></span>
+                                                                        </div>
+                                                                        <div class="slds-col slds-size_8-of-12">
+                                                                            <strong>{adder.Name}</strong>
+                                                                            <template lwc:if={adder.hasDisclaimer}>
+                                                                                &nbsp;&nbsp;&nbsp;<a
+                                                                                    onclick={handleDescription}
+                                                                                    data-name={adder.Name}
+                                                                                    data-id={adder.disclaimerNumber}
+                                                                                    >See Details</a
+                                                                                >
+                                                                            </template>
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-col slds-size_3-of-12 slds-text-align_left slds-p-horizontal_none"
+                                                                        >
+                                                                            <strong> ${adder.Price} </strong>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:if={isBundle}>
+                                <div class="slds-col slds-size_12-of-12">
+                                    <div
+                                        class="slds-text-heading_small slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_x-small slds-m-horizontal_none"
+                                        style="color: #ff8200"
+                                    >
+                                        {labels.Phone_Configurations_labels}
+                                    </div>
+                                    <div class="slds-form-element__control">
+                                        <template lwc:if={phone.length}>
+                                            <template for:each={phone} for:item="adder">
+                                                <div
+                                                    key={adder.Id}
+                                                    class="slds-box slds-grid slds-wrap slds-m-bottom_medium slds-p-horizontal_none"
+                                                >
+                                                    <div class="slds-col slds-size_12-of-12 slds-wrap">
+                                                        <div>
+                                                            <span class="slds-checkbox slds-col slds-size_12-of-12">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    id={adder.Id}
+                                                                    data-id={adder.Id}
+                                                                    data-type={adder.type}
+                                                                    value={adder.Id}
+                                                                    name="phone"
+                                                                    disabled={adder.isDisabled}
+                                                                    checked={adder.isChecked}
+                                                                    onchange={handleChange}
+                                                                />
+                                                                <label class="slds-checkbox__label" for={adder.Id}>
+                                                                    <span class="slds-form-element__label">
+                                                                        <div class="slds-grid">
+                                                                            <div
+                                                                                class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                                            >
+                                                                                <span
+                                                                                    class="slds-checkbox_faux slds-m-right_none"
+                                                                                ></span>
+                                                                            </div>
+                                                                            <div class="slds-col slds-size_8-of-12">
+                                                                                <strong>{adder.Name}</strong>
+                                                                                <template lwc:if={adder.hasDisclaimer}>
+                                                                                    &nbsp;&nbsp;&nbsp;<a
+                                                                                        onclick={handleDescription}
+                                                                                        data-name={adder.Name}
+                                                                                        data-id={adder.disclaimerNumber}
+                                                                                        >See Details</a
+                                                                                    >
+                                                                                </template>
+                                                                            </div>
+                                                                            <div
+                                                                                class="slds-col slds-size_3-of-12 slds-text-align_left slds-p-horizontal_none"
+                                                                            >
+                                                                                <strong> ${adder.Price} </strong>
+                                                                            </div>
+                                                                        </div>
+                                                                    </span>
+                                                                </label>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </template>
+                                        <div
+                                            class="slds-box slds-grid slds-wrap slds-m-bottom_medium slds-p-horizontal_none"
+                                        >
+                                            <div class="slds-col slds-size_12-of-12 slds-wrap">
+                                                <div>
+                                                    <span class="slds-checkbox slds-col slds-size_12-of-12">
+                                                        <input
+                                                            type="checkbox"
+                                                            value={portability}
+                                                            name="portability"
+                                                            id="portability"
+                                                            checked={portability}
+                                                            onchange={handlePortability}
+                                                        />
+                                                        <label class="slds-checkbox__label" for="portability">
+                                                            <span class="slds-form-element__label">
+                                                                <div class="slds-grid">
+                                                                    <div
+                                                                        class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                                    >
+                                                                        <span
+                                                                            class="slds-checkbox_faux slds-m-right_none"
+                                                                        ></span>
+                                                                    </div>
+                                                                    <div class="slds-col slds-size_8-of-12">
+                                                                        <strong>{labels.Phone_Number_Portability}</strong>
+                                                                    </div>
+                                                                    <div
+                                                                        class="slds-col slds-size_3-of-12 slds-text-align_left slds-p-horizontal_none"
+                                                                    ></div>
+                                                                </div>
+                                                            </span>
+                                                        </label>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <template lwc:if={portability}>
+                                            <div class="slds-grid slds-wrap slds-m-bottom_medium">
+                                                <div class="slds-col slds-medium-size_6-of-12 slds-size_12-of-12">
+                                                    <lightning-input
+                                                        type="tel"
+                                                        name="portablePhone"
+                                                        pattern="[0-9]{10}"
+                                                        label="Phone Number"
+                                                        message-when-pattern-mismatch="Please enter a valid phone number"
+                                                        value={portablePhone}
+                                                        onchange={handlePortability}
+                                                        max-length="10"
+                                                        required="true"
+                                                    ></lightning-input>
+                                                </div>
+                                                <div class="slds-col slds-medium-size_6-of-12 slds-size_12-of-12">
+                                                    <lightning-input
+                                                        type="text"
+                                                        label="Current Provider"
+                                                        value={provider}
+                                                        name="provider"
+                                                        onchange={handlePortability}
+                                                        required="true"
+                                                    ></lightning-input>
+                                                </div>
+                                                <div class="slds-col slds-medium-size_6-of-12 slds-size_12-of-12">
+                                                    <lightning-input
+                                                        type="text"
+                                                        label="Current Account"
+                                                        value={account}
+                                                        name="account"
+                                                        onchange={handlePortability}
+                                                        required="true"
+                                                    ></lightning-input>
+                                                </div>
+                                                <div class="slds-col slds-medium-size_6-of-12 slds-size_12-of-12">
+                                                    <lightning-input
+                                                        type="text"
+                                                        label="Current PIN"
+                                                        value={pin}
+                                                        name="pin"
+                                                        onchange={handlePortability}
+                                                        required="true"
+                                                    ></lightning-input>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:if={others.length}>
+                                <div class="slds-col slds-size_12-of-12">
+                                    <div
+                                        class="slds-text-heading_small slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_x-small slds-m-horizontal_none"
+                                        style="color: #ff8200"
+                                    >
+                                        {labels.Others_labels}
+                                    </div>
+                                    <div class="slds-form-element__control">
+                                        <template for:each={others} for:item="adder">
+                                            <div
+                                                key={adder.Id}
+                                                class="slds-box slds-grid slds-wrap slds-m-bottom_medium slds-p-horizontal_none"
+                                            >
+                                                <div class="slds-col slds-size_12-of-12 slds-wrap">
+                                                    <div>
+                                                        <span class="slds-checkbox slds-col slds-size_12-of-12">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={adder.Id}
+                                                                data-id={adder.Id}
+                                                                data-type={adder.type}
+                                                                value={adder.Id}
+                                                                name="others"
+                                                                disabled={adder.isDisabled}
+                                                                checked={adder.isChecked}
+                                                                onchange={handleChange}
+                                                                onclick={checkForInternetAndMilitaryFee}
+                                                            />
+                                                            <label class="slds-checkbox__label" for={adder.Id}>
+                                                                <span class="slds-form-element__label">
+                                                                    <div class="slds-grid">
+                                                                        <div
+                                                                            class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                                        >
+                                                                            <span
+                                                                                class="slds-checkbox_faux slds-m-right_none"
+                                                                            ></span>
+                                                                        </div>
+                                                                        <div class="slds-col slds-size_8-of-12">
+                                                                            <strong>{adder.Name}</strong>
+                                                                            <template lwc:if={adder.hasDisclaimer}>
+                                                                                &nbsp;&nbsp;&nbsp;<a
+                                                                                    onclick={handleDescription}
+                                                                                    data-name={adder.Name}
+                                                                                    data-id={adder.disclaimerNumber}
+                                                                                    >See Details</a
+                                                                                >
+                                                                            </template>
+                                                                        </div>
+                                                                        <div
+                                                                            class="slds-col slds-size_3-of-12 slds-text-align_left slds-p-horizontal_none"
+                                                                        >
+                                                                            <strong> ${adder.Price} </strong>
+                                                                        </div>
+                                                                    </div>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-windstream-cart cart={cart}> </c-poe_lwc-buyflow-windstream-cart>
+                        <template lwc:if={isGuestUser}></template>
+                        <template lwc:else>
+                            <button
+                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                onclick={sbsHandler}
+                            >
+                                {labels.T_Chart_labels}
+                            </button></template
+                        >
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    disable-next={disableNext}
+                    show-previous="true"
+                    show-cancel="true"
+                    oncancel={handleCancel}
+                    onprevious={handlePrevious}
+                    onnext={handleClick}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showDisclaimer}>
+        <c-poe_lwc-buyflow-windstream-product-description-modal
+            onclosedescription={handleDescription}
+            description={disclaimer}
+            modal-label={modalLabel}
+            onaccept={termsHandler}
+        ></c-poe_lwc-buyflow-windstream-product-description-modal>
+    </template>
+    <template lwc:if={showKSCreditOfferModal}>
+        <c-poe_lwc-buyflow-windstream-products-disclaimer-modal
+            onclosedisclaimer={handleKSCreditOfferDecline}
+            disclaimer={kSCreditOfferModalDisclaimer}
+            onagree={handleKSCreditOfferAccept}
+            oncancelorder={handleKSCreditOfferDecline}
+        ></c-poe_lwc-buyflow-windstream-products-disclaimer-modal>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showAutoPaySurchargeDisclaimer}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.autoPaySurcharge}
+            modal-title="Disclaimer"
+            onclose={hideAutoPaySurchargeDisclaimer}
+            onconfirm={handleConfirmAutoPay}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

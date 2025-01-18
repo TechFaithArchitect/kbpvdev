@@ -1,0 +1,48 @@
+<template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading"> </lightning-spinner>
+    </template>
+    <div class="pages-with-provider-style page pages-nav" provider={program}>
+        <div class="nav-bar">
+            <h2>{labels.ORDER_SUCCESS_TAB_NAME_LABEL}</h2>
+        </div>
+        <div class="page-content no-padding-top">
+            <div class="page-invoice">
+                <img src={iconCheckGreen} />
+                <h3>{labels.ORDER_SUCCESS_TAB_SUBTITLE}</h3>
+                <template lwc:if={isFrontier}>
+                    <p class="no-margin-bottom">{labels.BILLING_TELEPHONE_NUMBER_FIELD_LABEL} <span>{btn}</span></p>
+                    <p class="no-margin-bottom">{labels.QUOTE_NUMBER_FIELD_LABEL} <span>{quoteNumber}</span></p>
+                    <p>{labels.ORDER_NUMBER_LABEL} <span>{orderNumber}</span></p>
+                </template>
+                <template lwc:else>
+                    <p class="no-margin-bottom">{labels.REFERENCE_NUMBER_LABEL} <span>{referenceNumber}</span></p>
+                    <p>{labels.CONFIRMATION_NUMBER_LABEL} <span>{orderNumber}</span></p>
+                </template>
+
+                <template lwc:if={hasReturnUrl}>
+                    <a class="btn-rounded btn-center hide-mobile" onclick={returnToUrlHandler}>
+                        {labels.CONTINUE_BUTTON_LABEL}
+                    </a>
+                </template>
+                <template lwc:else>
+                    <a class="btn-rounded btn-center hide-mobile" onclick={newOpportunityHandler}>
+                        {labels.NEW_PRODUCT_BUTTON_LABEL}
+                    </a>
+                    <a class="btn-rounded btn-center hide-mobile" onclick={homeHandler}> {homeButtonLabel} </a>
+                </template>
+            </div>
+        </div>
+        <div class="footer-mobile">
+            <template lwc:if={hasReturnUrl}>
+                <a class="btn-rounded btn-center" onclick={returnToUrlHandler}> {labels.CONTINUE_BUTTON_LABEL} </a>
+            </template>
+            <template lwc:else>
+                <a class="btn-rounded btn-center" onclick={newOpportunityHandler} style="margin-right: 10px !important">
+                    {labels.NEW_PRODUCT_BUTTON_LABEL}
+                </a>
+                <a class="btn-rounded btn-center" onclick={homeHandler}> {homeButtonLabel} </a>
+            </template>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,81 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="page-content width-large">
+                    <form>
+                        <div class="form-header">
+                            <img align="left" src={iconFormUser} />
+
+                            <h3>Installation</h3>
+                        </div>
+
+                        <div class="form-content">
+                            <template lwc:if={timeOut}>
+                                <div class="form-group">
+                                    <lightning-button
+                                        variant="brand"
+                                        label={buttonLabel}
+                                        onclick={handleRefreshDates}
+                                    ></lightning-button>
+                                </div>
+                            </template>
+                            <template lwc:if={showInstallationPicker}>
+                                <div class="form-group">
+                                    <lightning-select
+                                        name="date"
+                                        label="Please select an available date/time from the dropdown:"
+                                        value={value}
+                                        options={options}
+                                        class="slds-var-m-around_large"
+                                        required
+                                        onchange={handleDate}
+                                    ></lightning-select>
+                                </div>
+                                <div class="form-group">
+                                    <lightning-textarea
+                                        type="text"
+                                        name="notes"
+                                        value={notes}
+                                        label="Notes for Technician"
+                                        onchange={handleChange}
+                                    ></lightning-textarea>
+                                </div>
+                                <div class="form-group">
+                                    <lightning-formatted-rich-text
+                                        value={verbiages.serviceInstallation}
+                                    ></lightning-formatted-rich-text>
+                                </div>
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="checkbox"
+                                        name="installAgreement"
+                                        value={installAgreement}
+                                        required
+                                        label="I have read the above disclosures to the customer, and the customer agreed"
+                                        onchange={handleAgreement}
+                                    ></lightning-input>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="form-group">
+                                    <lightning-formatted-rich-text
+                                        value={noInstallationVerbiage}
+                                    ></lightning-formatted-rich-text>
+                                </div>
+                            </template>
+                        </div>
+                    </form>
+                    <a onclick={handleNext} class={nextBtnDesktopClass} data-id="next"> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <a onclick={handleNext} data-id="next" class={nextBtnMobileClass}> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

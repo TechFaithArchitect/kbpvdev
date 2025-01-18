@@ -1,0 +1,299 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="viasat"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_small">
+            <div class="slds-grid slds-wrap slds-gutters slds-p-around_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                    <div class="slds-grid slds-wrap slds-box slds-theme_default slds-p-around_small">
+                        <div class="slds-col slds-size_1-of-1 slds-var-m-bottom_small slds-text-heading_large">
+                            <template lwc:if={orderComplete}>{labels.Thank_you_for_your_Order}</template>
+                            <template lwc:else>{labels.Self_Service_Order_Confirmation_Modal_Title}</template>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1 slds-text-title_bold">{labels.Account_Number_label}</div>
+                        <div class="slds-col slds-size_1-of-1">{calloutInfo.billingAccountNumber}</div>
+                        <template lwc:if={hasUpfront}>
+                            <div
+                                class="slds-box slds-box_xx-small slds-text-title_bold slds-size_1-of-1 slds-var-m-vertical_medium"
+                                style="background-color: #74747436"
+                            >
+                                {labels.one_time_upfron_payment}
+                            </div>
+                            <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-3 slds-large-size_1-of-5 slds-m-bottom_x-small">
+                                <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                    {labels.Payment_Method}
+                                </div>
+                                <div class="slds-col slds-size_1-of-1">
+                                    {ccUpfrontMethod}
+                                </div>
+                            </div>
+                            <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-3 slds-large-size_1-of-5 slds-m-bottom_x-small">
+                                <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                    {labels.Credit_Card_Section_Title}
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-wrap">
+                                    {ccUpfrontLastDigits}
+                                </div>
+                            </div>
+                            <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-3 slds-large-size_1-of-5 slds-m-bottom_x-small">
+                                <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                    {labels.Name_on_Card_Field_Label}
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-wrap">
+                                    {ccUpfrontName}
+                                </div>
+                            </div>
+                            <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-3 slds-large-size_1-of-5 slds-m-bottom_x-small">
+                                <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                    {labels.Expiration_Date}
+                                </div>
+                                <div class="slds-col slds-size_1-of-1">
+                                    {ccUpfrontExpDate}
+                                </div>
+                            </div>
+                            <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-3 slds-large-size_1-of-5 slds-m-bottom_x-small">
+                                <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                    {labels.Postal_Code}
+                                </div>
+                                <div class="slds-col slds-size_1-of-1">
+                                    {ccUpfrontZip}
+                                </div>
+                            </div>
+                        </template>
+                        <template lwc:if={hasRecurrent}>
+                            <div
+                                class="slds-box slds-box_xx-small slds-text-title_bold slds-size_1-of-1 slds-var-m-vertical_medium"
+                                style="background-color: #74747436"
+                            >
+                                {labels.Recurring_Payment_Information}
+                            </div>
+                            <template lwc:if={hasRecurrentCard}>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-3 slds-large-size_1-of-5 slds-m-bottom_x-small">
+                                    <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                        {labels.Payment_Method}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <p class="slds-text-align_left">{ccRecurringMethod}</p>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-3 slds-large-size_1-of-5 slds-m-bottom_x-small">
+                                    <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                        {labels.Credit_Card_Section_Title}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-wrap">
+                                        <p class="slds-text-align_left">{ccRecurringLastDigits}</p>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-3 slds-large-size_1-of-5 slds-m-bottom_x-small">
+                                    <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                       {labels.Name_on_Card_Field_Label}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-wrap">
+                                        <p class="slds-text-align_left">{ccRecurringName}</p>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-3 slds-large-size_1-of-5 slds-m-bottom_x-small">
+                                    <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                        {labels.Expiration_Date}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <p class="slds-text-align_left">{ccRecurringExpDate}</p>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-medium-size_1-of-3 slds-large-size_1-of-5 slds-m-bottom_x-small">
+                                    <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                        {labels.Postal_Code}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <p class="slds-text-align_left">{ccRecurringZip}</p>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:if={hasRecurrentACH}>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                                    <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                        {labels.Payment_Method}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <p class="slds-text-align_left">{ccRecurringMethod}</p>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                                    <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                        {labels.Bank_Routing_Number}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-wrap">
+                                        <p class="slds-text-align_left">{ccRecurringLastDigits}</p>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                                    <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                        {labels.Account_Surname}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-wrap">
+                                        <p class="slds-text-align_left">{ccRecurringName}</p>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                                    <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                       {labels.Bank_Account_Number}
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <p class="slds-text-align_left">{ccRecurringExpDate}</p>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                        <div
+                            class="slds-box slds-box_xx-small slds-text-title_bold slds-size_1-of-1 slds-var-m-vertical_medium"
+                            style="background-color: #74747436"
+                        >
+                            {labels.Customer_Information}
+                        </div>
+                        <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                            <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                {labels.Credit_Check_Contact_Information_Section_Title}
+                            </div>
+                            <div class="slds-col slds-size_1-of-1">
+                                <p class="slds-text-align_left">
+                                    {calloutInfo.clientInfo.contactInfo.firstName}
+                                    {calloutInfo.clientInfo.contactInfo.lastName}
+                                </p>
+                                <p class="slds-text-align_left">{calloutInfo.clientInfo.contactInfo.email}</p>
+                                <p class="slds-text-align_left">{calloutInfo.clientInfo.contactInfo.phone}</p>    
+                            </div>
+                        </div>
+                        <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                            <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                {labels.Service_Address_Title}
+                            </div>
+                            <div class="slds-col slds-size_1-of-1">
+                                <p class="slds-text-align_left">{calloutInfo.serviceLocation.address.addressLine1}</p>
+                                <p class="slds-text-align_left">{calloutInfo.serviceLocation.address.addressLine2}</p>
+                                <p class="slds-text-align_left">
+                                    {calloutInfo.serviceLocation.address.city}, {calloutInfo.serviceLocation.address.state}
+                                </p>
+                                <p class="slds-text-align_left">{calloutInfo.serviceLocation.address.zipCode}</p>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                            <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                {labels.Credit_Check_Billing_Address_Section_Title}
+                            </div>
+                            <div class="slds-col slds-size_1-of-1">
+                                <p class="slds-text-align_left">{calloutInfo.clientInfo.billingAddress.addressLine1}</p>
+                                <p class="slds-text-align_left">{calloutInfo.clientInfo.billingAddress.addressLine2}</p>
+                                <p class="slds-text-align_left">
+                                    {calloutInfo.clientInfo.billingAddress.city},
+                                    {calloutInfo.clientInfo.billingAddress.state}
+                                </p>
+                                <p class="slds-text-align_left">{calloutInfo.clientInfo.billingAddress.zipCode}</p>
+                            </div>
+                        </div>
+                        <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-small-size_1-of-2 slds-large-size_1-of-4 slds-m-bottom_x-small">
+                            <div class="slds-col slds-size_1-of-1 slds-text-title_bold">
+                                {labels.Credit_Check_Shipping_Address_Section_Title}
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-wrap">
+                                <p class="slds-text-align_left">{calloutInfo.clientInfo.shippingAddress.addressLine1}</p>
+                                <p class="slds-text-align_left">{calloutInfo.clientInfo.shippingAddress.addressLine2}</p>
+                                <p class="slds-text-align_left">
+                                    {calloutInfo.clientInfo.shippingAddress.city},
+                                    {calloutInfo.clientInfo.shippingAddress.state}
+                                </p>
+                                <p class="slds-text-align_left">{calloutInfo.clientInfo.shippingAddress.zipCode}</p>
+                            </div>
+                        </div>
+                        <div
+                            class="slds-box slds-box_xx-small slds-text-title_bold slds-size_1-of-1 slds-var-m-vertical_medium"
+                            style="background-color: #74747436"
+                        >
+                            {labels.Plan_Detail}
+                        </div>
+                        <div class="slds-box slds-grid slds-wrap slds-p-around_x-small" for={product.Id}>
+                            <div class="slds-col slds-size_12-of-12">
+                                <h2><strong>{product.Name}</strong></h2>
+                                <div class="slds-border_top"></div>
+                            </div>
+
+                            <div class="slds-col slds-var-p-top_medium slds-size_12-of-12">
+                                <strong> {product.Description}</strong>
+                            </div>
+                            <div class="slds-col slds-var-p-top_medium slds-size_12-of-12">{product.UploadSpeed}</div>
+                            <div class="slds-col slds-var-p-top_medium slds-size_12-of-12">{product.DownloadSpeed}</div>
+                            <div class="slds-col slds-var-p-top_medium slds-size_12-of-12">
+                                Data cap: {product.DataCap}*
+                            </div>
+                            <div class="slds-col slds-var-p-top_medium slds-var-p-left_large slds-size_6-of-12">
+                                Bundle Term: {product.PriceType}
+                            </div>
+                            <div
+                                class="slds-col slds-text-heading_medium slds-text-align_right slds-var-p-top_medium slds-size_6-of-12"
+                            >
+                                <strong>${cartInfo.monthlyTotal}**</strong>
+                            </div>
+                            <div
+                                class="slds-col slds-text-body_small slds-text-align_left slds-var-p-top_medium slds-size_12-of-12"
+                            >
+                                <div class="slds-border_top"></div>
+                                {product.DisclosureText}
+                            </div>
+                            <div class="slds-col slds-text-body_small slds-text-align_left slds-var-p-top_xx-small">
+                                {labels.Plus_taxes_and_surcharges}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- This is a small margin left between the products and the cart when vertically aligned -->
+                <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-viasat-cart 
+                        cart={cartInfo}
+                    ></c-poe_lwc-buyflow-viasat-cart>
+                    <div class="slds-grid slds-p-around_medium">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <c-poe_lwc-buyflow-tab-actions
+                previous-label="Retry"
+                next-label={nextLabel}
+                show-cancel={orderNotComplete}
+                show-previous={calloutError}
+                show-next={orderComplete}
+                oncancel={handleCancel}
+                onprevious={retryCallout}
+                onnext={handleClick}
+                disable-next={disableNext}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

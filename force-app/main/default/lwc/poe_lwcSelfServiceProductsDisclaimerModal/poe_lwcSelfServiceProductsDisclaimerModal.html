@@ -1,0 +1,37 @@
+<template>
+	<lightning-modal-header label={disclaimer.header}></lightning-modal-header>
+	<lightning-modal-body class="modal-disclaimer">
+        <div provider={provider}>
+			<h2>
+                <lightning-formatted-text
+                    value={disclaimer.header}
+                >
+                </lightning-formatted-text>
+            </h2>
+			<p>
+                <lightning-formatted-text
+                    value={disclaimer.shortDescription}
+                >
+                </lightning-formatted-text>
+			</p>
+
+            <p class="body-text">
+                <lightning-formatted-text 
+                    value={disclaimer.description} 
+                    linkify
+                >
+                </lightning-formatted-text>
+            </p>
+
+            <div class="group-buttons">
+				<a onclick={cancelOrder} class="btn-outline btn-only-rounded">
+					<lightning-formatted-text value={cancelOrderText}></lightning-formatted-text>
+				</a>
+
+				<a onclick={closeModal} class="btn-provider-color btn-only-rounded">
+                    <lightning-formatted-text value={agreeText}></lightning-formatted-text>
+				</a>
+			</div>
+        </div>
+    </lightning-modal-body>
+</template>

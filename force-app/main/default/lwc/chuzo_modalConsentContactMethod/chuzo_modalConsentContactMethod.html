@@ -1,0 +1,24 @@
+<template>
+    <lightning-modal-header label={content.label}></lightning-modal-header>
+    <lightning-modal-body class="modal-contact-us">
+        <img src={iconCallUser} />
+        <h2>{content.title}</h2>
+        <p>{content.subtitle}</p>
+        <div class="slds-m-vertical_small">
+            <lightning-combobox
+                name={content.subtitle}
+                label="Communication Method"
+                value={method}
+                options={content.options}
+                required
+                onchange={handleMethod}
+            >
+            </lightning-combobox>
+        </div>
+        <div class="group-buttons">
+            <a class="btn-outline btn-only-rounded" onclick={handleButton} data-id="close"> Close </a>
+
+            <a class={classButton} onclick={handleButton} data-id="confirm"> Confirm </a>
+        </div>
+    </lightning-modal-body>
+</template>

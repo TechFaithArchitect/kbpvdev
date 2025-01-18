@@ -1,0 +1,44 @@
+div input[readonly] {
+    padding-left: 2.75rem !important;  
+}
+.slds-input{
+    padding-left: 1.75rem !important;
+}
+
+.slds-input-has-icon .slds-input__icon {
+    top: 56% !important;
+}
+.slds-icon_small, .slds-icon--small {
+    width: 1.5rem;
+    height: 1.5rem;
+    line-height: 2;
+}
+
+
+.scannerheight{
+	width: 90% !important;
+	max-width: 90% !important;
+    height: 100%!important;
+    max-height: 100%!important;
+    color: aliceblue;
+}
+
+.footerstyle{
+	width: 90% !important;
+	max-width: 90% !important;
+  
+
+}
+
+.bgcolor{
+
+    background-color:rgb(206, 254, 206) !important;
+    height: 25% !important;
+
+}
+
+
+
+  input[disabled] + lightning-primitive-icon + div {
+	display: none;
+}

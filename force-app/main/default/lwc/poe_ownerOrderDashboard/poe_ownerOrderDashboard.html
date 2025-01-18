@@ -1,0 +1,117 @@
+<template>
+    <template lwc:if={showCharts}>
+        <div class="slds-box slds-theme_default slds-var-m-bottom_xx-small">
+            <div class="slds-grid slds-gutters_xxx-small">
+                <lightning-combobox
+                    class="slds-col slds-size_3-of-12"
+                    name="startDate"
+                    label="Order Start Date"
+                    value={dateSelected}
+                    onchange={handleChange}
+                    options={dateOptions}
+                ></lightning-combobox>
+                <lightning-combobox
+                    class="slds-col slds-size_3-of-12"
+                    name="representative"
+                    label="Representative Title"
+                    value={typeSelected}
+                    onchange={handleChange}
+                    options={representativeOptions}
+                ></lightning-combobox>
+                <lightning-combobox
+                    class="slds-col slds-size_3-of-12"
+                    name="program"
+                    label="Program"
+                    value={programSelected}
+                    onchange={handleChange}
+                    options={programOptions}
+                ></lightning-combobox>
+            </div>
+            <template lwc:if={showDatePicker}>
+                <div class="slds-grid slds-gutters_xxx-small slds-var-m-top_xx-small">
+                    <lightning-input
+                        name="start"
+                        type="date"
+                        label="From"
+                        class="slds-col slds-size_2-of-12"
+                        onchange={handleDatePickerChange}
+                    ></lightning-input>
+                    <lightning-input
+                        name="end"
+                        type="date"
+                        label="To"
+                        class="slds-col slds-size_2-of-12"
+                        onchange={handleDatePickerChange}
+                    ></lightning-input>
+                    <div
+                        lwc:if={hasError}
+                        class="slds-col slds-size_3-of-12 slds-text-color_error slds-var-m-left_x-small"
+                        style="align-self: flex-end"
+                    >
+                        {dateError}
+                    </div>
+                </div>
+            </template>
+        </div>
+        <template lwc:if={hasOrderData}>
+            <div class="slds-grid slds-gutters_xxx-small">
+                <template for:each={orderData} for:item="data">
+                    <div class="slds-col slds-size_2-of-12" key={data.key}>
+                        <c-poe_owner-dashboard-number-chart
+                            title={data.title}
+                            number-data={data.amount}
+                            type={data.type}
+                            green-value={data.greenValue}
+                            red-value={data.redValue}
+                            report-name={data.reportName}
+                            report-id={data.reportId}
+                        ></c-poe_owner-dashboard-number-chart>
+                    </div>
+                </template>
+            </div>
+            <div class="slds-grid slds-gutters_xxx-small slds-var-m-top_xx-small">
+                <div class="slds-col slds-size_4-of-12">
+                    <c-ad_-root-chart
+                        chart-dataset={orderBarconfig}
+                        title="Fully Submitted Orders by Rep"
+                        chart-style="background: rgb(255,255,255);margin: 2px; border: 1px solid #D4D4D4; border-radius: 0.25rem; height: 368px;"
+                        report={OrdersByRepReport}
+                    ></c-ad_-root-chart>
+                </div>
+                <div class="slds-col slds-size_4-of-12">
+                    <c-ad_-root-chart
+                        chart-dataset={orderPercentBarConfig}
+                        title="Submitted Order % by Rep"
+                        chart-style="background: rgb(255,255,255);margin: 2px; border: 1px solid #D4D4D4; border-radius: 0.25rem; height: 368px;"
+                        report={DraftReport}
+                    ></c-ad_-root-chart>
+                </div>
+                <div class="slds-col slds-size_4-of-12">
+                    <c-ad_-root-chart
+                        chart-dataset={oppDoughnutConfig}
+                        title="Orders by Program"
+                        chart-style="background: rgb(2,19,60); margin: 2px; border: 1px solid #D4D4D4; border-radius: 0.25rem; color: white; height: 368px"
+                        report={programReport}
+                    ></c-ad_-root-chart>
+                </div>
+            </div>
+            <div class="slds-grid slds-gutters_xxx-small slds-var-m-top_xx-small">
+                <div class="slds-col slds-size_4-of-12">
+                    <c-ad_-root-chart
+                        chart-dataset={orderDraftBarConfig}
+                        title="Draft Orders by Rep"
+                        chart-style="background: rgb(255,255,255);margin: 2px; border: 1px solid #D4D4D4; border-radius: 0.25rem; height: 368px;"
+                        report={OrdersByRepReport}
+                    ></c-ad_-root-chart>
+                </div>
+            </div>
+            <!-- <c-ad_-opp-dashboard></c-ad_-opp-dashboard> -->
+        </template>
+        <template lwc:if={showDataError}>
+            <div class="slds-text-heading_medium slds-text-align_center">No orders found for the current filters</div>
+        </template>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

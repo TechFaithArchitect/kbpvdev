@@ -1,0 +1,112 @@
+<template>
+    <div class="page pages-nav page-services">
+        <div class="nav-bar">
+            <a onclick={changeViewToHome} title="Back button" class="btn-back-rounded">
+                <img src={iconBtnBack} alt="Back button" />
+            </a>
+
+            <h2>{labels.title}</h2>
+        </div>
+
+        <div class="page-content">
+            <div class="filter-tab">
+                <div class="scroll-bar">
+                    <a class="button-tab selected" data-id="all-tab" onclick={handleFilter}> {labels.allTab} </a>
+                    <a class="button-tab" data-id="internet-tab" onclick={handleFilter}> {labels.internetTab} </a>
+                    <a class="button-tab" data-id="tv-tab" onclick={handleFilter}> {labels.tvTab} </a>
+                    <a class="button-tab" data-id="security-tab" onclick={handleFilter}> {labels.securityTab} </a>
+                </div>
+            </div>
+
+            <div class="list-services">
+                <p class="result-description">
+                    {labels.subTitle} <span>{selfServiceAddress.city}, {selfServiceAddress.state}</span>
+                </p>
+
+                <div class="services-listing">
+                    <template for:each={availablePrograms} for:item="program">
+                        <div class="service-list" key={program.eventId}>
+                            <div class="service-content">
+                                <div class="content-information">
+                                    <div class="service-provider">
+                                        <img align="left" src={program.logo} class="provider-logo" />
+                                        <h4>{program.name}</h4>
+                                        <p>{program.category}</p>
+                                    </div>
+
+                                    <template lwc:if={program.isSecurity}>
+                                        <div class="service-description-security">
+                                            <p>{program.characteristicOneHeader}</p>
+                                            <h4>{program.characteristicOneValue}</h4>
+                                        </div>
+                                    </template>
+                                    <template lwc:else>
+                                        <div class="service-description">
+                                            <p>{program.characteristicOneHeader}</p>
+                                            <h4>{program.characteristicOneValue}</h4>
+                                        </div>
+
+                                        <div class="service-pricing">
+                                            <p>{program.characteristicTwoHeader}</p>
+                                            <h4>{program.characteristicTwoValue} <span>/ month</span></h4>
+                                        </div></template
+                                    >
+                                </div>
+
+                                <div class="service-actions">
+                                    <template lwc:if={program.canOrder}>
+                                        <a
+                                            onclick={goOrderNow}
+                                            class="btn-orange btn-order-now"
+                                            data-id={program.eventId}
+                                        >
+                                            {labels.orderButtonLabel}
+                                        </a>
+                                    </template>
+                                    <a onclick={contactUsModal} class="btn-outline btn-contact-us">
+                                        {labels.contactButtonLabel}
+                                    </a>
+                                </div>
+                                <div class="clearboth"></div>
+                                <div class="service-information">
+                                    <p>
+                                        <img src={iconInformation} />
+                                        <lightning-formatted-rich-text
+                                            value={program.disclaimer}
+                                        ></lightning-formatted-rich-text>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="service-footer">
+                                <lightning-accordion class="btn-open-included" allow-multiple-sections-open>
+                                    <lightning-accordion-section name="whats-included" label="See what's included">
+                                        <div class="list-with-check">
+                                            <p>{labels.programDetailHeader}</p>
+                                            <lightning-formatted-rich-text
+                                                value={program.providerDetails}
+                                            ></lightning-formatted-rich-text>
+                                        </div>
+                                        <div class="list-with-check">
+                                            <p>{labels.programDetailHeader2}</p>
+                                            <lightning-formatted-rich-text
+                                                value={program.included}
+                                            ></lightning-formatted-rich-text>
+                                        </div>
+                                    </lightning-accordion-section>
+                                </lightning-accordion>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <p class="legal-description">
+                    {labels.pricesDisclaimer}<br />
+                    {labels.serviceDisclaimer}
+                </p>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

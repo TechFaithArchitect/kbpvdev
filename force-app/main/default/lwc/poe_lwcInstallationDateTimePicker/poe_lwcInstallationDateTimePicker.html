@@ -1,0 +1,85 @@
+<template>
+    <div class="slds-form">
+        <fieldset class="slds-form-element slds-form-element_compound">
+            <template lwc:if={showTimePicker}>
+                <legend class="slds-form-element__label slds-form-element__legend">{defaultDateTimeLabel}</legend>
+            </template>
+            <div class="slds-form-element__control">
+                <div class="slds-form-element__group">
+                    <div class="slds-form-element__row">
+                        <div class={dropdownTriggerClass}>
+                            <label class="slds-form-element__label" for="dateinput">
+                                <template lwc:if={required}>
+                                    <abbr class="slds-required" title="required">* </abbr>
+                                </template>
+                                {defaultDateLabel}
+                            </label>
+                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+                                <input
+                                    class="slds-input"
+                                    type="text"
+                                    id="dateinput"
+                                    data-id="dateinput"
+                                    required
+                                    placeholder={defaultDatePlaceholder}
+                                    value={dateValueStr}
+                                    onclick={handleShowDatePicker}
+                                    onblur={handleInputBlur}
+                                />
+                                <button
+                                    class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"
+                                    title="Select a date"
+                                >
+                                    <lightning-icon
+                                        icon-name="utility:event"
+                                        alternative-text="Select a date"
+                                        size="xx-small"
+                                        onclick={handleIconShowDatePicker}
+                                    >
+                                    </lightning-icon>
+                                </button>
+                            </div>
+                            <c-poe_lwc-date-picker
+                                available-dates={availableDates}
+                                selected-date={dateValueStr}
+                                ondatechange={handleDateChange}
+                                onmousedown={handleDatePickerMouseDown}
+                                onclick={handleDatePickerClick}
+                            >
+                            </c-poe_lwc-date-picker>
+                        </div>
+                        <template lwc:if={showTimePicker}>
+                            <template lwc:if={isNotGuestUser}>
+                                <lightning-combobox
+                                    class="slds-col"
+                                    label={defaultTimeLabel}
+                                    placeholder={defaultTimePlaceholder}
+                                    options={timeOptions}
+                                    value={timeValue}
+                                    disabled={disableTimeInput}
+                                    onchange={handleTimeChange}
+                                    required
+                                >
+                                </lightning-combobox>
+                            </template>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <template lwc:if={isGuestUser}>
+        <lightning-select
+            class="slds-col"
+            label={defaultTimeLabel}
+            placeholder={defaultTimePlaceholder}
+            options={timeOptions}
+            value={timeValue}
+            disabled={disableTimeInput}
+            onchange={handleTimeChange}
+            required
+        >
+        </lightning-select>
+    </template>
+</template>

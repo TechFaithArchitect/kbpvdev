@@ -1,0 +1,107 @@
+<template>
+    <lightning-modal-header label="Let’s connect"></lightning-modal-header>
+    <lightning-modal-body class="modal-schedule-call">
+        <div class="page-content">
+            <template lwc:if={isLoading}>
+                <lightning-spinner variant="brand" alternative-text="Loading"> </lightning-spinner>
+            </template>
+
+            <form>
+                <div class="form-header">
+                    <img src={iconInbox} />
+
+                    <h3>Let’s connect</h3>
+                </div>
+
+                <div class="form-content">
+                    <div class="form-group">
+                        <lightning-input
+                            type="text"
+                            required
+                            placeholder="Write your name"
+                            label="Name (*)"
+                            value={name}
+                            name="name"
+                            onchange={handleInput}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="text"
+                            required
+                            placeholder="Write your last name"
+                            label="Last Name (*)"
+                            value={lastName}
+                            name="lastName"
+                            onchange={handleInput}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="tel"
+                            required
+                            placeholder="Write your phone"
+                            label="Phone (*)"
+                            max-length="10"
+                            name="phone"
+                            value={phone}
+                            onchange={handleInput}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="email"
+                            required
+                            name="contactEmail"
+                            placeholder="Write your email"
+                            label="Email (*)"
+                            value={contactEmail}
+                            onchange={handleInput}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-select
+                            label="Best time to contact"
+                            options={optionsTimeToContact}
+                            value={time}
+                            name="time"
+                            placeholder="Pick a time"
+                            required
+                            onchange={handleRadio}
+                        ></lightning-select>
+                    </div>
+
+                    <h3>I am interested in</h3>
+                    <template for:each={checkboxOptions} for:item="option">
+                        <div class="form-group" key={option.id}>
+                            <lightning-input
+                                type="checkbox"
+                                label={option.label}
+                                data-id={option.id}
+                                checked={option.checked}
+                                onchange={handleCheckbox}
+                            ></lightning-input>
+                        </div>
+                    </template>
+
+                    <div class="form-group slds-text-body_small">
+                        <lightning-input
+                            type="checkbox"
+                            checked={consentAgreement}
+                            onchange={handleConsentChange}
+                            label={consentLabel}
+                        ></lightning-input>
+                    </div>
+                </div>
+
+                <a class="btn-orange btn-rounded btn-disabled" onclick={handleSubmit} data-id="next"> Submit </a>
+
+                <a class="btn-outline btn-only-rounded" onclick={handleCancel} data-id="call"> Cancel </a>
+            </form>
+        </div>
+    </lightning-modal-body>
+</template>

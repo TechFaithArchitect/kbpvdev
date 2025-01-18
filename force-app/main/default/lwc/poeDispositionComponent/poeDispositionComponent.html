@@ -1,0 +1,379 @@
+<template>
+    <div class="slds-box slds-theme--default">
+        <template lwc:if={isFraudFlagged}>
+            <div class="slds-grid slds-gutters slds-m-top_small slds-m-bottom_x-small">
+                <lightning-icon
+                    icon-name="custom:custom77"
+                    size="medium"
+                    class="slds-m-around_x-small"
+                ></lightning-icon>
+                <div class="slds-text-heading_small slds-p-around_x-small">
+                    This Opportunity was locked due to Security Reasons.
+                </div>
+            </div>
+        </template>
+        <template lwc:else>
+            <div class="slds-grid slds-gutters slds-wrap slds-grid_vertical-align-center slds-p-around_medium">
+                <div
+                    class="slds-grid slds-wrap slds-col slds-size_8-of-12 slds-box slds-theme_default slds-m-vertical_medium"
+                >
+                    <div class="slds-grid slds-col slds-size_12-of-12">
+                        <div class="slds-text-heading_medium slds-m-right_medium slds-p-left_xx-small">
+                            Open Follow Up Tasks
+                        </div>
+                        <c-poe-_lwc-follow-up-task-component record-id={recordId} onrefresh={getList}>
+                        </c-poe-_lwc-follow-up-task-component>
+                    </div>
+                    <template lwc:if={hasTasks}>
+                        <div class="slds-col slds-size_12-of-12 slds-p-around_medium">
+                            <c-poe_lwc-follow-up-tasks-table tasks={tasks}></c-poe_lwc-follow-up-tasks-table>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div class="slds-col slds-size_12-of-12">
+                            <div class="slds-text-heading_small slds-p-around_small">
+                                No Follow Up Tasks related to this Opportunity.
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div
+                    class="slds-grid slds-wrap slds-col slds-size_4-of-12 slds-m-vertical_medium slds-grid_vertical-align-center"
+                >
+                    <div class="slds-col slds-text-heading_small slds-text-align_right">
+                        <p>Click here to complete the order</p>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-icon
+                            icon-name="action:update"
+                            alternative-text="Order"
+                            title="Order"
+                            size="large"
+                            onclick={orderHandler}
+                            class={iconButtonClass}
+                        ></lightning-icon>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-gutters slds-wrap slds-p-around_medium slds-m-bottom_medium">
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        data-id="Address Does Not Exist"
+                        disabled={hasOutcome}
+                    >
+                        Address Does Not Exist
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        data-id="No Answer"
+                        disabled={hasOutcome}
+                    >
+                        No Answer
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="Competitor Contract"
+                    >
+                        Competitor Contract
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="Existing Customer"
+                    >
+                        Existing Customer
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="Language Barrier"
+                    >
+                        Language Barrier
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="Past Due Balance"
+                    >
+                        Past Due Balance
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="Pricing"
+                    >
+                        Pricing
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="Credit Card Declined"
+                    >
+                        Credit Card Declined
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="Customer Changed Mind"
+                    >
+                        Customer Changed Mind
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="DNK/DNC Request"
+                    >
+                        DNK/DNC Request
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="Failed Credit"
+                    >
+                        Failed Credit
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="Install Date"
+                    >
+                        Install Date
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="No SSN"
+                    >
+                        No SSN
+                    </button>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-6 slds-m-vertical_small slds-p-horizontal_x-small slds-align-absolute_center"
+                >
+                    <button
+                        class="slds-button slds-button_brand slds-button_stretch"
+                        onclick={outcomeHandler}
+                        disabled={hasOutcome}
+                        data-id="Other"
+                    >
+                        Other
+                    </button>
+                </div>
+                <div class="slds-col slds-size_3-of-5"></div>
+            </div>
+        </template>
+        <!-- Ends Outcomes -->
+        <lightning-record-edit-form object-api-name="Opportunity" record-id={recordId} class="slds-m-bottom_small">
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size_4-of-12">
+                    <lightning-input-field
+                        class="outcome"
+                        field-name="POE_Outcome__c"
+                        value={selectedOutcome}
+                        disabled="true"
+                    ></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_4-of-12">
+                    <lightning-input-field
+                        field-name="POE_Current_Wireless_Customer__c"
+                        disabled={hasOutcome}
+                    ></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_4-of-12">
+                    <lightning-input-field
+                        field-name="POE_Current_Internet_Speed__c"
+                        disabled={hasOutcome}
+                    ></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_4-of-12">
+                    <lightning-input-field
+                        field-name="POE_Decision_Maker_Name__c"
+                        disabled={hasOutcome}
+                    ></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_4-of-12">
+                    <lightning-input-field
+                        field-name="POE_Decision_Maker_Phone__c"
+                        disabled={hasOutcome}
+                    ></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_4-of-12">
+                    <lightning-input-field
+                        field-name="POE_Existing_Video__c"
+                        disabled={hasOutcome}
+                    ></lightning-input-field>
+                </div>
+                <div class="slds-col slds-size_4-of-12">
+                    <lightning-input-field
+                        field-name="POE_Contract_Expiration_Date__c"
+                        disabled={hasOutcome}
+                    ></lightning-input-field>
+                </div>
+                <div
+                    class="slds-col slds-size_12-of-12 slds-grid slds-wrap slds-gutters slds-grid_vertical-align-center"
+                >
+                    <div class="slds-col slds-size_11-of-12">
+                        <lightning-input-field
+                            field-name="POE_Outcome_Notes__c"
+                            class="custom-textarea"
+                            disabled={hasOutcome}
+                        ></lightning-input-field>
+                    </div>
+                    <div class="slds-col slds-size_1-of-12">
+                        <button
+                            type="submit"
+                            disabled={hasOutcome}
+                            class="slds-button slds-button_brand slds-button_stretch"
+                            onclick={handleSubmit}
+                            onsubmit={handleSubmit}
+                        >
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </lightning-record-edit-form>
+        <div class="slds-grid slds-gutters dispositionFooter slds-grid_align-center">
+            <template lwc:if={showNavigation}>
+                <div class="slds-col slds-size_2-of-6">
+                    <template lwc:if={hasPreviousRoutePosition}>
+                        <div class="slds-col slds-size_1-of-2">
+                            <p class="slds-text-align_left"><strong>Previous Opportunity</strong></p>
+                            <p class="slds-text-align_left">
+                                {routePreviousOpportunity.street} {routePreviousOpportunity.city}
+                            </p>
+                            <p class="slds-text-align_left">
+                                {routePreviousOpportunity.state} {routePreviousOpportunity.postalCode}
+                            </p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <span>
+                                <lightning-icon
+                                    icon-name="action:back"
+                                    alternative-text="Previous Opportunity"
+                                    title="Previous"
+                                    onclick={handlePreviousOpportunity}
+                                    class="chuzoFooterStyle"
+                                ></lightning-icon>
+                                <p>Previous</p>
+                            </span>
+                        </div>
+                    </template>
+                </div>
+            </template>
+            <template lwc:if={isDoorToDoor}>
+                <div class="slds-col slds-size_1-of-6">
+                    <span>
+                        <lightning-icon
+                            icon-name="action:map"
+                            alternative-text="Map"
+                            title="Map"
+                            onclick={mapHandler}
+                            class="chuzoFooterStyle"
+                        ></lightning-icon>
+                        <p>Map</p>
+                    </span>
+                </div>
+            </template>
+            <template lwc:if={showNavigation}>
+                <div class="slds-col slds-size_2-of-6">
+                    <template lwc:if={hasNextRoutePosition}>
+                        <div class="slds-col slds-size_1-of-2">
+                            <span>
+                                <div dir="rtl">
+                                    <span class="slds-icon_container slds-icon_flip">
+                                        <lightning-icon
+                                            icon-name="action:back"
+                                            alternative-text="Next Opportunity"
+                                            title="Next Opportunity"
+                                            onclick={handleNextOpportunity}
+                                            class="chuzoFooterStyle"
+                                        ></lightning-icon>
+                                    </span>
+                                </div>
+                                <p>Next</p>
+                            </span>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <p class="slds-text-align_right"><strong>Next Opportunity</strong></p>
+                            <p class="slds-text-align_right">
+                                {routeNextOpportunity.street} {routeNextOpportunity.city}
+                            </p>
+                            <p class="slds-text-align_right">
+                                {routeNextOpportunity.state} {routeNextOpportunity.postalCode}
+                            </p>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

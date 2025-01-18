@@ -1,0 +1,308 @@
+<template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading"> </lightning-spinner>
+    </template>
+    <div class="page pages-nav">
+        <div class="nav-bar">
+            <h2>Set up your payment method</h2>
+        </div>
+
+        <div class="page-content no-padding-top">
+            <form class="slds-m-bottom_medium">
+                <div class="form-header">
+                    <img align="left" src={iconFormCreditCard} />
+
+                    <h3>Payment information</h3>
+                    <p>Securely add your payment method details here.</p>
+                </div>
+
+                <div class="form-content">
+                    <template lwc:if={isNotGuestUser}>
+                        <div class="form-group">
+                            <lightning-radio-group
+                                class="radio-two-options"
+                                label="Select your client's preferred input method:"
+                                type="radio"
+                                options={methods}
+                                onchange={handleMethod}
+                            ></lightning-radio-group>
+                        </div>
+                    </template>
+
+                    <template lwc:if={isPCI}>
+                        <div class="form-group">
+                            <lightning-radio-group
+                                class="radio-two-options"
+                                label="Send PCI link via:"
+                                type="radio"
+                                options={pciOptions}
+                                value={pciValue}
+                                onchange={handlePCI}
+                            ></lightning-radio-group>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type={pciInput.type}
+                                value={pciInput.value}
+                                onchange={pciInput.changeHandler}
+                                name={pciInput.name}
+                                label={pciInput.label}
+                            >
+                            </lightning-input>
+                        </div>
+
+                        <template lwc:if={isSMSPCI}>
+                            <p class="slds-text-body_small form-group">
+                                <lightning-formatted-rich-text value={phoneDisclaimer}></lightning-formatted-rich-text>
+                            </p>
+                            <div class="form-group">
+                                <lightning-input
+                                    type="checkbox"
+                                    label={phoneDisclaimer2}
+                                    checked={hasOptedInSMS}
+                                    name="hasOptedInSMS"
+                                    onchange={handleChange}
+                                >
+                                </lightning-input>
+                            </div>
+                        </template>
+
+                        <div class="slds-grid slds-wrap slds-size_1-of-1 slds-m-bottom_small slds-grid_align-space">
+                            <div class="slds-col slds-max-medium-size_1-of-1 slds-m-bottom_small">
+                                <a class={sendPCIBtnClass} onclick={handleSendPCI}> Send PCI {pciValue} </a>
+                            </div>
+                            <div class="slds-col slds-max-medium-size_1-of-1 slds-m-bottom_small">
+                                <a class={sendPCIBtnClass} onclick={handleRefresh}> Refresh Fields </a>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template lwc:if={showAutoPayDiscounts}>
+                        <div class="form-group">
+                            <lightning-radio-group
+                                label="Card Type"
+                                name="autoPayDiscountGroup"
+                                options={autoPayDiscounts}
+                                value={autoPayDiscount}
+                                onchange={handleAutoPayDiscount}
+                                type="radio"
+                            ></lightning-radio-group>
+                        </div>
+                    </template>
+                    <template lwc:if={showCreditCardForm}>
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="text"
+                                label="First Name (*)"
+                                name="firstName"
+                                placeholder="Write your first name"
+                                min-length="2"
+                                disabled={isPCI}
+                                value={firstName}
+                                onchange={handleChange}
+                                pattern={onlyLettersRegExPattern}
+                                message-when-pattern-mismatch={onlyLettersRegExErrorMessage}
+                            ></lightning-input>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="text"
+                                label="Last Name (*)"
+                                name="lastName"
+                                placeholder="Write your last name"
+                                min-length="2"
+                                disabled={isPCI}
+                                value={lastName}
+                                onchange={handleChange}
+                                pattern={onlyLettersRegExPattern}
+                                message-when-pattern-mismatch={onlyLettersRegExErrorMessage}
+                            ></lightning-input>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="text"
+                                name="cardName"
+                                placeholder="Write your name on card"
+                                label="Name on Card (*)"
+                                disabled={isPCI}
+                                value={cardName}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-select
+                                required
+                                label="Card Type (*)"
+                                placeholder="Select your card provider"
+                                name="type"
+                                value={type}
+                                options={ccTypes}
+                                disabled={isPCI}
+                                onchange={handleChange}
+                            ></lightning-select>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                placeholder="Write your card number"
+                                label="Card number (*)"
+                                max-length="19"
+                                min-length="13"
+                                message-when-pattern-mismatch="Enter a valid Credit Card Number."
+                                name="ccNumber"
+                                pattern="[0-9]{13,19}"
+                                type={cardNumberType}
+                                disabled={isPCI}
+                                value={ccNumber}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-select
+                                required
+                                placeholder="MM"
+                                label="Expiration month (*)"
+                                name="month"
+                                disabled={isPCI}
+                                options={months}
+                                value={month}
+                                onchange={handleChange}
+                            ></lightning-select>
+
+                            <lightning-select
+                                required
+                                placeholder="YYYY"
+                                label="Expiration year (*)"
+                                name="year"
+                                disabled={isPCI}
+                                options={years}
+                                value={year}
+                                onchange={handleChange}
+                            ></lightning-select>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="text"
+                                max-length="5"
+                                min-length="5"
+                                name="zip"
+                                label="Zip Code (*)"
+                                disabled={isPCI}
+                                value={zip}
+                                onchange={handleChange}
+                            ></lightning-input>
+
+                            <lightning-input
+                                type="password"
+                                required
+                                placeholder="Write your CVV"
+                                label="CVV (*)"
+                                name="cvv"
+                                min-length="3"
+                                max-length="4"
+                                pattern="[0-9]{3,4}"
+                                message-when-pattern-mismatch="Enter a valid CVV."
+                                value={cvv}
+                                disabled={isPCI}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                    </template>
+                    <template lwc:if={showACHForm}>
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="text"
+                                value={accountFirstName}
+                                onchange={handleACH}
+                                name="accountFirstName"
+                                label="Account First Name"
+                            ></lightning-input>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="text"
+                                value={accountLastName}
+                                onchange={handleACH}
+                                name="accountLastName"
+                                label="Account Last Name"
+                            ></lightning-input>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-input
+                                type="text"
+                                label="Account Number"
+                                required
+                                max-length="12"
+                                pattern="[0-9]{10,12}"
+                                message-when-pattern-mismatch="The Account Number must be a 10-12-digit number"
+                                value={bankAccountNumber}
+                                onchange={handleACH}
+                                name="bankAccountNumber"
+                            ></lightning-input>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-input
+                                type="text"
+                                value={bankRoutingNumber}
+                                onchange={handleACH}
+                                name="bankRoutingNumber"
+                                pattern="[0-9]{9}"
+                                message-when-pattern-mismatch="The Routing Number must be a 9-digit number"
+                                max-length="9"
+                                label="Routing Number"
+                                required="true"
+                            ></lightning-input>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-combobox
+                                name="accountType"
+                                label="Account Type"
+                                value={accountType}
+                                options={accountTypes}
+                                required
+                                onchange={handleACH}
+                            >
+                            </lightning-combobox>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-combobox
+                                name="accountClass"
+                                label="Account Class"
+                                value={accountClass}
+                                options={accountClasses}
+                                required
+                                onchange={handleACH}
+                            >
+                            </lightning-combobox>
+                        </div>
+                    </template>
+                </div>
+            </form>
+
+            <a onclick={handlePayment} class={nextBtnDesktopClass}> Next step </a>
+        </div>
+
+        <div class="footer-mobile">
+            <a onclick={handlePayment} class={nextBtnMobileClass}> Next step </a>
+        </div>
+    </div>
+</template>

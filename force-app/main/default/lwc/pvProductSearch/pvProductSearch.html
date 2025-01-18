@@ -1,0 +1,42 @@
+<!--
+  @description       : 
+  @author            : Impaqtive Dev Team
+  @group             : 
+  @last modified on  : 08-02-2023
+  @last modified by  : Impaqtive Dev Team
+-->
+<template>
+    <div>
+        <legend class="slds-form-element__legend slds-form-element__label slds-text-align_center ">Product</legend>
+
+        <lightning-input
+            type="search"
+            onchange={handleChange}
+            placeholder="Products"
+            value={searchKey}
+            label=""
+        ></lightning-input>
+        <lightning-formatted-rich-text if:true={LoadingText} value={loading}>
+        </lightning-formatted-rich-text>  
+        <lightning-formatted-rich-text if:true={NoResultText} value={Noresult}>
+        </lightning-formatted-rich-text>  
+    </div>
+
+    <template if:true={ServiceTerritories}>  
+        <div class="slds-box">
+            <template iterator:it={ServiceTerritories} for:index="index">  
+                <div onclick={handleSelect} key={it.value.recId} data-id={it.index} style="cursor: pointer;">  
+                    <div class="slds-m-around_medium">                              
+                        <lightning-formatted-rich-text value={it.value.recName}>
+                        </lightning-formatted-rich-text>  
+                    </div>  
+                </div>  
+            </template>
+        </div>
+    </template>
+    <!-- <template if:true={selectedstId}>
+        <div class="slds-m-around_medium">
+            <b>Selected  Id is</b> {selectedstId}.
+        </div>
+    </template> -->
+</template>

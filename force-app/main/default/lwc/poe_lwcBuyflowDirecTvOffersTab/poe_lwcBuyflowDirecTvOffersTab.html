@@ -1,0 +1,862 @@
+<template>
+    <template if:true={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template if:false={showCollateral}>
+        <div class="slds-grid slds-grid_align-end">
+            <div class="slds-col">
+                <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+            </div>
+        </div>
+        <div class="slds-box slds-theme_default">
+            <template if:false={showSBS}>
+                <div class="slds-grid slds-gutters slds-p-around--medium">
+                    <div class="slds-col slds-size_2-of-3">
+                        <lightning-tabset>
+                            <lightning-tab label="Offers">
+                                <template if:true={requiredPresent}>
+                                    <div
+                                        class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        Selection Required
+                                    </div>
+                                    <div
+                                        class="slds-grid slds-grid--vertical-stretch slds-gutters slds-wrap slds-m-vertical_small slds-m-horizontal_small"
+                                    >
+                                        <div
+                                            class="slds-col slds-size_2-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            style="background-color: #ffb769; color: white"
+                                        >
+                                            Select
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_3-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            style="background-color: #ffb769; color: white"
+                                        >
+                                            Name
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_5-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            style="background-color: #ffb769; color: white"
+                                        >
+                                            Description
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            style="background-color: #ffb769; color: white"
+                                        >
+                                            Monthly Fee
+                                        </div>
+                                        <template for:each={configurations.offers.required} for:item="promo">
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-size_2-of-12 slds-p-around_small slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <lightning-input
+                                                    type="checkbox"
+                                                    name={promo.name}
+                                                    checked={promo.checked}
+                                                    data-id={promo.id}
+                                                    data-choice={promo.choiceCode}
+                                                    onchange={handleToggleChange}
+                                                ></lightning-input>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_3-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-grid slds-size_1-of-3 slds-align_absolute-center">
+                                                    <img src={promo.img} />
+                                                </div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_5-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid-vertical slds-grid_align-center slds-grid–vertical-align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">{promo.name}</div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">{promo.fee}</div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_12-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            >
+                                                <lightning-formatted-rich-text value={promo.description}>
+                                                </lightning-formatted-rich-text>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <template if:true={hasLandlord}>
+                                    <div
+                                        class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        Landlord Permission - Selection Required
+                                    </div>
+                                    <div
+                                        class="slds-grid slds-grid--vertical-stretch slds-gutters slds-wrap slds-m-vertical_small slds-m-horizontal_small"
+                                    >
+                                        <div
+                                            class="slds-col slds-p-around-medium slds-box slds-size_12-of-12 slds-grid slds-wrap"
+                                        >
+                                            <div class="slds-col slds-size_12-of-12 slds-p-around_small">
+                                                {landlordDisclaimer}
+                                            </div>
+                                            <template for:each={landlordOptions} for:item="promo">
+                                                <div
+                                                    key={promo.id}
+                                                    class="slds-col slds-size_12-of-12 slds-p-around_x-small"
+                                                >
+                                                    <lightning-input
+                                                        type="checkbox"
+                                                        name={promo.name}
+                                                        label={promo.label}
+                                                        field-level-help={promo.help}
+                                                        checked={promo.checked}
+                                                        disabled={promo.disabled}
+                                                        data-id={promo.id}
+                                                        onchange={handleLandlordChange}
+                                                    ></lightning-input>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                                <div
+                                    class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    Included with selected Plan
+                                </div>
+                                <div
+                                    class="slds-grid slds-grid--vertical-stretch slds-gutters slds-wrap slds-m-vertical_small slds-m-horizontal_small"
+                                >
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        Select
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_8-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        Name
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        Monthly Fee
+                                    </div>
+                                    <template for:each={configurations.offers.included} for:item="promo">
+                                        <template if:true={promo.show}>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-size_2-of-12 slds-p-around_small slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <lightning-input
+                                                    type="checkbox"
+                                                    data-id={promo.id}
+                                                    data-choice={promo.choiceCode}
+                                                    checked={promo.checked}
+                                                    disabled
+                                                    name={promo.name}
+                                                    onchange={handleToggleChange}
+                                                    class="slds-align_absolute-center"
+                                                ></lightning-input>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_8-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">
+                                                    {promo.name}&nbsp;&nbsp;
+                                                    <template if:true={promo.hasDescription}>
+                                                        <lightning-icon
+                                                            icon-name="action:info"
+                                                            data-id={promo.id}
+                                                            onclick={showData}
+                                                            alternative-text="Open Info"
+                                                            title="Open Info"
+                                                            size="xx-small"
+                                                            style="cursor: pointer"
+                                                        ></lightning-icon>
+                                                    </template>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">{promo.fee}</div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </lightning-tab>
+                            <lightning-tab label="Premiums" title="2nd tab extended title">
+                                <div
+                                    class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    Premium Channels/Offers
+                                </div>
+                                <div
+                                    class="slds-grid slds-grid--vertical-stretch slds-gutters slds-wrap slds-m-vertical_small slds-m-horizontal_small"
+                                >
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Select</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Name</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_1-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Category</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_5-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Description</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Monthly Fee</div>
+                                    </div>
+                                    <template for:each={configurations.premiums} for:item="promo">
+                                        <template if:true={promo.show}>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-size_2-of-12 slds-p-around_small slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">
+                                                    <lightning-input
+                                                        type="checkbox"
+                                                        data-id={promo.id}
+                                                        data-choice={promo.choiceCode}
+                                                        name={promo.name}
+                                                        onchange={handleToggleChange}
+                                                        checked={promo.checked}
+                                                        disabled={promo.required}
+                                                    ></lightning-input>
+                                                </div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-grid slds-size_2-of-3 slds-align_absolute-center">
+                                                    <img src={promo.img} />
+                                                </div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_1-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">{promo.category}</div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_5-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid-vertical slds-grid_align-center slds-grid–vertical-align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">
+                                                    <lightning-formatted-rich-text
+                                                        value={promo.name}
+                                                    ></lightning-formatted-rich-text>
+                                                </div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">
+                                                    {promo.fee}&nbsp;&nbsp;
+                                                    <template if:true={promo.hasDescription}
+                                                        ><lightning-icon
+                                                            icon-name="action:info"
+                                                            data-id={promo.id}
+                                                            onclick={showData}
+                                                            alternative-text="Open Info"
+                                                            title="Open Info"
+                                                            size="xx-small"
+                                                            style="cursor: pointer"
+                                                        ></lightning-icon>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </lightning-tab>
+                            <lightning-tab label="Sports">
+                                <div
+                                    class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    Sport Options
+                                </div>
+                                <div
+                                    class="slds-grid slds-grid--vertical-stretch slds-gutters slds-wrap slds-m-vertical_small slds-m-horizontal_small"
+                                >
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Select</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Name</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_1-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Sport</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_5-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Description</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Fee</div>
+                                    </div>
+                                    <template for:each={configurations.sports} for:item="promo">
+                                        <template if:true={promo.show}>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-size_2-of-12 slds-p-around_small slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">
+                                                    <lightning-input
+                                                        type="checkbox"
+                                                        data-id={promo.id}
+                                                        data-choice={promo.choiceCode}
+                                                        disabled={promo.required}
+                                                        name={promo.name}
+                                                        onchange={handleToggleChange}
+                                                        checked={promo.checked}
+                                                    ></lightning-input>
+                                                </div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-grid slds-size_2-of-3 slds-align_absolute-center">
+                                                    <img src={promo.img} />
+                                                </div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_1-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">{promo.category}</div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_5-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid-vertical slds-grid_align-center slds-grid–vertical-align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">
+                                                    <lightning-formatted-rich-text
+                                                        value={promo.name}
+                                                    ></lightning-formatted-rich-text>
+                                                </div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">
+                                                    {promo.fee}&nbsp;&nbsp;
+                                                    <template if:true={promo.hasDescription}>
+                                                        <lightning-icon
+                                                            icon-name="action:info"
+                                                            data-id={promo.id}
+                                                            onclick={showData}
+                                                            alternative-text="Open Info"
+                                                            title="Open Info"
+                                                            size="xx-small"
+                                                            style="cursor: pointer"
+                                                        ></lightning-icon>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </lightning-tab>
+                            <lightning-tab label="International">
+                                <div
+                                    class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    International
+                                </div>
+                                <div
+                                    class="slds-grid slds-grid--vertical-stretch slds-gutters slds-wrap slds-m-vertical_small slds-m-horizontal_small"
+                                >
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Select</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Name</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Language</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_4-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Description</div>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                        style="background-color: #ffb769; color: white"
+                                    >
+                                        <div class="slds-align_absolute-center">Monthly Fee</div>
+                                    </div>
+                                    <template for:each={configurations.international} for:item="promo">
+                                        <template if:true={promo.show}>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-size_2-of-12 slds-p-around_small slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">
+                                                    <lightning-input
+                                                        type="checkbox"
+                                                        data-id={promo.id}
+                                                        data-choice={promo.choiceCode}
+                                                        disabled={promo.required}
+                                                        name={promo.name}
+                                                        onchange={handleToggleChange}
+                                                        checked={promo.checked}
+                                                    ></lightning-input>
+                                                </div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-grid slds-size_2-of-3 slds-align_absolute-center">
+                                                    <img src={promo.img} />
+                                                </div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">{promo.category}</div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_4-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid-vertical slds-grid_align-center slds-grid–vertical-align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">
+                                                    <lightning-formatted-rich-text
+                                                        value={promo.name}
+                                                    ></lightning-formatted-rich-text>
+                                                </div>
+                                            </div>
+                                            <div
+                                                key={promo.id}
+                                                class="slds-col slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                            >
+                                                <div class="slds-align_absolute-center">
+                                                    {promo.fee}&nbsp;&nbsp;
+                                                    <template if:true={promo.hasDescription}
+                                                        ><lightning-icon
+                                                            icon-name="action:info"
+                                                            data-id={promo.id}
+                                                            onclick={showData}
+                                                            alternative-text="Open Info"
+                                                            title="Open Info"
+                                                            size="xx-small"
+                                                            style="cursor: pointer"
+                                                        ></lightning-icon>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template></div
+                            ></lightning-tab>
+                            <template if:true={hasClosingOffers}>
+                                <lightning-tab label="Closing Offers">
+                                    <div
+                                        class="slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        Closing Offers
+                                    </div>
+                                    <div
+                                        class="slds-grid slds-grid--vertical-stretch slds-gutters slds-wrap slds-m-vertical_small slds-m-horizontal_small"
+                                    >
+                                        <div
+                                            class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            style="background-color: #ffb769; color: white"
+                                        >
+                                            <div class="slds-align_absolute-center">Select</div>
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_7-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            style="background-color: #ffb769; color: white"
+                                        >
+                                            <div class="slds-align_absolute-center">Name</div>
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_3-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                            style="background-color: #ffb769; color: white"
+                                        >
+                                            <div class="slds-align_absolute-center">Offer Fee</div>
+                                        </div>
+                                        <template for:each={configurations.closingOffers} for:item="promo">
+                                            <template if:true={promo.show}>
+                                                <div
+                                                    key={promo.id}
+                                                    class="slds-col slds-size_2-of-12 slds-p-around_small slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                                >
+                                                    <div class="slds-align_absolute-center">
+                                                        <lightning-input
+                                                            type="checkbox"
+                                                            data-id={promo.id}
+                                                            data-choice={promo.choiceCode}
+                                                            disabled={promo.required}
+                                                            name={promo.name}
+                                                            onchange={handleToggleChange}
+                                                            checked={promo.checked}
+                                                        ></lightning-input>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    key={promo.id}
+                                                    class="slds-col slds-p-around_small slds-size_7-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                                >
+                                                    <div class="slds-align_absolute-center">
+                                                        <lightning-formatted-rich-text
+                                                            value={promo.name}
+                                                        ></lightning-formatted-rich-text>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    key={promo.id}
+                                                    class="slds-col slds-p-around_small slds-size_3-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                                                >
+                                                    <div class="slds-align_absolute-center">
+                                                        {promo.fee}&nbsp;&nbsp;
+                                                        <template if:true={promo.hasDescription}
+                                                            ><lightning-icon
+                                                                icon-name="action:info"
+                                                                data-id={promo.id}
+                                                                onclick={showData}
+                                                                alternative-text="Open Info"
+                                                                title="Open Info"
+                                                                size="xx-small"
+                                                                style="cursor: pointer"
+                                                            ></lightning-icon>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    key={promo.id}
+                                                    class="slds-col slds-p-around_small slds-size_12-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                                                >
+                                                    <lightning-formatted-rich-text
+                                                        value={promo.description}
+                                                    ></lightning-formatted-rich-text>
+                                                </div>
+                                            </template>
+                                        </template></div
+                                ></lightning-tab>
+                            </template>
+                        </lightning-tabset>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-card>
+                            <h2 slot="title">
+                                <lightning-icon
+                                    icon-name="utility:cart"
+                                    size="small"
+                                    class="slds-var-m-right_small"
+                                ></lightning-icon>
+                                Shopping Cart
+                            </h2>
+                            <div>
+                                <div class="slds-border_top slds-grid slds-wrap">
+                                    <div
+                                        class="slds-text-heading_small slds-col slds-text-align_center slds-size_12-of-12 slds-var-p-vertical_xx-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        <span>Order ID: {cart.orderNumber}</span>
+                                    </div>
+                                    <template if:true={cart.hasToday}>
+                                        <div
+                                            class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                            style="background-color: #ff8200; color: white"
+                                        >
+                                            <span>Today's Charges</span>
+                                        </div>
+                                        <template for:each={cart.todayCharges} for:item="charge">
+                                            <div
+                                                key={charge.id}
+                                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                            >
+                                                <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                    <b>{charge.name}</b>
+                                                </div>
+                                                <template if:true={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                        style="color: #00c6b7"
+                                                    >
+                                                        ${charge.fee}
+                                                    </div>
+                                                </template>
+                                                <template if:false={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    >
+                                                        ${charge.fee}
+                                                    </div>
+                                                </template>
+                                                <template if:true={charge.hasDescription}>
+                                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                        {charge.description}
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <div
+                                            class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12">
+                                                <b>Today's Total*:</b>
+                                            </div>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-text-align_right slds-m-right_medium"
+                                            >
+                                                <b>${cart.todayTotal}</b>
+                                            </div>
+                                        </div>
+                                        <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                            <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                        </div>
+                                    </template>
+                                    <template if:true={cart.hasFirstBill}>
+                                        <div
+                                            class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                            style="background-color: #ff8200; color: white"
+                                        >
+                                            <span>First Bill Charges</span>
+                                        </div>
+                                        <template for:each={cart.firstBillCharges} for:item="charge">
+                                            <div
+                                                key={charge.id}
+                                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                            >
+                                                <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                    <b>{charge.name}</b>
+                                                </div>
+                                                <template if:true={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                        style="color: #00c6b7"
+                                                    >
+                                                        ${charge.fee}
+                                                    </div>
+                                                </template>
+                                                <template if:false={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    >
+                                                        ${charge.fee}
+                                                    </div>
+                                                </template>
+                                                <template if:true={charge.hasDescription}>
+                                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                        {charge.description}
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <div
+                                            class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12">
+                                                <b>First Bill Total (plus monthly):</b>
+                                            </div>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-text-align_right slds-m-right_medium"
+                                            >
+                                                <b>${cart.firstBillTotal}</b>
+                                            </div>
+                                        </div>
+                                        <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                            <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                        </div>
+                                    </template>
+                                    <template if:true={cart.hasMonthly}>
+                                        <div
+                                            class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                            style="background-color: #ff8200; color: white"
+                                        >
+                                            <span>Monthly Charges</span>
+                                        </div>
+                                        <template for:each={cart.monthlyCharges} for:item="charge">
+                                            <div
+                                                key={charge.id}
+                                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                            >
+                                                <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                    <b>{charge.name}</b>
+                                                </div>
+                                                <template if:true={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                        style="color: #00c6b7"
+                                                    >
+                                                        ${charge.fee}
+                                                    </div>
+                                                </template>
+                                                <template if:false={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    >
+                                                        ${charge.fee}
+                                                    </div>
+                                                </template>
+                                                <template if:true={charge.hasDescription}>
+                                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                        {charge.description}
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small">
+                                            <div class="slds-col slds-size_9-of-12">
+                                                <b>Monthly Total*:</b>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                                                <b>${cart.monthlyTotal}</b>
+                                            </div>
+                                        </div>
+                                        <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                            <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                        </div>
+                                    </template>
+                                    <template if:true={cart.hasSavings}>
+                                        <div
+                                            class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                            style="background-color: #ff8200; color: white"
+                                        >
+                                            <span>Savings & Promotions</span>
+                                        </div>
+                                        <template for:each={cart.savingCharges} for:item="charge">
+                                            <div
+                                                key={charge.id}
+                                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                            >
+                                                <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                    <b>{charge.name}</b>
+                                                </div>
+                                                <template if:true={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                        style="color: #00c6b7"
+                                                    ></div>
+                                                </template>
+                                                <template if:false={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    ></div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
+                        </lightning-card>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-grid_align-spread slds-p-around--medium">
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <div class="slds-grid slds-float_right">
+                            <div class="slds-col slds-p-right--medium">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Previous"
+                                    onclick={handlePrevious}
+                                    class="slds-float_right"
+                                ></lightning-button>
+                            </div>
+                            <div class="slds-col slds-p-right--medium">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Next"
+                                    disabled={noCompleteInfo}
+                                    onclick={handleClick}
+                                    class="slds-float_right"
+                                ></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+    <template if:true={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template if:true={showPopup}>
+        <c-poe_lwc-buyflow-direc-t-v-info-popup
+            onclose={hideData}
+            description={offerDescription}
+        ></c-poe_lwc-buyflow-direc-t-v-info-popup>
+    </template>
+</template>

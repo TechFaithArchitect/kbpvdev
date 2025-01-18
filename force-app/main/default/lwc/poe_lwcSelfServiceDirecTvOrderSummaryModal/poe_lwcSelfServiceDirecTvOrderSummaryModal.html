@@ -1,0 +1,107 @@
+<template>
+    <lightning-modal-header label="Invoice Details"></lightning-modal-header>
+    <lightning-modal-body class="modal-see-more page-invoice">
+        <div provider="directv">
+            <h2>Invoice Details</h2>
+            <div class="box-invoice">
+                <h3>Customer information</h3>
+                <ul>
+                    <li>
+                        <p>Customer name</p>
+                        <p>
+                            <lightning-formatted-rich-text value={customerName}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                    <li>
+                        <p>Address</p>
+                        <p>
+                            <lightning-formatted-rich-text value={addressText}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                    <li>
+                        <p>Phone number</p>
+                        <p>
+                            <lightning-formatted-rich-text value={orderInfo.customer.phoneNumber}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                    <li>
+                        <p>Email address</p>
+                        <p>
+                            <lightning-formatted-rich-text value={orderInfo.customer.emailAddress}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="box-invoice">
+                <h3>Order overview</h3>
+                <ul>
+                    <li>
+                        <p>Package option</p>
+                        <p>
+                            <lightning-formatted-rich-text value={productSelected}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                    <li>
+                        <p>Hardware option</p>
+                        <p>
+                            <lightning-formatted-rich-text value={hardwareSelected}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                    <li>
+                        <p>Email</p>
+                        <p>
+                            <lightning-formatted-rich-text value={orderInfo.customer.emailAddress}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                    <li>
+                        <p>Completed on</p>
+                        <p>
+                            <lightning-formatted-rich-text value={confirmedDate}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                    <li>
+                        <p>Order number</p>
+                        <p>
+                            <lightning-formatted-rich-text value={orderInfo.partnerOrderNumber}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="box-invoice">
+                <h3>Payment information</h3>
+                <ul>
+                    <li>
+                        <p>Amount paid today</p>
+                        <p>
+                            $<lightning-formatted-rich-text value={paymentInfo.amount}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                    <li>
+                        <p>Card type</p>
+                        <p>
+                            <lightning-formatted-rich-text value={type}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                    <li>
+                        <p>Name</p>
+                        <p>
+                            <lightning-formatted-rich-text value={paymentInfoCustomerName}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                    <li>
+                        <p>Card zip code</p>
+                        <p>
+                            <lightning-formatted-rich-text value={paymentInfo.zipCode}></lightning-formatted-rich-text>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="group-buttons">
+                <a onclick={hideModal} class="btn-provider-color btn-only-rounded">Close</a>
+            </div>
+        </div>
+    </lightning-modal-body>
+</template>

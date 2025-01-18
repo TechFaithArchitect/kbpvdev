@@ -1,0 +1,53 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        class="slds-modal slds-fade-in-open slds-modal_x-small"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{modalTitle}</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-text-heading_small">{modalBody}</div>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <template for:each={attributes} for:item="attribute">
+                        <div key={attribute.name} class="slds-col slds-size_12-of-12">
+                            <lightning-input
+                                type={attribute.inputType}
+                                data-id={attribute.name}
+                                name={attribute.name}
+                                onchange={handleChange}
+                                class={attribute.class}
+                                label={attribute.name}
+                                required={attribute.required}
+                                value={attribute.value}
+                            ></lightning-input>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" disabled={noInfo} onclick={handleConfirm}>Confirm</button>
+            </div>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

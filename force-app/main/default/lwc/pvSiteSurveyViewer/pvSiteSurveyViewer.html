@@ -1,0 +1,50 @@
+<template>
+    <template if:true={loader}>
+        <div>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </div>
+    </template>
+    <lightning-card>
+<template if:true={showSiteSurvey}>
+    <div class="slds-card slds-p-around_small" >
+        <template for:each={surveyData} for:item="data">
+            <c-pv-site-survey-element if:true={data.isVisible} key={data.id} type={data.type} 
+                input={data} onselected={handleSelection} value={data.value} response-value={data.value}>
+            </c-pv-site-survey-element>
+        </template>
+        <template if:true={showAcknowledgement}>
+        <div class="slds-size_1-of-1">
+            <lightning-input label="Site Survey Acknowledgement " value={acknowledgement}
+                name="siteSurveyAcknowledgement" type="checkbox" onchange={handleCheckBoxChange}
+                required ></lightning-input>
+            <p>- {surveyAck}</p>
+        </div>
+    </template>
+<template if:true={showSubmit}>
+    <div>
+            
+        <lightning-button variant="brand" label="Submit" title="Submit Survey" onclick={handleSubmit} 
+        class="slds-m-left_x-small" disabled={submitDisabled}></lightning-button>
+
+    </div>
+</template>
+       
+    </div>
+</template>
+        <template if:true={showStatusMessage}>
+            <div class="slds-card slds-p-around_small">
+                <p>{exceptionErrorMessage}</p>
+            </div>
+        </template>
+        <template if:true={showSuccessMessage}>
+            <div class="slds-card slds-p-around_small">
+                <p>Site Survey submitted successfully</p>
+            </div>
+        </template>
+        <template if:true={surveyCompleted}>
+            <div class="slds-card slds-p-around_small">
+                <p>Site Survey already submitted</p>
+            </div>
+        </template>
+    </lightning-card>
+</template>

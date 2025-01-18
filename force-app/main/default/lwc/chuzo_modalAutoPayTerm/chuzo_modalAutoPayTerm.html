@@ -1,0 +1,62 @@
+<template>
+	<lightning-modal-header label="AutoPay and Paperless Billing Terms and Conditions"></lightning-modal-header>
+	<lightning-modal-body class="modal-autopay-term">
+		<div provider="directv">
+			<img src={iconInfoTerm} />
+
+			<h2>AutoPay and Paperless Billing Terms and Conditions</h2>
+			<form class="autopay-term">
+				<div class="form-content">
+					
+					<div class="form-group">
+						<p class="float-checkbox-right">Accept</p>
+						<lightning-input 
+							type="checkbox"
+							label="1. Paperless Billing"
+							data-field-name="paperlessBillingAgreement"
+							checked={paperlessBillingAgreement}
+							onchange={handleChange}
+						></lightning-input>
+					</div>
+					<p class="legal-bottom">
+						<lightning-formatted-rich-text
+							value={paperlessVerbiage}
+						>
+						</lightning-formatted-rich-text>
+					</p>
+					
+					<div class="form-group">
+						<p class="float-checkbox-right">Accept</p>
+						<lightning-input 
+							type="checkbox" 
+							label="2. AutoPay authorization"
+							data-field-name="autopayAuthorization"
+							checked={autopayAuthorization}
+							onchange={handleChange} 
+						></lightning-input>
+					</div>
+					<p class="legal-bottom">
+						<lightning-formatted-rich-text
+							value={autoPayVerbiage}
+						>
+						</lightning-formatted-rich-text>
+					</p>
+				</div>
+			</form>
+
+			<div class="group-buttons">
+				<a class="btn-outline btn-only-rounded"
+					onclick={handleCancel}
+				>
+					Cancel
+				</a>
+	
+				<a class={acceptTermsClass}
+					onclick={acceptTerms}
+				>
+					Accept all terms and conditions
+				</a>
+			</div>
+		</div>
+	</lightning-modal-body>
+</template>

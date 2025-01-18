@@ -1,0 +1,105 @@
+<template>
+    <p class="slds-m-around_large slds-text-title_bold">{block}</p>
+    <template lwc:if={showDTV}>
+        <lightning-input
+            type="checkbox"
+            label="DIRECTV"
+            name="at"
+            onchange={handleChecked}
+            checked={hasDTV}
+            class="slds-m-around_large"
+            disabled={disabled}
+        ></lightning-input>
+    </template>
+    <template lwc:if={showBrinks}>
+        <lightning-input
+            type="checkbox"
+            label="Brinks"
+            name="brinks"
+            onchange={handleChecked}
+            checked={hasBrinks}
+            class="slds-m-around_large"
+            disabled={disabled}
+        ></lightning-input>
+    </template>
+    <template lwc:if={showCharter}>
+        <lightning-input
+            type="checkbox"
+            label="Spectrum"
+            name="charter"
+            onchange={handleChecked}
+            class="slds-m-around_large"
+            checked={hasCharter}
+            disabled={disabled}
+        ></lightning-input>
+    </template>
+    <template lwc:if={showEarthLink}>
+        <lightning-input
+            type="checkbox"
+            label="EarthLink"
+            name="earthlink"
+            onchange={handleChecked}
+            class="slds-m-around_large"
+            checked={hasEarthLink}
+            disabled={disabled}
+        ></lightning-input>
+    </template>
+    <template lwc:if={showFrontier}>
+        <lightning-input
+            type="checkbox"
+            checked={hasFrontier}
+            label="Frontier"
+            name="frontier"
+            class="slds-m-around_large"
+            onchange={handleChecked}
+            disabled={disabled}
+        ></lightning-input>
+    </template>
+    <template lwc:if={showTMobile}>
+        <lightning-input
+            type="checkbox"
+            checked={hasTMobile}
+            disabled={disabled}
+            label="T-Mobile"
+            class="slds-m-around_large"
+            name="t-mobile"
+            onchange={handleChecked}
+        ></lightning-input>
+    </template>
+    <template lwc:if={showViasat}>
+        <lightning-input
+            type="checkbox"
+            checked={hasViasat}
+            label="Viasat"
+            class="slds-m-around_large"
+            name="viasat"
+            onchange={handleChecked}
+            disabled={disabled}
+        ></lightning-input>
+    </template>
+    <template lwc:if={showWindstream}>
+        <lightning-input
+            type="checkbox"
+            label="Windstream"
+            class="slds-m-around_large"
+            checked={hasWindstream}
+            name="windstream"
+            onchange={handleChecked}
+            disabled={disabled}
+        ></lightning-input>
+    </template>
+    <template lwc:if={showAltice}>
+        <lightning-input
+            type="checkbox"
+            label="Optimum"
+            class="slds-m-around_large"
+            checked={hasAltice}
+            name="altice"
+            onchange={handleChecked}
+            disabled={disabled}
+        ></lightning-input>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

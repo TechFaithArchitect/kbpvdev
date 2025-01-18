@@ -1,0 +1,35 @@
+<template>
+	<lightning-modal-header label={labels.SUGGESTED_ADDRESS_SELECTION_TITLE}></lightning-modal-header>
+	<lightning-modal-body class="modal-products">
+        <div provider="earthlink">
+            <template lwc:if={loaderSpinner}>
+                <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+            </template>
+
+			<h2>{labels.SUGGESTED_ADDRESS_SELECTION_TITLE}</h2>
+			<p>
+				{labels.WIRED_PRODUCT_SELECTION_MODAL_INSTRUCTIONS}
+			</p>
+
+            <div class="form-group slds-align_absolute-center slds-m-top_small">
+                <lightning-radio-group
+                    name="radioAddresses"
+                    options={options}
+                    value={value}
+                    type="radio"
+                    onchange={handleChangeAddress}
+                ></lightning-radio-group>
+            </div>
+
+            <div class="group-buttons">
+				<a onclick={hideModal} class="btn-outline btn-only-rounded">
+					{labels.CANCEL_BUTTON_LABEL}
+				</a>
+
+				<a onclick={handleConfirm} class={confirmBtnClass}>
+					{labels.CONFIRM_BUTTON_LABEL}
+				</a>
+			</div>
+        </div>
+    </lightning-modal-body>
+</template>

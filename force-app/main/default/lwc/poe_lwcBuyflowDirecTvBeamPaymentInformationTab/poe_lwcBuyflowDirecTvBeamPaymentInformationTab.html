@@ -1,0 +1,637 @@
+<template>
+    <template if:true={showCollateral}>
+        <c-collateral-files-component
+            provider="earthlink"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template if:false={showCollateral}>
+        <div class="slds-grid slds-grid_align-end">
+            <div class="slds-col">
+                <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+            </div>
+        </div>
+        <div class="slds-box slds-theme_default">
+            <div class="slds-grid slds-gutters slds-var-p-around_medium">
+                <div class="slds-col slds-size_2-of-3 slds-grid slds-wrap">
+                    <div class="slds-box slds-m-bottom_small slds-size_12-of-12 slds-grid slds-wrap">
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Payment Information
+                        </div>
+                        <div class="slds-col slds-size_10-of-12 slds-grid slds-p-around_small" style="color: #ff8200">
+                            <div class="slds-col slds-size_7-of-12 slds-text-heading_small">
+                                Today's Charges $
+                                <strong>{total}</strong> (Includes Sales Tax)
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-wrap slds-p-horizontal_x-small">
+                            <div class="slds-col slds-size_12-of-12">
+                                <p>
+                                    <strong>
+                                        The last name on the credit card being used should match the last name of the
+                                        customer signing up for service. See&nbsp;<a onclick={handleSchedule}
+                                            >Schedule for Future Payments</a
+                                        >&nbsp;for details on your monthly charges.
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-wrap slds-p-around_small">
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        type="text"
+                                        label="First Name"
+                                        name="firstName"
+                                        onchange={handleChange}
+                                        min-length="2"
+                                        value={firstName}
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        type="text"
+                                        label="Last Name"
+                                        name="lastName"
+                                        value={lastName}
+                                        onchange={handleChange}
+                                        min-length="2"
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        type="password"
+                                        max-length="19"
+                                        min-length="13"
+                                        message-when-pattern-mismatch="Enter a valid Credit Card Number."
+                                        value={ccNumber}
+                                        onchange={handleChange}
+                                        name="ccNumber"
+                                        label="Card Number"
+                                        pattern="[0-9]{13,19}"
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <div class="slds-p-around_xx-small lgc-bg">
+                                    <lightning-combobox
+                                        label="Credit Card Type"
+                                        required="true"
+                                        value={type}
+                                        onchange={handleChange}
+                                        name="type"
+                                        options={ccTypes}
+                                    ></lightning-combobox>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <div class="slds-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        type="text"
+                                        max-length="5"
+                                        min-length="5"
+                                        value={zip}
+                                        onchange={handleChange}
+                                        name="zip"
+                                        label="Zip Code"
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <div class="slds-p-around_xx-small lgc-bg">
+                                    <lightning-combobox
+                                        options={months}
+                                        value={month}
+                                        onchange={handleChange}
+                                        name="month"
+                                        label="Expiration Month"
+                                        required="true"
+                                    ></lightning-combobox>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <div class="slds-p-around_xx-small lgc-bg">
+                                    <lightning-combobox
+                                        options={years}
+                                        value={year}
+                                        onchange={handleChange}
+                                        name="year"
+                                        label="Expiration Year"
+                                        required="true"
+                                    ></lightning-combobox>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12">
+                                <div class="slds-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        value={cvv}
+                                        onchange={handleChange}
+                                        name="cvv"
+                                        type="password"
+                                        max-length="4"
+                                        message-when-pattern-mismatch="Enter a valid Security Code."
+                                        min-length="3"
+                                        label="Security Code"
+                                        pattern="[0-9]{3,4}"
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-grid slds-wrap slds-m-vertical_xx-small slds-p-horizontal_x-small slds-border_bottom slds-p-bottom_small"
+                        >
+                            <p>
+                                You certify that you are the card owner or authorized to use this credit card.
+                                Additionally, you authorize your service provider to automatically charge the total due
+                                today, your future monthly payments, and any cancellation fees and/or installment plan
+                                balances to the card on your account. The amount could be debited as early as today.
+                            </p>
+                            <template if:true={isNonCallcenter}>
+                                <lightning-input
+                                    class="slds-m-top_medium"
+                                    type="checkbox"
+                                    label={paymentTClabel}
+                                    name="agreementPayment"
+                                    required="true"
+                                    id="agreementPayment"
+                                    checked={agreementPayment}
+                                    onchange={handleAgreement}
+                                ></lightning-input>
+                            </template>
+                        </div>
+                        <div
+                            class="slds-col slds-grid slds-grid_vertical-align-end slds-gutters slds-size_12-of-12 slds-grid slds-wrap slds-m-vertical_xx-small slds-m-horizontal_small"
+                        >
+                            <div class="slds-col slds-size_6-of-12">
+                                <lightning-input
+                                    type="email"
+                                    value={email}
+                                    onchange={handleEmail}
+                                    name="email"
+                                    label="Email"
+                                    required="true"
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_4-of-12 slds-text-body_regular">
+                                Customer agrees to sign up for AutoPay and Paperless Billing
+                            </div>
+                            <div class="slds-col slds-size_2-of-12">
+                                <lightning-input
+                                    type="checkbox"
+                                    name="costumerAutopay"
+                                    label="Agree"
+                                    checked={autoPay}
+                                    disabled={noEmail}
+                                    onchange={handleCostumerAutopayChange}
+                                ></lightning-input>
+                            </div>
+                        </div>
+                        <template if:true={autoPay}>
+                            <div class="slds-col slds-size_12-of-12 slds-grid slds-p-around_small slds-m-top_medium">
+                                <div class="slds-col slds-size_8-of-12 slds-text-heading_small" style="color: #ff8200">
+                                    Credit Card AutoPay
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12 slds-p-horizontal_medium slds-m-horizontal_x-small">
+                                <strong
+                                    >This on-file payment method CANNOT be a non-reloadable prepaid card or gift
+                                    card.</strong
+                                >
+                            </div>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-grid slds-p-around_small slds-m-horizontal_medium"
+                            >
+                                <lightning-input
+                                    type="checkbox"
+                                    label="Use same payment as today's info? (uncheck to use a different method)"
+                                    name="sameCardAutopay"
+                                    checked={useSameAutopay}
+                                    onchange={handleSameCard}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12 slds-p-horizontal_medium slds-m-horizontal_x-small">
+                                <strong
+                                    >The last name on the credit card being used should match the last name of the
+                                    customer signing up for service.</strong
+                                >
+                            </div>
+                            <template if:false={useSameAutopay}>
+                                <div class="slds-grid slds-wrap slds-p-around_small">
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <div class="slds-p-around_xx-small lgc-bg">
+                                            <lightning-input
+                                                type="text"
+                                                label="First Name"
+                                                name="autopayFirstName"
+                                                onchange={handleChange}
+                                                min-length="2"
+                                                value={autopayFirstName}
+                                                required="true"
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <div class="slds-p-around_xx-small lgc-bg">
+                                            <lightning-input
+                                                type="text"
+                                                label="Last Name"
+                                                name="autopayLastName"
+                                                value={autopayLastName}
+                                                onchange={handleChange}
+                                                min-length="2"
+                                                required="true"
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <div class="slds-p-around_xx-small lgc-bg">
+                                            <lightning-input
+                                                type="password"
+                                                max-length="19"
+                                                min-length="13"
+                                                message-when-pattern-mismatch="Enter a valid Credit Card Number."
+                                                value={autopayCcNumber}
+                                                onchange={handleChange}
+                                                name="autopayCcNumber"
+                                                label="Card Number"
+                                                pattern="[0-9]{13,19}"
+                                                required="true"
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_3-of-12">
+                                        <div class="slds-p-around_xx-small lgc-bg">
+                                            <lightning-combobox
+                                                label="Credit Card Type"
+                                                required="true"
+                                                value={autopayType}
+                                                onchange={handleChange}
+                                                name="autopayType"
+                                                options={ccTypes}
+                                            ></lightning-combobox>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_3-of-12">
+                                        <div class="slds-p-around_xx-small lgc-bg">
+                                            <lightning-input
+                                                type="text"
+                                                max-length="5"
+                                                min-length="5"
+                                                value={autopayZip}
+                                                onchange={handleChange}
+                                                name="autopayZip"
+                                                label="Zip Code"
+                                                required="true"
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_3-of-12">
+                                        <div class="slds-p-around_xx-small lgc-bg">
+                                            <lightning-combobox
+                                                options={months}
+                                                value={autopayMonth}
+                                                onchange={handleChange}
+                                                name="autopayMonth"
+                                                label="Expiration Month"
+                                                required="true"
+                                            ></lightning-combobox>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_3-of-12">
+                                        <div class="slds-p-around_xx-small lgc-bg">
+                                            <lightning-combobox
+                                                options={years}
+                                                value={autopayYear}
+                                                onchange={handleChange}
+                                                name="autopayYear"
+                                                label="Expiration Year"
+                                                required="true"
+                                            ></lightning-combobox>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_6-of-12">
+                                        <div class="slds-p-around_xx-small lgc-bg">
+                                            <lightning-input
+                                                value={autopayCvv}
+                                                onchange={handleChange}
+                                                name="autopayCvv"
+                                                type="password"
+                                                max-length="4"
+                                                message-when-pattern-mismatch="Enter a valid Security Code."
+                                                min-length="3"
+                                                label="Security Code"
+                                                pattern="[0-9]{3,4}"
+                                                required="true"
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <div class="slds-col slds-size_12-of-12 slds-grid slds-p-around_small slds-m-top_medium">
+                                <div class="slds-col slds-size_8-of-12 slds-text-heading_small" style="color: #ff8200">
+                                    The AutoPay and Paperless Billing verbiages must be read to the customer before
+                                    continuing
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-grid_vertical slds-m-top_small">
+                                <div class="slds-col slds-size_12-of-12">
+                                    <lightning-formatted-rich-text value={verbiages.paperlessVerbiage}>
+                                    </lightning-formatted-rich-text>
+                                </div>
+                                <lightning-input
+                                    class="slds-m-bottom_x-small"
+                                    type="checkbox"
+                                    label={agreementLabel}
+                                    name="agreementPaperlessBilling"
+                                    required="true"
+                                    id="agreementPaperlessBilling"
+                                    checked={agreementPaperlessBilling}
+                                    onchange={handleAgreement}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-grid slds-grid_vertical slds-border_bottom slds-m-vertical_small">
+                                <div class="slds-col slds-size_12-of-12">
+                                    <lightning-formatted-rich-text value={verbiages.autopayVerbiage}>
+                                    </lightning-formatted-rich-text>
+                                </div>
+                                <lightning-input
+                                    class="slds-m-bottom_x-small"
+                                    type="checkbox"
+                                    label={agreementLabel}
+                                    name="agreementAutoPay"
+                                    id="agreementAutoPay"
+                                    required="true"
+                                    checked={agreementAutoPay}
+                                    onchange={handleAgreement}
+                                ></lightning-input>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-card>
+                        <h2 slot="title">
+                            <lightning-icon
+                                icon-name="utility:cart"
+                                size="small"
+                                class="slds-var-m-right_small"
+                            ></lightning-icon>
+                            Shopping Cart
+                        </h2>
+                        <div>
+                            <div class="slds-border_top slds-grid slds-wrap">
+                                <div
+                                    class="slds-text-heading_small slds-col slds-text-align_center slds-size_12-of-12 slds-var-p-vertical_xx-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    <span>Order ID: {cart.orderNumber}</span>
+                                </div>
+                                <template if:true={cart.hasToday}>
+                                    <div
+                                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        <span>Today's Charges</span>
+                                    </div>
+                                    <template for:each={cart.todayCharges} for:item="charge">
+                                        <div
+                                            key={charge.name}
+                                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                <b>{charge.name}</b>
+                                            </div>
+                                            <template if:true={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    style="color: #00c6b7"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:false={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:true={charge.hasDescription}>
+                                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                    {charge.description}
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <div
+                                        class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                                    >
+                                        <div class="slds-col slds-size_9-of-12">
+                                            <b>Today's Total*:</b>
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_3-of-12 slds-text-align_right slds-m-right_medium"
+                                        >
+                                            <b>${cart.todayTotal}</b>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                        <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                    </div>
+                                </template>
+                                <template if:true={cart.hasFirstBill}>
+                                    <div
+                                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        <span>First Bill Charges</span>
+                                    </div>
+                                    <template for:each={cart.firstBillCharges} for:item="charge">
+                                        <div
+                                            key={charge.name}
+                                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                <b>{charge.name}</b>
+                                            </div>
+                                            <template if:true={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    style="color: #00c6b7"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:false={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:true={charge.hasDescription}>
+                                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                    {charge.description}
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <div
+                                        class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                                    >
+                                        <div class="slds-col slds-size_9-of-12">
+                                            <b>First Bill Total (plus monthly):</b>
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_3-of-12 slds-text-align_right slds-m-right_medium"
+                                        >
+                                            <b>${cart.firstBillTotal}</b>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                        <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                    </div>
+                                </template>
+                                <template if:true={cart.hasMonthly}>
+                                    <div
+                                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        <span>Monthly Charges</span>
+                                    </div>
+                                    <template for:each={cart.monthlyCharges} for:item="charge">
+                                        <div
+                                            key={charge.name}
+                                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                <b>{charge.name}</b>
+                                            </div>
+                                            <template if:true={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    style="color: #00c6b7"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:false={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:true={charge.hasDescription}>
+                                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                    {charge.description}
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small">
+                                        <div class="slds-col slds-size_9-of-12">
+                                            <b>Monthly Total*:</b>
+                                        </div>
+                                        <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                                            <b>${cart.monthlyTotal}</b>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                        <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                    </div>
+                                </template>
+                                <template if:true={cart.hasSavings}>
+                                    <div
+                                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        <span>Savings & Promotions</span>
+                                    </div>
+                                    <template for:each={cart.savingCharges} for:item="charge">
+                                        <div
+                                            key={charge.name}
+                                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                <b>{charge.name}</b>
+                                            </div>
+                                            <template if:true={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    style="color: #00c6b7"
+                                                ></div>
+                                            </template>
+                                            <template if:false={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                ></div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </template>
+                            </div>
+                        </div>
+                    </lightning-card>
+                    <div class="slds-grid slds-p-around_medium">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-grid_align-spread slds-p-around--medium">
+                <div class="slds-col">
+                    <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                </div>
+                <div class="slds-col">
+                    <template lwc:if={showNext}>
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_2-of-5 slds-p-right--medium">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Previous"
+                                    onclick={handlePrevious}
+                                ></lightning-button>
+                            </div>
+                            <div class="slds-col slds-size_3-of-5 slds-p-right--medium">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Process Payment"
+                                    onclick={handleClick}
+                                    disabled={noCompleteInformation}
+                                ></lightning-button>
+                            </div></div
+                    ></template>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template if:true={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template if:true={showSchedule}>
+        <c-poe_lwc-buyflow-direc-tv-future-charges-modal
+            future-charges={futureCharges}
+            onclose={handleSchedule}
+        ></c-poe_lwc-buyflow-direc-tv-future-charges-modal>
+    </template>
+    <template if:true={showPopup}>
+        <c-poe_lwc-buyflow-direc-t-v-info-popup
+            onclose={hideData}
+            description={declineWarning}
+        ></c-poe_lwc-buyflow-direc-t-v-info-popup>
+    </template>
+</template>

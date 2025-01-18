@@ -1,0 +1,98 @@
+<template>
+    <div class="slds-box slds-theme_default">
+        <div class="slds-text-heading_small slds-p-around_small">
+            <span>{contactLength} Agents</span>
+        </div>
+        <div style="overflow: auto">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                <thead>
+                    <tr>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="First Name">First Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Last Name">Last Name</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Phone">Mobile Phone</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Programs Available">Programs Available</div>
+                        </th>
+                        <th class="" scope="col" hidden>
+                            <div class="slds-truncate" title="Enable TPV">Enable TPV</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Inactive">Inactive</div>
+                        </th>
+                        <th class="" scope="col">
+                            <div class="slds-truncate" title="Actions">Actions</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template lwc:if={activeContacts}>
+                        <template for:each={activeContacts} for:item="contact">
+                            <tr key={contact.Id}>
+                                <td>{contact.FirstName}</td>
+                                <td>{contact.LastName}</td>
+                                <td>
+                                    <lightning-formatted-phone value={contact.MobilePhone}></lightning-formatted-phone>
+                                </td>
+                                <td>
+                                    <div class="slds-wrap slds-line-clamp_x-small">
+                                        {contact.POE_Programs_Available__c}
+                                    </div>
+                                </td>
+                                <td hidden>
+                                    <lightning-input
+                                        type="checkbox"
+                                        name={contact.Id}
+                                        value={contact.POE_Enable_Trial_Period__c}
+                                        checked={contact.POE_Enable_Trial_Period__c}
+                                        onchange={updateTPV}
+                                        disabled={tpv}
+                                    ></lightning-input>
+                                </td>
+                                <td>
+                                    <lightning-input
+                                        type="checkbox"
+                                        name={contact.UserId}
+                                        value={contact.IsInactive}
+                                        checked={contact.IsInactive}
+                                        disabled
+                                    ></lightning-input>
+                                </td>
+                                <td class="slds-wrap">
+                                    <lightning-button
+                                        name={contact.Id}
+                                        label="Edit"
+                                        onclick={showModalBox}
+                                    ></lightning-button>
+                                    <c-poe_lwc-rep-onboarding-representatives-inactive-modal
+                                        is-active={contact.IsActive}
+                                        user-id={contact.UserId}
+                                        onupdate={refreshTable}
+                                        onlogerror={handleLogError}
+                                    ></c-poe_lwc-rep-onboarding-representatives-inactive-modal>
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showModal}>
+        <c-poe_lwc-rep-onboarding-representatives-modal
+            contact={selectedContact}
+            record-id={selectedId}
+            onupdate={refreshTable}
+            onclose={closeModal}
+            onlogerror={handleLogError}
+        ></c-poe_lwc-rep-onboarding-representatives-modal>
+    </template>
+</template>

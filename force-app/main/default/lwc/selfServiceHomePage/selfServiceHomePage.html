@@ -1,0 +1,173 @@
+<template>
+    <div class="slds-is-fixed slds-size_1-of-1 toast-container">
+        <template for:each={toastQueue} for:item="toast">
+            <c-poe_lwc-toast key={toast.key} toast={toast} ontoastend={handleToastEnd}> </c-poe_lwc-toast>
+        </template>
+    </div>
+    <header class={headerMode} provider={providerStyle}>
+        <div class="content-header">
+            <div class="content-logo">
+                <a title="Logo" class="logo">
+                    <img align="left" src={referralCode.logo} class="triviaboss" alt="Logo" />
+                    <img align="left" src={logoPoweredChuzo} class="powerby" alt="Chuzo Logo" />
+                </a>
+            </div>
+            <div class="content-menu menu-align-right">
+                <ul>
+                    <li><span>Need help?</span> <button onclick={contactUsModal}>Contact us</button></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <template lwc:if={showZipInput}>
+        <div class="page page-home">
+            <div class="page-home-header">
+                <video src={videoHome} autoplay muted loop></video>
+
+                <div class="home-float">
+                    <h1>
+                        <lightning-formatted-rich-text value={referralCode.title}> </lightning-formatted-rich-text>
+                    </h1>
+                    <p>
+                        <lightning-formatted-rich-text value={referralCode.subtitle}> </lightning-formatted-rich-text>
+                    </p>
+
+                    <form class="form-email-home">
+                        <div class="form-group with-icon-left">
+                            <img src={iconPointAddress} />
+                            <lightning-input
+                                type="text"
+                                placeholder="Enter your full address"
+                                onclick={handleAddressModal}
+                                onchange={handleAddressModal}
+                                value={addressTextValue}
+                            ></lightning-input>
+                        </div>
+                        <a onclick={handleClick} class="btn-orange btn-disabled" data-id="next-available">
+                            View available services
+                        </a>
+                    </form>
+                </div>
+            </div>
+            <ul class="list-providers">
+                <li>
+                    <img src={logoProvidersShowDirectv} alt="Directv" />
+                </li>
+
+                <li>
+                    <img src={logoProvidersShowEarthlink} alt="Earthlink" />
+                </li>
+
+                <li>
+                    <img src={logoProvidersShowFrontier} alt="Frontier" />
+                </li>
+
+                <li>
+                    <img src={logoProvidersShowKinetic} alt="Kinetic" />
+                </li>
+
+                <li>
+                    <img src={logoProvidersShowSpectrum} alt="Spectrum" />
+                </li>
+
+                <li>
+                    <img src={logoProvidersShowOptimum} alt="Spectrum" />
+                </li>
+
+                <li>
+                    <img src={logoProvidersShowViasat} alt="Viasat" />
+                </li>
+
+                <li>
+                    <img src={logoProvidersShowHomeSecurity} alt="Viasat" />
+                </li>
+            </ul>
+
+            <div class="content-two-sides">
+                <div class="side">
+                    <h3>
+                        <lightning-formatted-rich-text value={referralCode.body}> </lightning-formatted-rich-text>
+                    </h3>
+                </div>
+
+                <div class="side">
+                    <div class="content-color" style={primaryColorBackground}>
+                        <div class="color-back-logo" style={secondaryColorBackground}>
+                            <img src={referralCode.bannerLogo} alt="Logo" />
+                        </div>
+
+                        <p style={secondaryColorText}>
+                            <lightning-formatted-rich-text value={referralCode.bannerDescription}>
+                            </lightning-formatted-rich-text>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template lwc:if={showBuyflowMaster}>
+        <c-poe_lwc-buyflow-master
+            referral-code-data={referralCode}
+            zip-code={zip}
+            is-mobile={isMobile}
+            self-service-address={address}
+            onhome={handleHome}
+            onproviderstyle={handleProviderStyle}
+            onlightning__showtoast={handleShowToast}
+        ></c-poe_lwc-buyflow-master>
+    </template>
+    <div class="footer">
+        <div class="content-footer">
+            <div class="menu-footer">
+                <img src={logoFooterChuzo} alt="Logo" />
+                <ul>
+                    <li>
+                        <a href={aboutUsURL} target="_blank">About Us</a>
+                    </li>
+                    <li>
+                        <a onclick={contactUsModal}>Contact Us</a>
+                    </li>
+                    <li>
+                        <a href={referralCode.privacyPolicyUrl} target="_blank">Privacy Policy</a>
+                    </li>
+                    <li>
+                        <a href={referralCode.termsUrl} target="_blank">Terms of Use</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="list-footer">
+                <div class="footer-info">
+                    <template lwc:if={isMobile}>
+                        <p>
+                            Need help finding internet & TV providers near you?<br />
+                            Give our experts a call <a href={referralCode.tollNumberURL}>{referralCode.tollNumber}</a>.
+                        </p>
+                    </template>
+                    <template lwc:else>
+                        <p>
+                            Need help finding internet & TV providers near you?<br />
+                            Give our experts a call {referralCode.tollNumber}.
+                        </p>
+                    </template>
+                </div>
+                <div class="schedules">
+                    <p>
+                        Monday to Friday<br />
+                        8:30 a.m. to 6:00 p.m. CST.
+                    </p>
+                </div>
+                <div class="schedules"></div>
+                <div class="schedules"></div>
+            </div>
+
+            <p class="footer-legal">
+                Copyright © 2024 Chuzo, a PerfectVision Company. All rights reserved.<br />
+                Terms and conditions and restrictions apply. All content on this web site is proprietary. Pricing per
+                month plus taxes for length of contract. Additional fees and terms may apply. Pricing varies by location
+                and availability. All prices subject to change at any time. May or may not be available based on service
+                address. Speeds may vary.
+            </p>
+        </div>
+    </div>
+</template>

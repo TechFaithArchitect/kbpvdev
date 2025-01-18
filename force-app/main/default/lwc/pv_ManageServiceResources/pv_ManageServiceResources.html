@@ -1,0 +1,370 @@
+<!--
+  @description       : 
+  @author            : Impaqtive Dev Team
+  @group             : 
+  @last modified on  : 08-25-2023
+  @last modified by  : Impaqtive Dev Team
+-->
+<template >
+    <template if:true={isVisiblePage}>
+        <br>
+        <lightning-tabset>
+            <lightning-tab label="Create Service Resource">
+    
+                <template if:true={isShowModal}>
+                    <lightning-card class="container">
+                        <lightning-modal-body>
+                            <template if:true={showSpinner}>
+                                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                            </template>
+                            <template if:true={CreateContact}>
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                        <div class="slds-form-element">
+    
+                                            <template if:true={picklistValues}>
+                                                <lightning-combobox  label="Resource Type"
+                                                    value={resourceTypeValue} options={picklistValues}
+                                                    placeholder="Select a Resource Type" required
+                                                    onchange={handleResourceTypeChange}>
+                                                </lightning-combobox>
+                                            </template>
+                                        </div>
+                                    </div>
+    
+                                    <div class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                        <div class="slds-form-element">
+                                            <div class="slds-form-element">
+                                                <template if:true={optionsLoaded}>
+                                                    <c-pv_-multi-select-picklist  options={Vendoroptions} 
+                                                        onvaluechange={handleVendorType} input-value={allValues} label="Vendor">
+                                                    </c-pv_-multi-select-picklist>
+    
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+    
+                                </div>
+    
+                                    <div class="slds-grid slds-wrap">
+                                        <div
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input label="First Name" value={rec.FirstName}
+                                                    onchange={contactChangeVal}></lightning-input>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input label="Last Name" value={rec.LastName}
+                                                    onchange={contactChangeVal} required></lightning-input>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input label="Email" type="email" value={rec.Email}
+                                                    onchange={contactChangeVal} required></lightning-input>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input type="tel" label="Phone" value={rec.Phone} name="phone"
+                                                    placeholder="Phone" required onchange={contactChangeVal}>
+                                                </lightning-input>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input label="Account" name="Account" placeholder="Account"
+                                                    value={accountname} required readonly></lightning-input>
+                                            </div>
+                                        </div>
+    
+                                        <div
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-combobox name="filter" label="Timezone" value={rec.Timezone}
+                                                    options={options} onchange={contactChangeVal}
+                                                    placeholder="Select timezone" required>
+    
+                                                </lightning-combobox>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input type="date" data-field="ds" name="input1"
+                                                    value={rec.DrugScreenDate} label="Drug Screen Date"
+                                                    onchange={contactChangeVal}></lightning-input>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input type="date" data-field="bg" name="input1"
+                                                    value={rec.BackgroundCheckDate} label="Background Check Date"
+                                                    onchange={contactChangeVal}></lightning-input>
+                                            </div>
+                                        </div>
+                                        <template if:true={directvvalue}>
+                                        <div if:false={dispatcher}
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input name="input1" label="DIRECTV Id" value={rec.IDDirecTV}
+                                                    onchange={contactChangeVal}></lightning-input>
+                                            </div>
+                                        </div>
+                                    </template>
+                                        <template if:true={viasatvalue}>
+                                        <div if:false={dispatcher}
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input name="input1" label="Viasat Id" value={rec.IDViasat}
+                                                    onchange={contactChangeVal}></lightning-input>
+                                            </div>
+                                        </div>
+                                    </template>
+                                        <template if:true={directvvalue}>
+                                        <div if:false={dispatcher}
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input type="date" data-field="de" name="input1"
+                                                    value={DIRECTVexp} label="DIRECTV Id Expiration Date"
+                                                    onchange={contactChangeVal}></lightning-input>
+                                            </div>
+                                        </div>
+                                    </template>
+                                        <template if:true={viasatvalue}>
+                                        <div if:false={dispatcher}
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input type="date" data-field="ve" name="input1" value={Viasatexp}
+                                                    label="Viasat Id Expiration Date" onchange={contactChangeVal}>
+                                                </lightning-input>
+                                            </div>
+                                        </div>
+                                    </template>
+                                        <!-- If a new vendor is added -->
+                                        <template if:true={nextlinkvalue}>
+                                        <div if:false={dispatcher}
+                                            class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input name="input1" label="Nextlink Id" value={rec.IDNextlink}
+                                                    onchange={contactChangeVal}></lightning-input>
+                                            </div>
+                                        </div>
+                                        </template>
+                                        <!-- Nextlink fields -->
+    
+                                        <div if:true={ManagerField} class="slds-p-horizontal--small slds-col slds-size_6-of-12 slds-m-bottom--medium">
+                                        <div class="slds-form-element">
+                                            <template if:true={ManagerLoaded}>
+                                            <lightning-combobox  label="Manager"
+                                            value={rec.Manager} options={Manageroptions}
+                                            placeholder="Select a Manager" required
+                                            onchange={contactChangeVal}>
+                                        </lightning-combobox>     
+                                    </template>                       
+                                </div>
+                               </div>
+                                        <!--new code for dependent picklist-->
+                                        <div
+                                            class="slds-p-horizontal--small slds-col slds-size_12-of-12 slds-m-bottom--medium">
+                                            <div class="slds-form-element">
+                                                <lightning-input-address address-label="Address" street-label="Street" city-label="City" country-label="Country"
+                                                province-label="State" postal-code-label="PostalCode" street={rec.MailingStreet} city={rec.MailingCity}
+                                                province={selectedState} country={selectedCountry} country-options={countries} province-options={states}
+                                                postal-code={rec.MailingPostalCode} required field-level-help="Select  Address" show-address-lookup onchange={Addresschange}>
+                                            </lightning-input-address>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                            </template>
+                            <template if:true={ShowServiceTerritory}>
+                                <template if:false={noTerritory}>
+                                    <lightning-modal-header label="Select Service Territory "></lightning-modal-header>
+                                    <lightning-layout multiple-rows="true" style="min-height: 300px;">
+    
+                                        <lightning-layout-item if:false={dispatcher} size="6" padding="around-small">
+                                            <lightning-input required="true" type="date" name="startDate" label="Start Date"
+                                                value={startDate} onchange={handleStartDateChanged}></lightning-input>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item size="12" padding="around-small">
+                                            <div class="slds-box slds-theme_default">
+                                                <table
+                                                    class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="" scope="col">
+                                                                <div class="slds-truncate" title="Region">Region</div>
+                                                            </th>
+                                                            <th class="" scope="col">
+                                                                <div class="slds-truncate" title="Create">Select</div>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <template for:each={memberShips} for:item="member">
+                                                            <tr key={member.serviceTerritoryId}>
+                                                                <td>{member.territoryName}</td>
+                                                                <td>
+                                                                    <lightning-input data-id={member.serviceTerritoryId}
+                                                                        type="checkbox" checked={member.isTerritoryMember}
+                                                                        onchange={handleSelect}>
+                                                                    </lightning-input>
+                                                                </td>
+                                                            </tr>
+                                                        </template>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+    
+                                        </lightning-layout-item>
+                                    </lightning-layout>
+                                </template>
+                                <template if:true={noTerritory}>
+    
+                                    No related territory found.Please assign Territories using Assign Territory
+                                </template>
+                            </template>
+                            <template if:true={ShowSkill}>
+                                <lightning-modal-header label="Select Skill"></lightning-modal-header>
+    
+                                <lightning-layout multiple-rows="true" style="min-height: 300px;">
+    
+                                    <lightning-layout-item size="6" padding="around-small">
+                                        <lightning-input required="true" type="date" name="startDate" label="Start Date"
+                                            value={skillStartDate} onchange={handleskillStartDateChanged}></lightning-input>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="12" padding="around-small">
+                                        <div class="slds-box slds-theme_default">
+                                            <table
+                                                class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate" title="Region">Skill</div>
+                                                        </th>
+                                                        <th class="" scope="col">
+                                                            <div class="slds-truncate" title="Create">Select</div>
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <template for:each={skillListArray} for:item="skill">
+                                                        <tr key={skill.DeveloperName}>
+                                                            <td>{skill.Name}</td>
+                                                            <td>
+                                                                <lightning-input data-id={skill.DeveloperName}
+                                                                    type="checkbox" checked={skill.isslected}
+                                                                    onchange={handleSelectskill}>
+                                                                </lightning-input>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </tbody>
+                                            </table>
+                                        </div>
+    
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </template>
+                            <template if:true={filescreen}>
+                                <lightning-modal-header label="Set profile picture(Max size 3MB)"></lightning-modal-header>
+    
+    
+                                <div class="piccontainer">
+                                    <div class="avatar-container" title="Click to change profile picture">
+                                        <img src={imageUrl} alt="Avatar" class="avatar" />
+                                        <div class="camera-icon" onclick={handleUploadClick}>
+                                            <lightning-icon icon-name="utility:photo" size="large"></lightning-icon>
+                                        </div>
+                                    </div>
+                                    <input type="file" accept="image/png,image/jpeg" onchange={handleFileChange}
+                                        class={fileInputClass} />
+                                </div>
+    
+                            </template>
+                        </lightning-modal-body>
+                    </lightning-card>
+                    <lightning-modal-footer>
+    
+                        <lightning-button if:true={firstback} label="Back" variant="brand" onclick={handleback}>
+                        </lightning-button>&nbsp; &nbsp; &nbsp;
+                        <lightning-button if:true={secondback} label="Back" variant="brand" onclick={handlesecondback}>
+                        </lightning-button>&nbsp; &nbsp; &nbsp;
+                        <lightning-button if:true={submit} label="Back" variant="brand" onclick={handlefileback}>
+                        </lightning-button>&nbsp; &nbsp; &nbsp;
+    
+                        <lightning-button if:true={submit} label="Submit" variant="brand" onclick={handleSubmit}
+                            disabled={disablesubmit}></lightning-button>
+    
+    
+                        <lightning-button if:true={firstNext} label="Next" variant="Next" onclick={handleNext}>
+                        </lightning-button>
+    
+                        <lightning-button if:true={secondNext} label="Next" variant="brand" onclick={handleNextTerritory}>
+                        </lightning-button>
+    
+                        <lightning-button if:true={readyfofiles} label="Next" variant="brand" onclick={handlefiles}>
+                        </lightning-button>
+    
+    
+    
+                    </lightning-modal-footer>
+                </template>
+    
+                <template if:true={StatusScreen}>
+                    <lightning-card>
+    
+                        <div class="slds-align_absolute-center statustext">Creating User : &nbsp;<lightning-spinner
+                                class="spinshow" if:true={UserStatusSpinner} size="small"> </lightning-spinner>
+                            <lightning-progress-ring if:false={UserStatusSpinner} variant={UserS} value={UserStatus}
+                                size="large"> </lightning-progress-ring>
+                        </div> <br>
+                        <div class="slds-align_absolute-center statustext">Assigning permissions : &nbsp;<lightning-spinner
+                                class="spinshow" if:true={PermissionSpinner} size="small"></lightning-spinner>
+                            <lightning-progress-ring if:false={PermissionSpinner} variant={Permissionset}
+                                value={PermissionsetStatus} size="large"></lightning-progress-ring>
+                        </div> <br>
+                        <div if:false={dispatcher} class="slds-align_absolute-center statustext">Service resource creation : &nbsp;
+                            <lightning-spinner class="spinshow" if:true={ServiceresourceSpinner} size="small">
+                            </lightning-spinner>
+                            <lightning-progress-ring if:false={ServiceresourceSpinner} variant={Serviceresource}
+                                value={ServiceresourceStatus} size="large">
+                                </lightning-spinner>
+                            </lightning-progress-ring>
+                        </div> <br>
+                        <div if:false={dispatcher} class="slds-align_absolute-center statustext">Service territory membership creation : &nbsp;
+                            <lightning-spinner class="spinshow" if:true={ServiceterritorySpinner} size="small">
+                            </lightning-spinner>
+                            <lightning-progress-ring if:false={ServiceterritorySpinner} variant={Serviceterritory}
+                                value={ServiceterritorymembershipStatus} size="large"> </lightning-progress-ring>
+                        </div> <br>
+                    </lightning-card>
+    
+    
+                </template>
+            </lightning-tab>
+            <lightning-tab label="Manage Service Resource">
+                <c-pv-create-new-s-t-m record-id={recordId}></c-pv-create-new-s-t-m>
+    
+            </lightning-tab>
+    
+        </lightning-tabset>
+    </template>
+    
+    <template if:false={isVisiblePage}>
+        <div class="centered-message">
+            <!-- Displaying message in bold using inline CSS -->
+            <p style="font-weight: bold; font-size: 1.5em;">{statusMessage}</p>
+        </div>
+        </template>
+</template>

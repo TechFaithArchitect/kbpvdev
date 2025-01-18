@@ -1,0 +1,33 @@
+<template>
+    <lightning-modal-header label="Add Location"></lightning-modal-header>
+    <lightning-modal-body>
+        
+        <lightning-record-edit-form object-api-name="Process_Approval__c" onsuccess={handleSuccess}>
+            <template if:true={showSpinner}>
+                <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+            </template>
+            <lightning-input-field field-name="Location_Name__c" value={locationName} onchange={handleNameChange} required>
+            </lightning-input-field>
+            <!-- <lightning-input-field field-name="Account__c" value={recordId}>
+            </lightning-input-field> -->
+            <lightning-input-field field-name="Location_Type__c" value={locationType} onchange={handleTypeChange} required>
+            </lightning-input-field>
+            <template if:true={showResource}>
+                <lightning-input-field field-name="Service_Resource__c" value={serviceResource} onchange={handleResourceChange}>
+                </lightning-input-field>
+            </template>
+            <lightning-input-field field-name="Inventory_Location__c" value={isInventory} onchange={handleInventoryChange}>
+            </lightning-input-field>
+            <lightning-input-field field-name="Mobile_Location__c" value={isMobile} onchange={handleMobileChange}>
+            </lightning-input-field>
+        </lightning-record-edit-form>
+
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <div class="slds-m-top_small slds-align_absolute-center">
+            <lightning-button variant="Neutral" class="slds-m-left_x-small" label="Cancel" title="Cancel" onclick={handleCloseClick}></lightning-button >
+            <lightning-button variant="brand" class="slds-m-left_x-small" label="Add Location" title="Add Location" onclick={handleSuccess}></lightning-button>
+        </div>
+    </lightning-modal-footer>
+
+</template>

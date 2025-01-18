@@ -1,0 +1,123 @@
+<template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading"> </lightning-spinner>
+    </template>
+    <div class="page pages-nav">
+        <template lwc:if={showPrevious}>
+            <div class="nav-bar">
+                <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                    <img src={iconBtnBack} alt="Back button" />
+                </a>
+            </div>
+        </template>
+        <div class="page-content no-padding-top">
+            <div class="page-invoice">
+                <template lwc:if={orderSuccess}>
+                    <img src={iconCheckGreen} />
+                </template>
+                <h3>{orderConfirmationCardVerbiage.title}</h3>
+                <template lwc:if={orderInProgress}>
+                    <template lwc:if={showModalSendingOrderClosed}>
+                        <template lwc:if={orderConfirmationCardVerbiage.subtitle}>
+                            <h4 class="order-confirmation-card-subtitle">{orderConfirmationCardVerbiage.subtitle}</h4>
+                        </template>
+
+                        <template lwc:if={showRefreshButton}>
+                            <a class="btn-rounded btn-center refresh-btn" onclick={handleRefresh}>
+                                {refreshButtonLabel}
+                            </a>
+                        </template>
+                    </template>
+                </template>
+                <template lwc:else>
+                    <template lwc:if={confirmationNumber}>
+                        <p>
+                            Confirmation number:
+                            <span>
+                                <lightning-formatted-rich-text
+                                    value={confirmationNumber}
+                                ></lightning-formatted-rich-text>
+                            </span>
+                        </p>
+                    </template>
+                </template>
+
+                <div class="box-invoice">
+                    <h3>Customer information</h3>
+                    <ul>
+                        <li>
+                            <p>Customer name</p>
+                            <p>
+                                <lightning-formatted-rich-text value={customerName}></lightning-formatted-rich-text>
+                            </p>
+                        </li>
+                        <li>
+                            <p>Address</p>
+                            <p>
+                                <lightning-formatted-rich-text value={addressText}></lightning-formatted-rich-text>
+                            </p>
+                        </li>
+                        <li>
+                            <p>Phone number</p>
+                            <p>
+                                <lightning-formatted-rich-text
+                                    value={clientInfo.contactInfo.phone}
+                                ></lightning-formatted-rich-text>
+                            </p>
+                        </li>
+                        <li>
+                            <p>Email address</p>
+                            <p>
+                                <lightning-formatted-rich-text
+                                    value={clientInfo.contactInfo.email}
+                                ></lightning-formatted-rich-text>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="box-invoice">
+                    <h3>Order overview</h3>
+                    <ul>
+                        <li>
+                            <p>Package option</p>
+                            <p>
+                                <lightning-formatted-rich-text
+                                    value={orderInfo.product.Name}
+                                ></lightning-formatted-rich-text>
+                            </p>
+                        </li>
+                        <li>
+                            <p>Hardware option</p>
+                            <p>
+                                <lightning-formatted-rich-text value={hardwareSelected}></lightning-formatted-rich-text>
+                            </p>
+                        </li>
+                        <li>
+                            <p>Order number</p>
+                            <p>
+                                <lightning-formatted-rich-text value={orderNumber}></lightning-formatted-rich-text>
+                            </p>
+                        </li>
+                        <li>
+                            <p>Account number</p>
+                            <p>
+                                <lightning-formatted-rich-text value={accountNumber}></lightning-formatted-rich-text>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+
+                <a class="btn-outline btn-only-rounded btn-center btn-view-invoice" onclick={handleViewOrderSummary}>
+                    View invoice details
+                </a>
+            </div>
+
+            <a onclick={handleNext} class={desktopNextBtnClass}> Next step </a>
+        </div>
+
+        <div class="footer-mobile">
+            <a onclick={handleNext} class={mobileNextBtnClass}> Next step </a>
+        </div>
+    </div>
+</template>

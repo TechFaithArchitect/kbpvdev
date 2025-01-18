@@ -1,0 +1,27 @@
+<template>
+    <div class="section-title slds-m-left_x-small slds-m-top_small" onclick={toggleOpen}>
+        <lightning-icon
+            icon-name={iconName}
+            size="x-small"
+        >
+        </lightning-icon>
+        <lightning-formatted-text
+            class="title-text slds-align-middle slds-m-left_x-small slds-text-heading_small"
+            value={defaultLabel}
+        >
+        </lightning-formatted-text>
+    </div>
+
+    <template lwc:if={isOpen}>
+        <template lwc:if={template}>
+            <c-poe_lwc-broadband-label-template class="slds-size_1-of-1" broadband-label={broadbandLabel}>
+            </c-poe_lwc-broadband-label-template>
+        </template>
+        <template lwc:else>
+            <iframe 
+                class="slds-m-vertical_small slds-size_1-of-1 broadband-label-frame"
+                src={broadbandLabel}
+            ></iframe>
+        </template>
+    </template>
+</template>

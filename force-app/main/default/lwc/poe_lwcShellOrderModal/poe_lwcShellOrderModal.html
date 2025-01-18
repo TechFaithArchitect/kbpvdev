@@ -1,0 +1,229 @@
+<template>
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_x-small" aria-labelledby="modal-heading-01" aria-modal="true">
+        <div class="slds-modal__container slds-p-top_none">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon icon-name="utility:close" alternative-text="Close Modal" title="Close Modal" variant="inverse" onclick={hideModal} size="small" class="slds-float_right" style="cursor: pointer;"></lightning-icon>
+            </div>
+            <div class="slds-modal__header">
+                <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Shell Order</h1>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <template if:false={hasOrder}>
+                    <div class="slds-text-heading_small">Please select applicable programs.</div>
+                    <lightning-radio-group name="Program Group"
+                    options={programs}
+                    value={program}
+                    onchange={handleChangeProgram}></lightning-radio-group>
+                </template>
+                <template if:true={hasOrder}>
+                    <lightning-input
+                        type="text"
+                        label="Program Selected"
+                        name="programSelected"
+                        value={programSelected}
+                        disabled="true"
+                    ></lightning-input>
+                    <lightning-input
+                        type="text"
+                        label="Product Selected"
+                        name="productSelected"
+                        value={productSelected}
+                        disabled="true"
+                    ></lightning-input>
+                </template>
+                <template if:true={hasOrder}>
+                    <div class="slds-text-heading_small slds-p-vertical_x-small">Customer's information</div>
+                    <div class="slds-grid slds-wrap slds-p-bottom_small">
+                        <div class="slds-col slds-size_4-of-12 slds-p-right_x-small">
+                            <lightning-input
+                            type="text"
+                            label="First Name"
+                            name="firstName"
+                            disabled="true"
+                            required
+                            value={firstName}
+                            onchange={handleContact}
+                        ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12 slds-p-right_x-small">
+                            <lightning-input
+                            type="text"
+                            label="Middle Name"
+                            disabled="true"
+                            name="middleName"
+                            value={middleName}
+                            onchange={handleContact}
+                        ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12">
+                            <lightning-input
+                            type="text"
+                            label="Last Name"
+                            name="lastName"
+                            required
+                            disabled="true"
+                            value={lastName}
+                            onchange={handleContact}
+                        ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                            type="tel"
+                            pattern="[0-9]{10}"
+                            max-length="10"
+                            class="slds-p-right_x-small"
+                            label="Contact Phone Number"
+                            name="phone"
+                            required
+                            value={phone}
+                            onchange={handleContact}
+                            message-when-pattern-mismatch="Please enter a valid phone number"
+                        ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                            type="tel"
+                            pattern="[0-9]{10}"
+                            max-length="10"
+                            class="slds-p-left_x-small"
+                            label="Secondary Phone Number"
+                            name="secondPhone"
+                            value={secondPhone}
+                            onchange={handleContact}
+                            message-when-pattern-mismatch="Please enter a valid phone number"
+                        ></lightning-input>
+                        </div>
+                    </div>
+                </template>
+                <template if:false={hasOrder}>
+                    <div class="slds-text-heading_small slds-p-vertical_x-small">Please enter the customer's information</div>
+                    <div class="slds-grid slds-wrap slds-p-bottom_small">
+                        <div class="slds-col slds-size_4-of-12 slds-p-right_x-small">
+                            <lightning-input
+                            type="text"
+                            label="First Name"
+                            name="firstName"
+                            required
+                            value={firstName}
+                            onchange={handleContact}
+                        ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12 slds-p-right_x-small">
+                            <lightning-input
+                            type="text"
+                            label="Middle Name"
+                            name="middleName"
+                            value={middleName}
+                            onchange={handleContact}
+                        ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12">
+                            <lightning-input
+                            type="text"
+                            label="Last Name"
+                            name="lastName"
+                            required
+                            value={lastName}
+                            onchange={handleContact}
+                        ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                            type="tel"
+                            pattern="[0-9]{10}"
+                            max-length="10"
+                            class="slds-p-right_x-small"
+                            label="Contact Phone Number"
+                            name="phone"
+                            required
+                            value={phone}
+                            onchange={handleContact}
+                            message-when-pattern-mismatch="Please enter a valid phone number"
+                        ></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                            type="tel"
+                            pattern="[0-9]{10}"
+                            max-length="10"
+                            class="slds-p-left_x-small"
+                            label="Secondary Phone Number"
+                            name="secondPhone"
+                            value={secondPhone}
+                            onchange={handleContact}
+                            message-when-pattern-mismatch="Please enter a valid phone number"
+                        ></lightning-input>
+                        </div>
+                    </div>    
+                </template>
+                <div class="slds-grid slds-wrap slds-p-bottom_small"> 
+                    <div class="slds-text-heading_small slds-p-vertical_x-small">Please enter Account Number(s) provided by the Call Center</div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input
+                        type="text"
+                        label="Order Number"
+                        name="ban"
+                        pattern="[0-9]*"
+                        message-when-pattern-mismatch="The Order Number must contain only numbers."
+                        class="slds-p-rigth_x-small"
+                        required
+                        value={ban}
+                        onchange={handleAccount}
+                    ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input
+                        type="text"
+                        label="Confirm Order Number"
+                        name="ccBan"
+                        pattern="[0-9]*"
+                        message-when-pattern-mismatch="The Order Number must contain only numbers."
+                        class="slds-p-left_x-small"
+                        required
+                        value={ccBan}
+                        onchange={handleAccount}
+                    ></lightning-input>
+                    </div>
+                    <template if:true={sameBAN}>
+                        <div class="slds-col slds-size_12-of-12">
+                            <p style="color: red">The Order Numbers entered don't match.</p>
+                        </div>
+                    </template>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input
+                        type="date"
+                        min={today}
+                        date-style="short"
+                        label="Installation Date"
+                        class="slds-p-rigth_x-small"
+                        required
+                        onchange={handleAccount}
+                        value={instDate}
+                        name="instDate"
+                    ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12"></div> 
+                    <div class="slds-text-heading_small slds-p-vertical_x-small">Please enter the Reason for Call Center Order</div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-combobox
+                        name="reasons"
+                        label="Manual Order Reason"
+                        value={reason}
+                        placeholder="Select Reason"
+                        options={reasons}
+                        required
+                        onchange={handleReason}></lightning-combobox>
+                    </div> 
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={hideModal}>Close</button>
+                <button class="slds-button slds-button_brand" onclick={saveShellOrder} disabled={noCompleteInformation}>Save</button>
+            </div>
+        </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+        <template if:true={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+</template>

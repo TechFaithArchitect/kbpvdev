@@ -1,0 +1,447 @@
+<template>
+    <template if:true={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template if:false={showCollateral}>
+        <div class="slds-grid slds-grid_align-end">
+            <div class="slds-col">
+                <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+            </div>
+        </div>
+        <div class="slds-box slds-p-around--medium slds-theme_default">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_2-of-3 slds-grid slds-wrap slds-grid_vertical-align-start">
+                    <c-poe_lwc-buyflow-direc-t-v-email-validation
+                        origin={origin}
+                        email={email}
+                        disclaimers={disclaimers}
+                        call-information={callInformation}
+                        onpinvalidation={handlePinValidation}
+                        stream={stream}
+                    ></c-poe_lwc-buyflow-direc-t-v-email-validation>
+                    <div class="slds-box slds-size_12-of-12 slds-grid slds-wrap">
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Address Selection
+                        </div>
+                        <div class="slds-col slds-size_12-of-12 slds-m-around_x-small slds-grid slds-wrap">
+                            <div class="slds-col slds-size_4-of-12 slds-m-bottom_small">
+                                <b>Service Address: </b>
+                            </div>
+                            <div class="slds-col slds-size_8-of-12">{address}</div>
+                            <div class="slds-col slds-size_4-of-12">
+                                <b>Shipping Address: </b>
+                            </div>
+                            <div class="slds-col slds-size_8-of-12">
+                                <lightning-radio-group
+                                    name="shipping"
+                                    label="Does customer want to use Service Address?"
+                                    options={addressOptions}
+                                    value={sameShipping}
+                                    required="true"
+                                    onchange={handleRadio}
+                                    type="radio"
+                                ></lightning-radio-group>
+                            </div>
+                            <div class="slds-col slds-size_4-of-12"></div>
+                            <div class="slds-col slds-size_8-of-12 slds-m-top_xx-small slds-m-bottom_small">
+                                This is the address where DIRECTV will ship the DIRECTV Via Internet Streaming devices.
+                                Note: The shipping address cannot be a PO BOX.
+                            </div>
+                            <template if:true={showShipping}>
+                                <div class="slds-col slds-size_4-of-12"></div>
+                                <div class="slds-col slds-size_8-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="shippingAddress"
+                                        value={shippingAddress}
+                                        required="true"
+                                        label="Address"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12"></div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="shippingApt"
+                                        value={shippingApt}
+                                        label="Apt"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="shippingZip"
+                                        value={shippingZip}
+                                        label="Zip"
+                                        required="true"
+                                        max-length="5"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12"></div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="shippingCity"
+                                        value={shippingCity}
+                                        label="City"
+                                        required="true"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-combobox
+                                        name="shippingState"
+                                        label="State"
+                                        value={shippingState}
+                                        onchange={handleChange}
+                                        options={states}
+                                        required
+                                    ></lightning-combobox>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12"></div>
+                                <div class="slds-col slds-size_8-of-12 slds-m-vertical_small">
+                                    <lightning-input
+                                        type="checkbox"
+                                        label="I have confirmed the address above is correct and is where I want my device(s) shipped."
+                                        name="shipConfirm"
+                                        value={shipConfirm}
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                            </template>
+                            <div class="slds-col slds-size_4-of-12">
+                                <b>Billing Address: </b>
+                            </div>
+                            <div class="slds-col slds-size_8-of-12">
+                                <lightning-radio-group
+                                    name="billing"
+                                    label="Does customer want to use Service Address?"
+                                    options={addressOptions}
+                                    value={sameBilling}
+                                    onchange={handleRadio}
+                                    required="true"
+                                    type="radio"
+                                ></lightning-radio-group>
+                            </div>
+                            <div class="slds-col slds-size_4-of-12 slds-m-bottom_small"></div>
+                            <div class="slds-col slds-size_8-of-12 slds-m-top_xx-small">
+                                The Credit Card billing address used for Auto Billing and possible payment due today
+                                must match this address
+                            </div>
+                            <template if:true={showBilling}>
+                                <div class="slds-col slds-size_4-of-12"></div>
+                                <div class="slds-col slds-size_8-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingAddress"
+                                        value={billingAddress}
+                                        required="true"
+                                        label="Address"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12"></div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingApt"
+                                        value={billingApt}
+                                        label="Apt"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingZip"
+                                        value={billingZip}
+                                        label="Zip"
+                                        required="true"
+                                        max-length="5"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12"></div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="billingCity"
+                                        value={billingCity}
+                                        label="City"
+                                        required="true"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-combobox
+                                        name="billingState"
+                                        label="State"
+                                        value={billingState}
+                                        onchange={handleChange}
+                                        options={states}
+                                        required
+                                    ></lightning-combobox>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-card>
+                        <h2 slot="title">
+                            <lightning-icon
+                                icon-name="utility:cart"
+                                size="small"
+                                class="slds-var-m-right_small"
+                            ></lightning-icon>
+                            Shopping Cart
+                        </h2>
+                        <div>
+                            <div class="slds-border_top slds-grid slds-wrap">
+                                <div
+                                    class="slds-text-heading_small slds-col slds-text-align_center slds-size_12-of-12 slds-var-p-vertical_xx-small"
+                                    style="background-color: #ff8200; color: white"
+                                >
+                                    <span>Order ID: {cartInfo.orderNumber}</span>
+                                </div>
+                                <template if:true={cartInfo.hasToday}>
+                                    <div
+                                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        <span>Today's Charges</span>
+                                    </div>
+                                    <template for:each={cartInfo.todayCharges} for:item="charge">
+                                        <div
+                                            key={charge.id}
+                                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                <b>{charge.name}</b>
+                                            </div>
+                                            <template if:true={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    style="color: #00c6b7"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:false={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:true={charge.hasDescription}>
+                                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                    {charge.description}
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <div
+                                        class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                                    >
+                                        <div class="slds-col slds-size_9-of-12">
+                                            <b>Today's Total*:</b>
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_3-of-12 slds-text-align_right slds-m-right_medium"
+                                        >
+                                            <b>${cartInfo.todayTotal}</b>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                        <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                    </div>
+                                </template>
+                                <template if:true={cartInfo.hasFirstBill}>
+                                    <div
+                                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        <span>First Bill Charges</span>
+                                    </div>
+                                    <template for:each={cartInfo.firstBillCharges} for:item="charge">
+                                        <div
+                                            key={charge.id}
+                                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                <b>{charge.name}</b>
+                                            </div>
+                                            <template if:true={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    style="color: #00c6b7"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:false={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:true={charge.hasDescription}>
+                                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                    {charge.description}
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <div
+                                        class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                                    >
+                                        <div class="slds-col slds-size_9-of-12">
+                                            <b>First Bill Total (plus monthly):</b>
+                                        </div>
+                                        <div
+                                            class="slds-col slds-size_3-of-12 slds-text-align_right slds-m-right_medium"
+                                        >
+                                            <b>${cartInfo.firstBillTotal}</b>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                        <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                    </div>
+                                </template>
+                                <template if:true={cartInfo.hasMonthly}>
+                                    <div
+                                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        <span>Monthly Charges</span>
+                                    </div>
+                                    <template for:each={cartInfo.monthlyCharges} for:item="charge">
+                                        <div
+                                            key={charge.id}
+                                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                <b>{charge.name}</b>
+                                            </div>
+                                            <template if:true={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    style="color: #00c6b7"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:false={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                >
+                                                    ${charge.fee}
+                                                </div>
+                                            </template>
+                                            <template if:true={charge.hasDescription}>
+                                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                    {charge.description}
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small">
+                                        <div class="slds-col slds-size_9-of-12">
+                                            <b>Monthly Total*:</b>
+                                        </div>
+                                        <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                                            <b>${cartInfo.monthlyTotal}</b>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                        <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                    </div>
+                                </template>
+                                <template if:true={cartInfo.hasSavings}>
+                                    <div
+                                        class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        <span>Savings & Promotions</span>
+                                    </div>
+                                    <template for:each={cartInfo.savingCharges} for:item="charge">
+                                        <div
+                                            key={charge.id}
+                                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                <b>{charge.name}</b>
+                                            </div>
+                                            <template if:true={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    style="color: #00c6b7"
+                                                ></div>
+                                            </template>
+                                            <template if:false={charge.discount}>
+                                                <div
+                                                    class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                ></div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                </template>
+                            </div>
+                        </div>
+                    </lightning-card>
+                    <div class="slds-grid slds-p-around_medium">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-grid slds-grid_align-spread slds-p-around--medium">
+                <div class="slds-col slds-size_6-of-12">
+                    <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                </div>
+                <div class="slds-col slds-size_6-of-12">
+                    <div class="slds-grid slds-float_right">
+                        <div class="slds-col slds-p-right--medium">
+                            <lightning-button
+                                variant="brand"
+                                label="Previous"
+                                onclick={handlePrevious}
+                                class="slds-float_right"
+                            ></lightning-button>
+                        </div>
+                        <div class="slds-col slds-p-right--medium">
+                            <lightning-button
+                                variant="brand"
+                                label="Next"
+                                disabled={noCompleteInfo}
+                                onclick={handleClick}
+                                class="slds-float_right"
+                            ></lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template if:true={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template if:true={showPopup}>
+        <c-poe_lwc-buyflow-direc-t-v-info-popup
+            onclose={hideData}
+            description={offerDescription}
+        ></c-poe_lwc-buyflow-direc-t-v-info-popup>
+    </template>
+</template>

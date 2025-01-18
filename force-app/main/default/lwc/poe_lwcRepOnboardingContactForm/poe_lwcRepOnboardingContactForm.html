@@ -1,0 +1,347 @@
+<template>
+    <div>
+        <div class="slds-grid slds-wrap">
+            <lightning-input
+                type="checkbox"
+                label="Is this Agent Offshore?"
+                class="slds-col slds-size_12-of-12 slds-var-p-around_xx-small"
+                value={offshore}
+                onchange={handleChange}
+                name="offshore"
+                checked={offshore}
+            ></lightning-input>
+
+            <lightning-input
+                name="fistNameField"
+                field-name="FirstName"
+                label="First Name"
+                type="text"
+                variant="label-stacked"
+                value={firstName}
+                required
+                class="slds-col slds-size_6-of-12"
+                onchange={handleChange}
+            ></lightning-input>
+
+            <lightning-input
+                name="middleNameField"
+                field-name="MiddleName"
+                label="Middle Name"
+                type="text"
+                variant="label-stacked"
+                value={middleName}
+                class="slds-col slds-size_6-of-12"
+                onchange={handleChange}
+            ></lightning-input>
+
+            <lightning-input
+                name="lastNameField"
+                field-name="LastName"
+                label="Last Name"
+                type="text"
+                variant="label-stacked"
+                value={lastName}
+                required
+                class="slds-col slds-size_6-of-12"
+                onchange={handleChange}
+            ></lightning-input>
+
+            <lightning-input
+                name="startDateField"
+                field-name="POE_Start_Date__c"
+                label="Start Date"
+                type="date"
+                variant="label-stacked"
+                value={POE_Start_Date__c}
+                required
+                class="slds-col slds-size_6-of-12"
+                onchange={handleChange}
+            ></lightning-input>
+
+            <lightning-input
+                name="dobField"
+                label="Date of Birth"
+                field-name="Birthdate"
+                type="date"
+                variant="label-stacked"
+                value={birthDate}
+                required
+                class="slds-col slds-size_6-of-12"
+                onchange={handleChange}
+                min="1901-01-01"
+                max={dateMinusEighteenYears}
+                message-when-range-overflow="The date of birth provided is invalid. Agent needs to be at least 18 years old."
+            ></lightning-input>
+
+            <lightning-input
+                name="ssnField"
+                field-name="vlocity_cmt__SSN__c"
+                label="SSN"
+                max-length="9"
+                pattern="[0-9]{9}"
+                message-when-pattern-mismatch="The SSN must be a 9 digits number."
+                variant="label-stacked"
+                value={vlocity_cmt__SSN__c}
+                class="slds-col slds-size_6-of-12"
+                onchange={handleChange}
+            ></lightning-input>
+
+            <template lwc:if={offshore}>
+                <lightning-textarea
+                    name="address"
+                    label="Address"
+                    class="slds-col slds-size_12-of-12"
+                    required
+                    variant="label-stacked"
+                    maxlength="255"
+                    onchange={handleChange}
+                    value={address}
+                ></lightning-textarea>
+            </template>
+
+            <template lwc:else>
+                <lightning-input
+                    name="mailingStreetField"
+                    field-name="MailingStreet"
+                    label="Mailing Street"
+                    type="text"
+                    variant="label-stacked"
+                    value={mailingStreet}
+                    required
+                    class="slds-col slds-size_6-of-12"
+                    onchange={handleChange}
+                ></lightning-input>
+
+                <lightning-combobox
+                    name="mailingStateField"
+                    required
+                    label="State"
+                    value={mailingState}
+                    options={stateOptions}
+                    class="slds-col slds-size_6-of-12"
+                    onchange={handleChange}
+                    variant="label-stacked"
+                ></lightning-combobox>
+
+                <lightning-input
+                    name="mailingCountyField"
+                    label="County"
+                    value={mailingCounty}
+                    class="slds-col slds-size_6-of-12"
+                    onchange={handleChange}
+                    variant="label-stacked"
+                ></lightning-input>
+
+                <lightning-input
+                    name="mailingPostalCodeField"
+                    field-name="MailingPostalCode"
+                    label="Mailing Zip/Postal Code"
+                    type="text"
+                    pattern="[0-9]{5}"
+                    max-length="5"
+                    message-when-pattern-mismatch="Please enter a valid postal code"
+                    value={mailingPostalCode}
+                    required
+                    class="slds-col slds-size_6-of-12"
+                    onchange={handleChange}
+                    variant="label-stacked"
+                ></lightning-input>
+            </template>
+
+            <div class="slds-col slds-size_6-of-12">
+                <lightning-input
+                    name="mobilePhoneField"
+                    field-name="MobilePhone"
+                    label="Mobile Phone"
+                    type="tel"
+                    max-length="15"
+                    required
+                    onchange={handleChange}
+                    variant="label-stacked"
+                    value={mobilePhone}
+                ></lightning-input>
+                <template lwc:if={wrongPhoneFormat}>
+                    <div class="slds-text-color_error slds-var-m-left_xx-small slds-text-body_small">
+                        {badMobilePhoneFormatMessage}
+                    </div>
+                </template>
+            </div>
+
+            <template lwc:if={isCreate}>
+                <div class="slds-col slds-size_6-of-12"></div>
+            </template>
+
+            <lightning-input
+                name="emailField"
+                field-name="Email"
+                label="Email"
+                type="email"
+                variant="label-stacked"
+                value={email}
+                required
+                disabled={isUpdate}
+                class="slds-col slds-size_6-of-12"
+                onchange={handleChange}
+            ></lightning-input>
+
+            <template lwc:if={isCreate}>
+                <div class="slds-col slds-size_6-of-12">
+                    <lightning-input
+                        name="confirmEmailField"
+                        field-name="ConfirmEmail"
+                        label="Confirm Email"
+                        type="email"
+                        variant="label-stacked"
+                        value={confirmEmail}
+                        required
+                        onchange={handleChange}
+                    ></lightning-input>
+                    <template lwc:if={differentEmail}>
+                        <div class="slds-text-color_error slds-var-m-left_xx-small slds-text-body_small">
+                            <p>The emails entered don't match.</p>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <lightning-combobox
+                name="functionalRoleField"
+                label="Functional Role"
+                variant="label-stacked"
+                value={POE_Functional_Role__c}
+                options={functionalRoles}
+                required
+                class="slds-col slds-size_6-of-12"
+                onchange={handleChange}
+            ></lightning-combobox>
+
+            <div class="slds-col slds-size_6-of-12 slds-p-vertical_large slds-p-horizontal_medium">
+                <a href={chuzoFunctionalRolesURL} class="slds-col slds-size_6-of-12" onclick={handleOpenPDF}
+                    >Functional Role Descriptions</a
+                >
+            </div>
+
+            <template lwc:if={showPhotoUploader}>
+                <lightning-file-upload
+                    label="Photo"
+                    name="fileUploader"
+                    accept={acceptedFormats}
+                    onuploadfinished={handleUploadFinished}
+                    class="slds-col slds-size_6-of-12 slds-var-m-bottom_small"
+                >
+                </lightning-file-upload>
+            </template>
+
+            <div class="slds-grid slds-col slds-size_12-of-12">
+                <div class="slds-col slds-size_6-of-12">
+                    <lightning-checkbox-group
+                        required
+                        name="checkboxGroupRepType"
+                        options={representativeTypes}
+                        onchange={handleChange}
+                        label="Representative Type"
+                        value={selectedTypes}
+                        class="slds-m-around_small"
+                    >
+                    </lightning-checkbox-group>
+                </div>
+            </div>
+            <div class="slds-m-around_small slds-m-top_none slds-text-title_bold">
+                Please note that selection of programs does not constitute creation of UID´s. If agent credentials need
+                to be created for this agent for any program, the Customer Service team will reach out directly.
+            </div>
+            <div class="slds-col slds-size_6-of-12">
+                <lightning-checkbox-group
+                    required
+                    label="Phone Sales"
+                    name="checkboxGroup"
+                    options={phoneProgramOptions}
+                    value={selectedOptions}
+                    class="slds-m-around_small slds-m-top_none"
+                    onchange={handleChange}
+                    disabled={disablePhoneSalesPrograms}
+                >
+                </lightning-checkbox-group>
+            </div>
+            <div class="slds-col slds-size_6-of-12">
+                <lightning-checkbox-group
+                    required
+                    label="Event"
+                    name="checkboxGroupEvent"
+                    options={eventProgramOptions}
+                    value={selectedEventOptions}
+                    class="slds-m-around_small slds-m-top_none"
+                    onchange={handleChange}
+                    disabled={disableEventPrograms}
+                >
+                </lightning-checkbox-group>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-p-left_small slds-m-bottom_small">
+                <lightning-input
+                    type="checkbox"
+                    label="Select All"
+                    name="selectAllPhone"
+                    checked={selectAllPhone}
+                    onchange={handleAllCheckbox}
+                    disabled={disablePhoneSalesPrograms}
+                ></lightning-input>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-p-left_small slds-m-bottom_small">
+                <lightning-input
+                    type="checkbox"
+                    label="Select All"
+                    name="selectAllEvent"
+                    checked={selectAllEvent}
+                    onchange={handleAllCheckbox}
+                    disabled={disableEventPrograms}
+                ></lightning-input>
+            </div>
+            <div class="slds-col slds-size_6-of-12">
+                <lightning-checkbox-group
+                    required
+                    label="Retail"
+                    name="checkboxGroupRetail"
+                    options={retailProgramOptions}
+                    value={selectedRetailOptions}
+                    class="slds-m-around_small slds-m-top_none"
+                    onchange={handleChange}
+                    disabled={disableRetailPrograms}
+                >
+                </lightning-checkbox-group>
+            </div>
+            <div class="slds-col slds-size_6-of-12">
+                <lightning-checkbox-group
+                    required
+                    label="Door To Door"
+                    name="checkboxGroupD2D"
+                    options={d2dProgramOptions}
+                    value={selectedD2DOptions}
+                    class="slds-m-around_small slds-m-top_none"
+                    onchange={handleChange}
+                    disabled={disableD2DPrograms}
+                >
+                </lightning-checkbox-group>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-p-left_small slds-m-bottom_small">
+                <lightning-input
+                    type="checkbox"
+                    label="Select All"
+                    name="selectAllRetail"
+                    checked={selectAllRetail}
+                    onchange={handleAllCheckbox}
+                    disabled={disableRetailPrograms}
+                ></lightning-input>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-p-left_small slds-m-bottom_small">
+                <lightning-input
+                    type="checkbox"
+                    label="Select All"
+                    name="selectAllD2D"
+                    checked={selectAllD2D}
+                    onchange={handleAllCheckbox}
+                    disabled={disableD2DPrograms}
+                ></lightning-input>
+            </div>
+        </div>
+    </div>
+</template>

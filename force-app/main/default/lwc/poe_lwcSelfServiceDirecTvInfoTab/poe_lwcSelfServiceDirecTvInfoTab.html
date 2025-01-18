@@ -1,0 +1,210 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <template lwc:if={notFirstInput}>
+                        <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                            <img src={iconBtnBack} alt="Back button" />
+                        </a>
+                    </template>
+                </div>
+
+                <div class="page-content width-large">
+                    <template lwc:if={dealerCodeView}>
+                        <form>
+                            <div class="form-header">
+                                <img align="left" src={iconFormUser} />
+
+                                <h3>Dealer Code Selection</h3>
+                            </div>
+
+                            <div class="form-content">
+                                <div class="form-group">
+                                    <lightning-select
+                                        name="dealerCode"
+                                        label="Dealer Code (*)"
+                                        required="true"
+                                        value={dealerCode}
+                                        disabled={isFSL}
+                                        options={dealerOptions}
+                                        onchange={handleChange}
+                                    ></lightning-select>
+                                </div>
+                            </div>
+                        </form>
+                    </template>
+                    <template lwc:if={customerView}>
+                        <form>
+                            <div class="form-header">
+                                <img align="left" src={iconFormUser} />
+
+                                <h3>Personal information</h3>
+                                <p>Enter the customer's name and contact details.</p>
+                            </div>
+
+                            <div class="form-content">
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="text"
+                                        name="firstName"
+                                        value={firstName}
+                                        onchange={handleChange}
+                                        max-length="15"
+                                        required
+                                        placeholder="Write your name"
+                                        label="First Name (*)"
+                                    ></lightning-input>
+                                </div>
+
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="text"
+                                        name="lastName"
+                                        value={lastName}
+                                        max-length="15"
+                                        onchange={handleChange}
+                                        required
+                                        placeholder="Write your last name"
+                                        label="Last Name (*)"
+                                    ></lightning-input>
+                                </div>
+
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="tel"
+                                        name="phoneNumber"
+                                        value={phoneNumber}
+                                        onchange={handleChange}
+                                        pattern="[0-9]{10}"
+                                        max-length="10"
+                                        message-when-pattern-mismatch="Please enter a valid phone number"
+                                        required
+                                        placeholder="Write your phone"
+                                        label="Phone (*)"
+                                    ></lightning-input>
+                                </div>
+
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="email"
+                                        name="emailAddress"
+                                        value={emailAddress}
+                                        onchange={handleChange}
+                                        required
+                                        placeholder="Write your email"
+                                        label="Email (*)"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                        </form>
+                    </template>
+                    <template lwc:if={addressView}>
+                        <form>
+                            <div class="form-header">
+                                <img align="left" src={iconFormUser} />
+
+                                <h3>Address Information</h3>
+                                <p>Enter the customer's addres details.</p>
+                            </div>
+
+                            <div class="form-content">
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="text"
+                                        name="address"
+                                        value={address}
+                                        label="Street Address (*)"
+                                        required="true"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="text"
+                                        name="apt"
+                                        value={apt}
+                                        label="Address Line 2"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="text"
+                                        name="city"
+                                        value={city}
+                                        label="City (*)"
+                                        required="true"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+
+                                <div class="form-group">
+                                    <lightning-select
+                                        name="state"
+                                        label="State (*)"
+                                        value={state}
+                                        options={stateOptions}
+                                        onchange={handleChange}
+                                        required="true"
+                                    ></lightning-select>
+                                </div>
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="text"
+                                        name="zip"
+                                        value={zip}
+                                        label="Zip"
+                                        disabled="true"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="form-group slds-p-around_medium slds-p-top_none slds-m-bottom_small">
+                                <div
+                                    class="slds-col slds-size_1-of-1 slds-text-heading_small slds-p-bottom_medium slds-p-top_medium"
+                                >
+                                    Read to customer
+                                </div>
+                                <div class="slds-col slds-size_1-of-1">
+                                    <lightning-radio-group
+                                        name="existingCustomer"
+                                        label="Are you an existing customer with DIRECTV service wishing to move, change, or upgrade your services?"
+                                        options={optionsRadio}
+                                        value={isExistingCustomer}
+                                        required
+                                        type="radio"
+                                        onchange={handleChange}
+                                    >
+                                    </lightning-radio-group>
+                                </div>
+                            </div>
+                        </form>
+                    </template>
+                    <a onclick={handleNext} class={nextBtnDesktopClass} data-id="next"> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <template lwc:if={notFirstInput}>
+                        <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                            <img src={iconBtnBack} alt="Back button" />
+                        </a>
+                    </template>
+                    <a onclick={handleNext} data-id="next" class={nextBtnMobileClass}> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={showLoaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSuggestedAddressModal}>
+        <c-poe_lwc-buyflow-direc-tv-info-tab-modal
+            onclose={hideModal}
+            onconfirm={handleSuggestedAddress}
+            suggested-addresses={suggestedAddresses}
+        ></c-poe_lwc-buyflow-direc-tv-info-tab-modal>
+    </template>
+</template>

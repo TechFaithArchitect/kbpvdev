@@ -1,0 +1,60 @@
+lightning-modal-header{
+	display: none !important;
+}
+
+lightning-modal-body{
+	max-width: 420px;
+	min-width: 420px;
+	width: 90%;
+	margin: 0 auto;
+	padding-top: 32px;
+}
+
+lightning-modal-body .modal-contact-us{
+	display: block;
+	width: 100%;
+}
+
+.modal-contact-us img{
+	display: block;
+	margin: 0 auto;
+	margin-bottom: 24px;
+}
+
+.modal-contact-us h2{
+	color: #1C2935;
+	font-size: 18px;
+	font-family: "Inter", sans-serif;
+	width: 90%;
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 8px;
+}
+
+.modal-contact-us p{
+	font-size: 16px;
+	color: #636C72;
+	font-family: "Inter", sans-serif;
+	width: 90%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.modal-contact-us p span{
+	font-weight: 500;
+	color: #1C2935;
+}
+
+.modal-contact-us .group-buttons{
+	display: table;
+	width: 100%;
+	text-align: center;
+	margin-top: 32px;
+	margin-bottom: 16px;
+}
+
+.modal-contact-us .group-buttons a{
+	display: inline-table;
+	margin: 0 12px;
+	padding: 10px 22px;
+}

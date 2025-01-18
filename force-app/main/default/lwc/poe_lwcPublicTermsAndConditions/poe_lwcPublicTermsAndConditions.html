@@ -1,0 +1,215 @@
+<template>
+    <template lwc:if={isLoading}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"> </lightning-spinner>
+    </template>
+    <div class="slds-box slds-p-around--medium slds-theme_default">
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1">
+                <div
+                    class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                    style="background-color: #ff8200; color: white"
+                >
+                    Terms, Conditions, and/or Disclosures
+                </div>
+                <template lwc:if={showTermsAgreedMessage}>
+                    <div
+                        class="slds-col slds-size_1-of-1 slds-p-around_large slds-p-right_large slds-text-align_center"
+                    >
+                        <p>
+                            <strong>
+                                <lightning-formatted-text value={termsAgreedMessage}> </lightning-formatted-text>
+                            </strong>
+                        </p>
+                    </div>
+                </template>
+                <template lwc:elseif={noTermsFound}>
+                    <div
+                        class="slds-col slds-size_1-of-1 slds-p-around_large slds-p-right_large slds-text-align_center"
+                    >
+                        <p>
+                            <strong>
+                                <lightning-formatted-text value={noTermsFoundMessage}> </lightning-formatted-text>
+                            </strong>
+                        </p>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div class="slds-col slds-size_12-of-12 slds-p-around_medium slds-p-right_medium">
+                        <p>
+                            <strong>
+                                <lightning-formatted-text value="Please read the following Terms and Conditions:">
+                                </lightning-formatted-text>
+                            </strong>
+                        </p>
+                    </div>
+                    <template for:each={terms} for:item="term">
+                        <div class="slds-col slds-size_12-of-12 slds-p-around_medium slds-p-right_medium" key={term.id}>
+                            <div class="slds-box">
+                                <p class="slds-p-bottom_x-small">
+                                    <strong
+                                        ><lightning-formatted-rich-text
+                                            value={term.consentLabel}
+                                        ></lightning-formatted-rich-text
+                                    ></strong>
+                                </p>
+                                <lightning-formatted-rich-text value={term.consentText}></lightning-formatted-rich-text>
+                                <lightning-input
+                                    type="checkbox"
+                                    label="I have read and agreed to the Terms & Conditions."
+                                    id={term.id}
+                                    value={term.checked}
+                                    data-id={term.id}
+                                    onchange={handleCheckbox}
+                                    required
+                                >
+                                </lightning-input>
+                            </div>
+                        </div>
+                    </template>
+                    <template lwc:if={isEventOrD2D}>
+                        <div class="slds-col slds-size_12-of-12 slds-p-around_medium slds-p-right_medium">
+                            <div class="slds-box">
+                                <p class="slds-p-bottom_x-small">
+                                    <strong>Consent to Electronic Delivery of Disclosures</strong>
+                                </p>
+                                <a
+                                    href="https://www.directv.com/legal/directv-consent-electronic-delivery-disclosures/"
+                                    target="”_blank"
+                                >
+                                    Click here to view Electronic Delivery of Disclosures
+                                </a>
+                                <lightning-input
+                                    type="checkbox"
+                                    label="I understand and agree to the DIRECTV Consent to Electronic Delivery of Disclosures"
+                                    name="electronicCheckbox"
+                                    checked={electronicCheckbox}
+                                    onchange={handleCheckbox}
+                                    required
+                                >
+                                </lightning-input>
+                            </div>
+                        </div>
+                    </template>
+                    <template lwc:if={showSignatureOption}>
+                        <div class="slds-col slds-align_absolute-center slds-size_12-of-12 slds-var-p-top_medium">
+                            <div class="slds-checkbox">
+                                <abbr class="slds-required" title="required">*</abbr>
+                                <input
+                                    type="checkbox"
+                                    name="agreementPrivacyPolicy"
+                                    id="agreementPrivacyPolicy"
+                                    value={termsAgreement}
+                                    onchange={handleAgreement}
+                                />
+                                <label class="slds-checkbox__label" for="agreementPrivacyPolicy">
+                                    <span class="slds-checkbox_faux"></span>
+                                    <span class="slds-form-element__label slds-var-p-left_small">
+                                        <lightning-formatted-rich-text
+                                            value={cancellationDisclosureVerbiage}
+                                        ></lightning-formatted-rich-text
+                                    ></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="slds-var-m-left_small">
+                            <lightning-button
+                                variant="base"
+                                label="Click here to view NOTICE OF RIGHT TO CANCEL"
+                                title="rightToCancel"
+                                onclick={openModal}
+                            ></lightning-button>
+                        </div>
+                        <div class="slds-box">
+                            <div class="slds-col slds-var-p-around_small slds-align_absolute-center slds-size_12-of-12">
+                                <p>
+                                    <strong>
+                                        <lightning-formatted-text
+                                            value="By signing you are consenting to the DIRECTV Terms and Conditions."
+                                        >
+                                        </lightning-formatted-text>
+                                    </strong>
+                                </p>
+                            </div>
+                            <div class="slds-col slds-align_absolute-center slds-size_12-of-12">
+                                <div class="slds-var-p-around_small">
+                                    <lightning-button
+                                        variant="brand"
+                                        label={signatureLabel}
+                                        onclick={openTermsSignatureModal}
+                                    ></lightning-button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <div class="slds-col slds-p-vertical_medium">
+                        <lightning-radio-group
+                            name="dtvConsent"
+                            label={dtvConsentLabel}
+                            options={consentOptions}
+                            type="radio"
+                            onchange={handleConsentChange}
+                        ></lightning-radio-group>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <template lwc:if={showAcceptButton}>
+            <div class="slds-grid slds-align_absolute-center slds-max-small-size_1-of-1 slds-m-top_small">
+                <lightning-button
+                    stretch
+                    class="slds-max-small-size_1-of-1"
+                    variant="brand"
+                    label="Accept"
+                    disabled={disableSubmit}
+                    onclick={handleTermsAgreement}
+                >
+                </lightning-button>
+            </div>
+        </template>
+    </div>
+
+    <template lwc:if={showTermsSignatureModal}>
+        <c-poe_lwc-buyflow-signature-modal
+            onclose={signatureConfirmation}
+            onguestsave={handleSignatureSave}
+            record-id={recordId}
+            name={signatureName}
+            address={signatureAddress}
+            program={provider}
+            is-encrypted-id={isEncryptedId}
+            signature-image-url={signatureImageURL}
+        >
+        </c-poe_lwc-buyflow-signature-modal>
+    </template>
+
+    <template lwc:if={showModal}>
+        <div class="custom-modal">
+            <section role="dialog" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium slds-hyphenate">
+                            <lightning-formatted-text value="Notice of Cancellation"></lightning-formatted-text>
+                        </h2>
+                    </header>
+                    <div class="slds-modal__content slds-var-p-around_medium">
+                        <lightning-formatted-rich-text
+                            value={cancellationAgreementVerbiage}
+                        ></lightning-formatted-rich-text>
+                    </div>
+
+                    <footer class="slds-modal__footer">
+                        <button
+                            class="slds-button slds-button_neutral slds-var-m-right_small"
+                            onclick={hideModal}
+                            style="border-radius: 20px"
+                        >
+                            <lightning-formatted-text value="I agree, and I am aware of the above disclosures">
+                            </lightning-formatted-text>
+                        </button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </template>
+</template>

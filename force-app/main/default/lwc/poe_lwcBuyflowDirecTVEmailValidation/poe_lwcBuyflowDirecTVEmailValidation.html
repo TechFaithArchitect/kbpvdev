@@ -1,0 +1,157 @@
+<template>
+    <template if:true={showModal}>
+        <section 
+            role="dialog" 
+            tabindex="-1" 
+            aria-labelledby="modal-heading-01" 
+            aria-modal="true" 
+            aria-describedby="modal-content-id-1" 
+            class="slds-modal slds-fade-in-open"
+        >
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Disclaimer</h1>
+                  </div>
+                <div class="slds-modal__content slds-var-p-around_medium">
+                    Customers who decline to receive their order receipt electronically require the Sales
+                    Representative to provide the customer with a paper copy of the 3ply LDC Order Receipt. 
+                    Click “Continue” to proceed with the paper copy of the LDC Order Receipt form
+                </div>
+                <div class="slds-modal__footer slds-modal__footer_directional">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal}>Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={handleContinueModal}>Continue</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <div class="slds-box slds-m-bottom_small slds-size_12-of-12 slds-grid slds-wrap">
+        <div
+            class="slds-col slds-size_12-of-12 slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+            style="background-color: #ff8200; color: white"
+        >
+            Email Validation
+        </div>
+        <template if:false={isD2DorEvent}>
+            <div class="slds-col slds-size_12-of-12 slds-m-around_x-small slds-m-top_medium">
+                In order to proceed with your order we will need an email address for your account which we
+                will validate in this next step.
+            </div>
+        </template>
+        <template if:true={isD2DorEvent}>
+            <div class="slds-col slds-size_12-of-12 slds-m-around_x-small slds-m-top_medium">
+                You have the option to receive applicable documents and disclosures electronically or receive a paper copy.
+                If you would like to receive them electronically, please provide your email address so that we can send you a 6-digit verification PIN that you will need to read to me.
+                You will be asked later in the order process to read and accept a Consent to Electronic Delivery of Disclosures.
+                Please note: If you are ordering DIRECTV STREAM, you must consent to electronic delivery so that any installment agreement applicable to your order can be delivered electronically.
+                If you do not want to consent to electronic delivery, you can complete that type of order by visiting an authorized DIRECTV retail store.
+            </div>
+        </template>
+        <div class="slds-col slds-size_4-of-12 slds-m-around_x-small">
+            <lightning-input
+                type="email"
+                name="email"
+                value={email}
+                required
+                label="Contact Email"
+                onchange={handleChangeEmail}
+                disabled={pinValidated}
+            ></lightning-input>
+        </div>
+        <template if:false={isD2DorEvent}>
+            <div class="slds-col slds-size_12-of-12 slds-m-around_x-small">
+                Please Read to Customer: {disclaimers.userValidationVerbiage}
+            </div>
+        </template>
+        <div class="slds-col slds-size_4-of-12 slds-m-around_x-small">
+            <lightning-input
+                type="email"
+                name="confirmemail"
+                value={confirmEmail}
+                required
+                label="Confirm Email"
+                onchange={handleChangeEmail}
+                disabled={pinValidated}
+            ></lightning-input>
+        </div>
+        <template if:true={noEqualEmail}>
+            <div class="slds-col slds-size_12-of-12 slds-m-around_x-small">
+                <p style="color: #cc0000">Email must be identical</p>
+            </div>
+        </template>
+        <template if:false={isD2DorEvent}>
+            <template if:false={pinValidated}>
+                <div class="slds-col slds-size_12-of-12 slds-m-around_x-small">
+                    The customer will receive an email from DIRECTV to complete Quick Account Registration
+                    after order submission.
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-m-around_x-small">
+                    Please complete the email verification steps below. Email confirmation is required for
+                    DIRECTV Via Internet account setup.
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-m-around_x-small">
+                    1. Send Pin to customer email address. 2. Validate Pin received by customer.
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-m-around_x-small">
+                    <strong> Note: This email will be used for DIRECTV Via Internet Secure Data T&C.</strong>
+                </div>
+            </template>
+            <template if:true={pinValidated}
+                >The customer will receive an email from DIRECTV to complete Quick Account Registration
+                after order submission.
+            </template>
+        </template>
+        <div
+            class="slds-col slds-grid slds-wrap slds-size_12-of-12 slds-m-around_x-small slds-p-bottom_medium"
+        >
+            <template if:false={pinValidated}>
+                <template if:false={pinSent}>
+                    <lightning-button
+                        label="Send PIN"
+                        variant="brand"
+                        disabled={noEmail}
+                        onclick={sendPin}
+                    ></lightning-button>
+                </template>
+                <template if:true={pinSent}>
+                    <div class="slds-col slds-size_2-of-12 slds-p-around_none slds-m-right_xx-small">
+                        <lightning-button
+                            label="Re-Send PIN"
+                            variant="brand"
+                            disabled={noEmail}
+                            onclick={sendPin}
+                        ></lightning-button>
+                    </div>
+                    <div class="slds-col slds-size_2-of-12 slds-p-around_none">
+                        <lightning-button
+                            label="Validate PIN"
+                            variant="brand"
+                            onclick={validatePin}
+                            disabled={cantValidatePin}
+                        ></lightning-button>
+                    </div>
+                    <div class="slds-col slds-size_5-of-12"></div>
+                    <div class="slds-col slds-size_4-of-12 slds-size slds-p-around_none">
+                        <lightning-input
+                            type="text"
+                            placeholder="Enter PIN"
+                            max-length="6"
+                            onchange={handlePINInput}
+                        ></lightning-input>
+                    </div>
+                </template>
+            </template>
+        </div>
+        <template if:true={showDeclinePaperless}>
+                <div class="slds-clearfix slds-col slds-size_12-of-12">
+                    <div class="slds-float_right slds-var-p-right_small">
+                        <a class="slds-text-link" onclick={showDisclaimerModal}> I do not wish to receive applicable documents and disclosure electronically. </a>
+                    </div>
+                </div>   
+        </template>
+    </div>
+    <template if:true={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

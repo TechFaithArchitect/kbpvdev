@@ -1,0 +1,158 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider="frontier">
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <h2>Installation</h2>
+                </div>
+                <div class="page-content no-padding-top">
+                    <form class="slds-m-bottom_medium">
+                        <div class="form-header installation-title">
+                            <h3>Installation Preferences</h3>
+                        </div>
+                        <div class="form-content">
+                            <div class="form-group">
+                                <lightning-radio-group
+                                    name="installationOption"
+                                    class="label-semi-bold"
+                                    label="Please select an installation method"
+                                    options={installationValues}
+                                    value={installationOption}
+                                    disabled={oneInstallationOption}
+                                    required
+                                    type="radio"
+                                    onchange={handleOption}
+                                >
+                                </lightning-radio-group>
+                            </div>
+
+                            <template lwc:if={showInstall}>
+                                <template lwc:if={showPicker}>
+                                    <div class="slds-m-bottom_small">
+                                        <c-poe_lwc-installation-date-time-picker
+                                            date-time-label={labels.SELECT_AVAILABLE_DATE_TIME_FIELD_LABEL}
+                                            required="true"
+                                            value={value}
+                                            available-date-times={availableDateTimeOptions}
+                                            ondatetimechange={handleInstallationTimeChange}
+                                        >
+                                        </c-poe_lwc-installation-date-time-picker>
+                                    </div>
+                                </template>
+                                <template lwc:if={timeOut}>
+                                    <div>
+                                        <a
+                                            class="btn-rounded btn-center"
+                                            label="Refresh Dates"
+                                            onclick={handleRefreshDates}
+                                        ></a>
+                                    </div>
+                                </template>
+                            </template>
+                            <template lwc:if={isFullInstall}>
+                                <div class="form-group">
+                                    <lightning-input
+                                        required
+                                        type="checkbox"
+                                        label="Someone 18 or older must be present at the home during the entire installation period who can authorize work and provide inside access to your property."
+                                        name="someoneOlderWillBePresent"
+                                        class="label-semi-bold"
+                                        checked={someoneOlderWillBePresent}
+                                        onchange={handleCheckboxChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="checkbox"
+                                        label="Someone other than the customer will be at the service address during the installation appointment."
+                                        name="anotherPersonWillBeAtInstallationAppointment"
+                                        class="label-semi-bold"
+                                        checked={anotherPersonWillBeAtInstallationAppointment}
+                                        onchange={handleCheckboxChange}
+                                    ></lightning-input>
+                                </div>
+                                <template lwc:if={anotherPersonWillBeAtInstallationAppointment}>
+                                    <div class="slds-p-top_medium">
+                                        <hr class="between-toggles" />
+                                        <p class="input-description-toggle">
+                                            Please provide information for the person who will be at the service address
+                                            during the installation date and time.
+                                        </p>
+                                        <div class="form-group">
+                                            <lightning-input
+                                                required
+                                                type="text"
+                                                name="firstName"
+                                                class="label-semi-bold"
+                                                value={firstName}
+                                                label="First Name"
+                                                placeholder="First Name"
+                                                onchange={handleChange}
+                                                pattern={onlyLettersRegExPattern}
+                                                message-when-pattern-mismatch={onlyLettersRegExErrorMessage}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="form-group">
+                                            <lightning-input
+                                                required
+                                                type="text"
+                                                name="lastName"
+                                                class="label-semi-bold"
+                                                value={lastName}
+                                                label="Last Name"
+                                                placeholder="Last Name"
+                                                onchange={handleChange}
+                                                pattern={onlyLettersRegExPattern}
+                                                message-when-pattern-mismatch={onlyLettersRegExErrorMessage}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="form-group">
+                                            <lightning-input
+                                                required
+                                                type="text"
+                                                max-length="10"
+                                                class="label-semi-bold"
+                                                name="primaryPhoneNumber"
+                                                value={primaryPhoneNumber}
+                                                label="Primary Phone Number"
+                                                placeholder="(000) 000-0000"
+                                                onchange={handleChange}
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="form-group">
+                                            <lightning-input
+                                                type="text"
+                                                max-length="10"
+                                                class="label-semi-bold"
+                                                name="secondaryPhoneNumber"
+                                                value={secondaryPhoneNumber}
+                                                label="Secondary Phone Number"
+                                                placeholder="(000) 000-0000"
+                                                onchange={handleChange}
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </form>
+                    <a onclick={handleClick} class={nextButtonClass}> Next step </a>
+                </div>
+                <div class="footer-mobile">
+                    <a onclick={handleClick} class={nextButtonClassMobile}> Next step </a>
+                </div>
+                <template lwc:if={loaderSpinner}>
+                    <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+                </template>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

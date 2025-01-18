@@ -1,0 +1,8 @@
+.slds-modal__content,
+.slds-modal{
+    overflow: initial;
+}
+
+.slds-modal__container{
+    justify-content: start;
+}

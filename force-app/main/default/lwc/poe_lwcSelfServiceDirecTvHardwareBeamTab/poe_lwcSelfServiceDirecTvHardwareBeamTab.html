@@ -1,0 +1,395 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <h2>{title}</h2>
+                </div>
+
+                <div class="page-content no-padding-top">
+                    <template lwc:if={showStep.tvSelection}>
+                        <div class="group-cards">
+                            <div class="card full-width card-min-form">
+                                <div class="card-header">
+                                    <img align="left" src={iconNumberTV} />
+
+                                    <h3>Number of TV’s</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="input-sum-min">
+                                        <template lwc:if={enableTvMinus}>
+                                            <lightning-button
+                                                data-id="valNumberTv"
+                                                onclick={changeValInputToMin}
+                                                class="btn-min"
+                                            ></lightning-button>
+                                        </template>
+                                        <lightning-input
+                                            type="number"
+                                            value={valNumberTv}
+                                            style="pointer-events: none"
+                                            min="1"
+                                            max="8"
+                                        ></lightning-input>
+                                        <template lwc:if={enableTvPlus}>
+                                            <lightning-button
+                                                data-id="valNumberTv"
+                                                onclick={changeValInputToSum}
+                                                class="btn-sum"
+                                            ></lightning-button>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template lwc:if={showStep.mainHardware}>
+                        <div class="page-content">
+                            <h4>Select a main device to connect all of your TVs</h4>
+                            <p class="subtitle">
+                                First receiver included. $49 one-time activation fee may apply for add’l receivers.
+                            </p>
+                            <div class="group-cards card-three-columns">
+                                <div class="card full-width card-min-form">
+                                    <div class="card-header">
+                                        <img align="left" src={iconDeviceWireless} />
+
+                                        <h3>DIRECTV Genie</h3>
+                                        <p>{directTvGenie.fee}</p>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="input-sum-min">
+                                            <template lwc:if={enableGinieMin}>
+                                                <lightning-button
+                                                    data-id="directTvGenie.quantity"
+                                                    onclick={changeValInputToMin}
+                                                    class="btn-min"
+                                                ></lightning-button>
+                                            </template>
+                                            <lightning-input
+                                                type="number"
+                                                value={directTvGenie.quantity}
+                                                style="pointer-events: none"
+                                                min="0"
+                                                max="1"
+                                            ></lightning-input>
+                                            <template lwc:if={enableGinieSum}>
+                                                <lightning-button
+                                                    data-id="directTvGenie.quantity"
+                                                    onclick={changeValInputToSum}
+                                                    class="btn-sum"
+                                                ></lightning-button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <lightning-accordion
+                                            class="btn-open-included view-features"
+                                            allow-multiple-sections-open
+                                        >
+                                            <lightning-accordion-section name="view-features" label="View all features">
+                                                <div class="list-with-check">{directTvGenie.description}</div>
+                                            </lightning-accordion-section>
+                                        </lightning-accordion>
+                                    </div>
+                                </div>
+
+                                <div class="card full-width card-min-form">
+                                    <div class="card-header">
+                                        <img align="left" src={iconDeviceWireless} />
+
+                                        <h3>DIRECTV Genie 2</h3>
+                                        <p>{directTvGenieTwo.fee}</p>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="input-sum-min">
+                                            <template lwc:if={enableGinieTwoMin}>
+                                                <lightning-button
+                                                    data-id="directTvGenieTwo.quantity"
+                                                    onclick={changeValInputToMin}
+                                                    class="btn-min"
+                                                ></lightning-button>
+                                            </template>
+                                            <lightning-input
+                                                type="number"
+                                                value={directTvGenieTwo.quantity}
+                                                style="pointer-events: none"
+                                                min="0"
+                                                max="1"
+                                            ></lightning-input>
+                                            <template lwc:if={enableGinieTwoSum}>
+                                                <lightning-button
+                                                    data-id="directTvGenieTwo.quantity"
+                                                    onclick={changeValInputToSum}
+                                                    class="btn-sum"
+                                                ></lightning-button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <lightning-accordion
+                                            class="btn-open-included view-features"
+                                            allow-multiple-sections-open
+                                        >
+                                            <lightning-accordion-section name="view-features" label="View all features">
+                                                <div class="list-with-check">
+                                                    <div class="list-with-check">{directTvGenieTwo.description}</div>
+                                                </div>
+                                            </lightning-accordion-section>
+                                        </lightning-accordion>
+                                    </div>
+                                </div>
+                            </div>
+                            <template lwc:if={showSubOptions}>
+                                <h4>Select one receiver for each TV you want to connect.</h4>
+                                <template lwc:if={showMultipleGenieButton}>
+                                    <div class="group-cards card-two-columns">
+                                        <div class="card full-width">
+                                            <div class="card-content">
+                                                <h3>{dtvSelectDeviceLabel}</h3>
+                                                <lightning-radio-group
+                                                    name="DevicePreference"
+                                                    options={deviceTypeOptions}
+                                                    value={deviceTypeValue}
+                                                    type="radio"
+                                                    class="radio-two-options"
+                                                    onchange={handleChange}
+                                                ></lightning-radio-group>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <div class="group-cards card-three-columns">
+                                    <template lwc:if={subOptions.wirelessGenieMini.show}>
+                                        <div class="card full-width card-min-form">
+                                            <div class="card-header">
+                                                <img align="left" src={iconDeviceWireless} />
+
+                                                <h3>Wireless Genie Mini</h3>
+                                                <p>{subOptions.wirelessGenieMini.fee}</p>
+                                            </div>
+                                            <div class="card-content">
+                                                <div class="input-sum-min">
+                                                    <template lwc:if={enableTvPlus}>
+                                                        <lightning-button
+                                                            data-id="wirelessGenieMini"
+                                                            onclick={handleMinusHardware}
+                                                            class="btn-min"
+                                                            disabled={disableHardwareMin}
+                                                        ></lightning-button>
+                                                    </template>
+                                                    <lightning-input
+                                                        type="number"
+                                                        value={subOptions.wirelessGenieMini.quantity}
+                                                        style="pointer-events: none"
+                                                        min="0"
+                                                        max="99"
+                                                    ></lightning-input>
+                                                    <template lwc:if={enableHardwareSum}>
+                                                        <lightning-button
+                                                            data-id="wirelessGenieMini"
+                                                            onclick={handleSumHardware}
+                                                            class="btn-sum"
+                                                        ></lightning-button>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <lightning-accordion
+                                                    class="btn-open-included view-features"
+                                                    allow-multiple-sections-open
+                                                >
+                                                    <lightning-accordion-section
+                                                        name="view-features"
+                                                        label="View all features"
+                                                    >
+                                                        <div class="list-with-check">
+                                                            {subOptions.wirelessGenieMini.description}
+                                                        </div>
+                                                    </lightning-accordion-section>
+                                                </lightning-accordion>
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <template lwc:if={subOptions.wirelessGemini.show}>
+                                        <div class="card full-width card-min-form">
+                                            <div class="card-header">
+                                                <img align="left" src={iconDeviceWireless} />
+
+                                                <h3>Wireless Gemini</h3>
+                                                <p>{subOptions.wirelessGemini.fee}</p>
+                                            </div>
+                                            <div class="card-content">
+                                                <div class="input-sum-min">
+                                                    <template lwc:if={enableTvPlus}>
+                                                        <lightning-button
+                                                            data-id="wirelessGemini"
+                                                            onclick={handleMinusHardware}
+                                                            class="btn-min"
+                                                            disabled={disableHardwareMin}
+                                                        ></lightning-button>
+                                                    </template>
+                                                    <lightning-input
+                                                        type="number"
+                                                        value={subOptions.wirelessGemini.quantity}
+                                                        style="pointer-events: none"
+                                                        min="0"
+                                                        max="99"
+                                                    ></lightning-input>
+                                                    <template lwc:if={enableHardwareSum}>
+                                                        <lightning-button
+                                                            data-id="wirelessGemini"
+                                                            onclick={handleSumHardware}
+                                                            class="btn-sum"
+                                                        ></lightning-button>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <lightning-accordion
+                                                    class="btn-open-included view-features"
+                                                    allow-multiple-sections-open
+                                                >
+                                                    <lightning-accordion-section
+                                                        name="view-features"
+                                                        label="View all features"
+                                                    >
+                                                        <div class="list-with-check">
+                                                            {subOptions.wirelessGemini.description}
+                                                        </div>
+                                                    </lightning-accordion-section>
+                                                </lightning-accordion>
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <template lwc:if={subOptions.genieMini.show}>
+                                        <div class="card full-width card-min-form">
+                                            <div class="card-header">
+                                                <img align="left" src={iconDeviceWire} />
+
+                                                <h3>DIRECTV Genie Mini 4K</h3>
+                                                <p>{subOptions.genieMini.fee}</p>
+                                            </div>
+                                            <div class="card-content">
+                                                <div class="input-sum-min">
+                                                    <template lwc:if={enableTvPlus}>
+                                                        <lightning-button
+                                                            data-id="directTvGenie"
+                                                            onclick={handleMinusHardware}
+                                                            class="btn-min"
+                                                            disabled={disableHardwareMin}
+                                                        ></lightning-button>
+                                                    </template>
+                                                    <lightning-input
+                                                        type="number"
+                                                        value={subOptions.genieMini.quantity}
+                                                        style="pointer-events: none"
+                                                        min="0"
+                                                        max="99"
+                                                    ></lightning-input>
+                                                    <template lwc:if={enableHardwareSum}>
+                                                        <lightning-button
+                                                            data-id="directTvGenie"
+                                                            onclick={handleSumHardware}
+                                                            class="btn-sum"
+                                                        ></lightning-button>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <lightning-accordion
+                                                    class="btn-open-included view-features"
+                                                    allow-multiple-sections-open
+                                                >
+                                                    <lightning-accordion-section
+                                                        name="view-features"
+                                                        label="View all features"
+                                                    >
+                                                        <div class="list-with-check">
+                                                            {subOptions.genieMini.description}
+                                                        </div>
+                                                    </lightning-accordion-section>
+                                                </lightning-accordion>
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <template lwc:if={subOptions.wiredGenieMini.show}>
+                                        <div class="card full-width card-min-form">
+                                            <div class="card-header">
+                                                <img align="left" src={iconDeviceWire} />
+
+                                                <h3>DIRECTV Genie Mini</h3>
+                                                <p>{subOptions.wiredGenieMini.fee}</p>
+                                            </div>
+                                            <div class="card-content">
+                                                <div class="input-sum-min">
+                                                    <template lwc:if={enableTvPlus}>
+                                                        <lightning-button
+                                                            data-id="wiredGenieMini"
+                                                            onclick={handleMinusHardware}
+                                                            class="btn-min"
+                                                            disabled={disableHardwareMin}
+                                                        ></lightning-button>
+                                                    </template>
+                                                    <lightning-input
+                                                        type="number"
+                                                        value={subOptions.wiredGenieMini.quantity}
+                                                        style="pointer-events: none"
+                                                        min="0"
+                                                        max="99"
+                                                    ></lightning-input>
+                                                    <template lwc:if={enableHardwareSum}>
+                                                        <lightning-button
+                                                            data-id="wiredGenieMini"
+                                                            onclick={handleSumHardware}
+                                                            class="btn-sum"
+                                                        ></lightning-button>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer">
+                                                <lightning-accordion
+                                                    class="btn-open-included view-features"
+                                                    allow-multiple-sections-open
+                                                >
+                                                    <lightning-accordion-section
+                                                        name="view-features"
+                                                        label="View all features"
+                                                    >
+                                                        <div class="list-with-check">
+                                                            {subOptions.wiredGenieMini.description}
+                                                        </div>
+                                                    </lightning-accordion-section>
+                                                </lightning-accordion>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <a onclick={handleNext} class={nextBtnDesktopClass} data-id="next"> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <a onclick={handleNext} class={nextBtnMobileClass} data-id="next"> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

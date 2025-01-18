@@ -1,0 +1,586 @@
+<template>
+    <template lwc:if={showLoadingSpinner}>
+        <div style="z-index: 10000 !important">
+            <lightning-spinner
+                alternative-text={labels.Spinner_Alternative_Text}
+                size="medium"
+                style="z-index: 10000 !important"
+            ></lightning-spinner>
+        </div>
+    </template>
+    <lightning-card title={labels.Lwc_Uploader_Process_CSV_File_Title}>
+        <div style="margin-left: 4%; margin: 0px auto; width: 300px">
+            <div>
+                <lightning-input
+                    name="fileUploader"
+                    accept=".csv"
+                    label={labels.Select_CSV_File_Generic_Label}
+                    onchange={handleFilesChange}
+                    type="file"
+                ></lightning-input>
+            </div>
+            <br />
+            <div class="slds-text-body_small slds-text-color_error">{fileName}</div>
+            <br />
+            <div>
+                <lightning-button
+                    class="slds-var-m-top_medium"
+                    label={labels.Lwc_Uploader_Insert_Button_Label}
+                    variant="brand"
+                    disabled={insertDisabled}
+                    onclick={handleSave}
+                ></lightning-button>
+            </div>
+        </div>
+        <br /><br />
+        <div>
+            <lightning-button
+                icon-name="utility:download"
+                label={labels.Lwc_Uploader_Download_Sample_CSV_File_Button_Label}
+                title={labels.Lwc_Uploader_Download_Sample_CSV_File_Button_Label}
+                onclick={handleDownload}
+                variant="base"
+                class="slds-var-m-left_medium"
+            ></lightning-button>
+        </div>
+        <div class="slds-p-bottom_small">
+            <lightning-button
+                icon-name="utility:download"
+                label={labels.Lwc_Uploader_Download_User_Guide_Button_Label}
+                title={labels.Lwc_Uploader_Download_User_Guide_Button_Label}
+                onclick={handleDownloadGuide}
+                variant="base"
+                class="slds-var-m-left_medium"
+            ></lightning-button>
+        </div>
+        <lightning-accordion
+            allow-multiple-sections-open
+            active-section-name={activeSections}
+            onsectiontoggle={handleAccordionSection}
+        >
+            <lightning-accordion-section
+                name="A"
+                label={uploadedContactsTitle}
+                lwc:if={showInsertedRecords}
+                onclick={handleSections}
+            >
+                <lightning-card>
+                    <div style="max-height: calc(10 * 45px + 50px); overflow-y: auto">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.First_Name_Field_Label}>
+                                            {labels.First_Name_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Last_Name_Field_Label}>
+                                            {labels.Last_Name_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Phone_Field_Label}>
+                                            {labels.Phone_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Email_Field_Label}>
+                                            {labels.Email_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Phone_Two_Field_Label}>
+                                            {labels.Phone_Two_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Email_Two_Field_Label}>
+                                            {labels.Email_Two_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Street_Field_Label}>
+                                            {labels.Street_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Address_Line_2_Field_Label}>
+                                            {labels.Address_Line_2_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.City_Field_Label}>
+                                            {labels.City_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.State_Code_Field_Label}>
+                                            {labels.State_Code_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Zip_Field_Label}>
+                                            {labels.Zip_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Lead_Origin_Field_Label}>
+                                            {labels.Lead_Origin_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Other_Lead_Origin_Field_Label}>
+                                            {labels.Other_Lead_Origin_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Program_Lead_Type_Field_Label}>
+                                            {labels.Program_Lead_Type_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Other_Program_Lead_Type_Field_Label}>
+                                            {labels.Other_Program_Lead_Type_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Current_Provider_s_Field_Label}>
+                                            {labels.Current_Provider_s_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Current_Provider_s_Cost_Field_Label}>
+                                            {labels.Current_Provider_s_Cost_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Under_Contract_Field_Label}>
+                                            {labels.Under_Contract_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Contract_Expiration_Date_Field_Label}>
+                                            {labels.Contract_Expiration_Date_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Suggested_Provider_s_Field_Label}>
+                                            {labels.Suggested_Provider_s_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Suggested_Provider_s_Cost_Field_Label}>
+                                            {labels.Suggested_Provider_s_Cost_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.First_Date_Contacted_Field_Label}>
+                                            {labels.First_Date_Contacted_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Second_Date_Contacted_Field_Label}>
+                                            {labels.Second_Date_Contacted_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Third_Date_Contacted_Field_Label}>
+                                            {labels.Third_Date_Contacted_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Sold_Date_Field_Label}>
+                                            {labels.Sold_Date_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Rating_Field_Label}>
+                                            {labels.Rating_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Stage_Field_Label}>
+                                            {labels.Stage_Field_Label}
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={insertedRecords} for:item="personaccount">
+                                    <tr key={personaccount.Id}>
+                                        <td>{personaccount.FirstName}</td>
+                                        <td>{personaccount.LastName}</td>
+                                        <td>
+                                            <lightning-formatted-phone
+                                                value={personaccount.Phone}
+                                            ></lightning-formatted-phone>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-email
+                                                value={personaccount.PersonEmail}
+                                            ></lightning-formatted-email>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-phone
+                                                value={personaccount.PersonOtherPhone}
+                                            ></lightning-formatted-phone>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-email
+                                                value={personaccount.POE_Alternate_Email__pc}
+                                            ></lightning-formatted-email>
+                                        </td>
+                                        <td>{personaccount.BillingStreet}</td>
+                                        <td>{personaccount.Billing_Address_Line_2__c}</td>
+                                        <td>{personaccount.BillingCity}</td>
+                                        <td>{personaccount.BillingStateCode}</td>
+                                        <td>{personaccount.BillingPostalCode}</td>
+                                        <td>{personaccount.Lead_Origin__pc}</td>
+                                        <td>{personaccount.Lead_Origin_Other__pc}</td>
+                                        <td>{personaccount.Program_Lead_Type__pc}</td>
+                                        <td>{personaccount.Program_Lead_Type_Other__pc}</td>
+                                        <td>{personaccount.Current_Provider_s__pc}</td>
+                                        <td>
+                                            <lightning-formatted-number
+                                                value={personaccount.Current_Provider_s_Cost__pc}
+                                                format-style="currency"
+                                                currency-code="USD"
+                                            ></lightning-formatted-number>
+                                        </td>
+                                        <td>
+                                            <div style="text-align: center">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={personaccount.Under_Contract__pc}
+                                                    disabled
+                                                />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={personaccount.Contract_Expiration_Date__pc}
+                                                year="numeric"
+                                                month="numeric"
+                                                day="numeric"
+                                            ></lightning-formatted-date-time>
+                                        </td>
+                                        <td>{personaccount.Suggested_Provider_s__pc}</td>
+                                        <td>
+                                            <lightning-formatted-number
+                                                value={personaccount.Suggested_Provider_s_Cost__pc}
+                                                format-style="currency"
+                                                currency-code="USD"
+                                            ></lightning-formatted-number>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={personaccount.First_Date_Contacted__pc}
+                                                year="numeric"
+                                                month="numeric"
+                                                day="numeric"
+                                            ></lightning-formatted-date-time>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={personaccount.Second_Date_Contacted__pc}
+                                                year="numeric"
+                                                month="numeric"
+                                                day="numeric"
+                                            ></lightning-formatted-date-time>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={personaccount.Third_Date_Contacted__pc}
+                                                year="numeric"
+                                                month="numeric"
+                                                day="numeric"
+                                            ></lightning-formatted-date-time>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={personaccount.Sold_Date__pc}
+                                                year="numeric"
+                                                month="numeric"
+                                                day="numeric"
+                                            ></lightning-formatted-date-time>
+                                        </td>
+                                        <td>{personaccount.Rating__pc}</td>
+                                        <td>{personaccount.Opportunity_Stage__pc}</td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </lightning-card>
+            </lightning-accordion-section>
+            <lightning-accordion-section
+                name="B"
+                label={failedContactsTitle}
+                onclick={handleSections}
+                lwc:if={showFailedInserts}
+            >
+                <lightning-card>
+                    <div style="max-height: calc(10 * 45px + 50px); overflow-y: auto">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.First_Name_Field_Label}>
+                                            {labels.First_Name_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Last_Name_Field_Label}>
+                                            {labels.Last_Name_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Phone_Field_Label}>
+                                            {labels.Phone_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Email_Field_Label}>
+                                            {labels.Email_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Phone_Two_Field_Label}>
+                                            {labels.Phone_Two_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Email_Two_Field_Label}>
+                                            {labels.Email_Two_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Street_Field_Label}>
+                                            {labels.Street_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Address_Line_2_Field_Label}>
+                                            {labels.Address_Line_2_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.City_Field_Label}>
+                                            {labels.City_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.State_Code_Field_Label}>
+                                            {labels.State_Code_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Zip_Field_Label}>
+                                            {labels.Zip_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Lead_Origin_Field_Label}>
+                                            {labels.Lead_Origin_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Other_Lead_Origin_Field_Label}>
+                                            {labels.Other_Lead_Origin_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Program_Lead_Type_Field_Label}>
+                                            {labels.Program_Lead_Type_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Other_Program_Lead_Type_Field_Label}>
+                                            {labels.Other_Program_Lead_Type_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Current_Provider_s_Field_Label}>
+                                            {labels.Current_Provider_s_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Current_Provider_s_Cost_Field_Label}>
+                                            {labels.Current_Provider_s_Cost_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Under_Contract_Field_Label}>
+                                            {labels.Under_Contract_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Contract_Expiration_Date_Field_Label}>
+                                            {labels.Contract_Expiration_Date_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Suggested_Provider_s_Field_Label}>
+                                            {labels.Suggested_Provider_s_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Suggested_Provider_s_Cost_Field_Label}>
+                                            {labels.Suggested_Provider_s_Cost_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.First_Date_Contacted_Field_Label}>
+                                            {labels.First_Date_Contacted_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Second_Date_Contacted_Field_Label}>
+                                            {labels.Second_Date_Contacted_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Third_Date_Contacted_Field_Label}>
+                                            {labels.Third_Date_Contacted_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Sold_Date_Field_Label}>
+                                            {labels.Sold_Date_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Rating_Field_Label}>
+                                            {labels.Rating_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Stage_Field_Label}>
+                                            {labels.Stage_Field_Label}
+                                        </div>
+                                    </th>
+                                    <th scope="col">
+                                        <div class="slds-truncate" title={labels.Reason_Field_Label}>
+                                            {labels.Reason_Field_Label}
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={failedRecords} for:item="failedRow">
+                                    <tr key={failedRow.Id}>
+                                        <td>{failedRow.FirstName}</td>
+                                        <td>{failedRow.LastName}</td>
+                                        <td>
+                                            <lightning-formatted-phone
+                                                value={failedRow.Phone}
+                                            ></lightning-formatted-phone>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-email
+                                                value={failedRow.PersonEmail}
+                                            ></lightning-formatted-email>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-phone
+                                                value={failedRow.PersonOtherPhone}
+                                            ></lightning-formatted-phone>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-email
+                                                value={failedRow.POE_Alternate_Email__pc}
+                                            ></lightning-formatted-email>
+                                        </td>
+                                        <td>{failedRow.BillingStreet}</td>
+                                        <td>{failedRow.Billing_Address_Line_2__c}</td>
+                                        <td>{failedRow.BillingCity}</td>
+                                        <td>{failedRow.BillingStateCode}</td>
+                                        <td>{failedRow.BillingPostalCode}</td>
+                                        <td>{failedRow.Lead_Origin__pc}</td>
+                                        <td>{failedRow.Lead_Origin_Other__pc}</td>
+                                        <td>{failedRow.Program_Lead_Type__pc}</td>
+                                        <td>{failedRow.Program_Lead_Type_Other__pc}</td>
+                                        <td>{failedRow.Current_Provider_s__pc}</td>
+                                        <td>
+                                            <lightning-formatted-number
+                                                value={failedRow.Current_Provider_s_Cost__pc}
+                                                format-style="currency"
+                                                currency-code="USD"
+                                            ></lightning-formatted-number>
+                                        </td>
+                                        <td>
+                                            <div style="text-align: center">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={failedRow.Under_Contract__pc}
+                                                    disabled
+                                                />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={failedRow.Contract_Expiration_Date__pc}
+                                                year="numeric"
+                                                month="numeric"
+                                                day="numeric"
+                                            ></lightning-formatted-date-time>
+                                        </td>
+                                        <td>{failedRow.Suggested_Provider_s__pc}</td>
+                                        <td>
+                                            <lightning-formatted-number
+                                                value={failedRow.Suggested_Provider_s_Cost__pc}
+                                                format-style="currency"
+                                                currency-code="USD"
+                                            ></lightning-formatted-number>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={failedRow.First_Date_Contacted__pc}
+                                                year="numeric"
+                                                month="numeric"
+                                                day="numeric"
+                                            ></lightning-formatted-date-time>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={failedRow.Second_Date_Contacted__pc}
+                                                year="numeric"
+                                                month="numeric"
+                                                day="numeric"
+                                            ></lightning-formatted-date-time>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={failedRow.Third_Date_Contacted__pc}
+                                                year="numeric"
+                                                month="numeric"
+                                                day="numeric"
+                                            ></lightning-formatted-date-time>
+                                        </td>
+                                        <td>
+                                            <lightning-formatted-date-time
+                                                value={failedRow.Sold_Date__pc}
+                                                year="numeric"
+                                                month="numeric"
+                                                day="numeric"
+                                            ></lightning-formatted-date-time>
+                                        </td>
+                                        <td>{failedRow.Rating__pc}</td>
+                                        <td>{failedRow.Opportunity_Stage__pc}</td>
+                                        <td>
+                                            <lightning-formatted-text
+                                                value={failedRow.errorMessage}
+                                                class="slds-text-color_error"
+                                            ></lightning-formatted-text>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </lightning-card>
+            </lightning-accordion-section>
+        </lightning-accordion>
+    </lightning-card>
+</template>

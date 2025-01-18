@@ -1,0 +1,126 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                    <div class="slds-box slds-theme_default">
+                        <div class="slds-text-heading_medium slds-p-bottom_medium">Installation</div>
+                        <template lwc:if={timeOut}>
+                            <div class="slds-float_right slds-m-right_large slds-m-bottom_small">
+                                <lightning-button
+                                    variant="brand"
+                                    label={buttonLabel}
+                                    onclick={handleRefreshDates}
+                                ></lightning-button>
+                            </div>
+                        </template>
+                        <template lwc:if={showInstallationPicker}>
+                            <lightning-combobox
+                                name="date"
+                                label="Please select an available date/time from the dropdown:"
+                                value={value}
+                                options={options}
+                                class="slds-var-m-around_large"
+                                required
+                                onchange={handleDate}
+                            ></lightning-combobox>
+                            <div class="slds-m-vertical_medium slds-p-horizontal_large">
+                                <lightning-textarea
+                                    type="text"
+                                    name="notes"
+                                    value={notes}
+                                    label="Notes for Technician"
+                                    onchange={handleChange}
+                                ></lightning-textarea>
+                            </div>
+                            <div
+                                class="slds-text-align_left slds-m-top_medium slds-p-bottom_xx-small slds-m-horizontal_medium slds-grid slds-wrap slds-grid_vertical-align-end"
+                            >
+                                <lightning-formatted-rich-text
+                                    value={verbiages.serviceInstallation}
+                                ></lightning-formatted-rich-text>
+                            </div>
+
+                            <div
+                                class="slds-text-align_left slds-m-bottom_medium slds-m-horizontal_medium slds-grid slds-wrap slds-grid_vertical-align-end"
+                            >
+                                <lightning-input
+                                    type="checkbox"
+                                    name="installAgreement"
+                                    value={installAgreement}
+                                    required
+                                    label="I have read the above disclosures to the customer, and the customer agreed"
+                                    onchange={handleAgreement}
+                                ></lightning-input>
+                            </div>
+
+                            <div class="slds-text-align_right slds-m-around_medium slds-grid slds-wrap">
+                                <div class="slds-col">
+                                    <div class="slds-text-heading_small slds-text-align_right slds-p-vertical_x-small">
+                                        <b>Service Info</b>
+                                    </div>
+                                    <p>{clientInfo.contactInfo.firstName}</p>
+                                    <p>{clientInfo.contactInfo.lastName}</p>
+                                    <p>{orderInfo.address.addressLine1}</p>
+                                    <p>
+                                        {orderInfo.address.city}, {orderInfo.address.state}, {orderInfo.address.zipCode}
+                                    </p>
+                                </div>
+                            </div>
+                        </template>
+                        <template lwc:else>
+                            <div
+                                class="slds-text-align_left slds-m-top_medium slds-p-bottom_xx-small slds-m-horizontal_medium slds-grid slds-wrap slds-grid_vertical-align-end"
+                            >
+                                <lightning-formatted-rich-text
+                                    value={noInstallationVerbiage}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-directv-enga-cart cart={cartInfo}> </c-poe_lwc-buyflow-directv-enga-cart>
+                    <div class="slds-grid slds-p-around_medium slds-text-align_center">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <c-poe_lwc-buyflow-tab-actions
+                disable-next={noCompleteInfo}
+                show-cancel="true"
+                oncancel={handleCancel}
+                onnext={handleGoToConfirmation}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+            <template lwc:if={loaderSpinner}>
+                <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

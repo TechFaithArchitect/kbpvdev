@@ -1,0 +1,23 @@
+<template>
+	<lightning-modal-header label="Are you sure you want to change the current address?"></lightning-modal-header>
+	<lightning-modal-body class="modal-change-address">
+		<div provider="directv">
+			<img src={iconInfoUser} />
+
+			<h2>Are you sure you want to<br>change the current address?</h2>
+			<p>
+				Note that availability may vary by location.
+			</p>
+
+			<div class="group-buttons">
+				<a class="btn-outline btn-only-rounded">
+					Cancel
+				</a>
+
+				<a onclick={changeAddress} class="btn-provider-color btn-only-rounded">
+					Change address
+				</a>
+			</div>
+		</div>
+	</lightning-modal-body>
+</template>

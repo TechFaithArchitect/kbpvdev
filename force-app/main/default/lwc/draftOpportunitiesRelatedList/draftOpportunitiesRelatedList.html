@@ -1,0 +1,43 @@
+<template>
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid slds-page-header">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-opportunity" title="Opportunity">
+                        <lightning-icon icon-name="standard:opportunity"></lightning-icon>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href={relatedListViewUrl} class="slds-card__header-link slds-truncate" title={relatedListTitle}>
+                            <span>{relatedListTitle}</span>
+                        </a>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-var-p-horizontal_medium slds-var-p-vertical_xx-small">
+                <template lwc:if={showRecords}>
+                    <template for:each={records} for:item="record">
+                        <lightning-tile key={record.Id} data-id={record.Id} label={record.Name} onclick={navigateToOpportunity}>
+                                <template for:each={record.attributes} for:item="attribute">
+                                    <dl key={attribute.name} class="slds-dl_horizontal">
+                                        <dt class="slds-dl_horizontal__label slds-item_label slds-text-color_weak slds-truncate">
+                                            <span class="slds-truncate" title={attribute.name}>{attribute.name}:</span>
+                                        </dt>
+                                        <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                            <span class="slds-truncate" title={attribute.value}>{attribute.value}</span>
+                                        </dd>
+                                    </dl>
+                                </template>
+                        </lightning-tile>
+                    </template>
+                </template>
+            </div>
+        </div>
+    </article>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

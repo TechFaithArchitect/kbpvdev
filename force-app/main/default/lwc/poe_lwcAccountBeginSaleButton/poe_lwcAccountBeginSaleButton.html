@@ -1,0 +1,26 @@
+<template>
+    <lightning-card>
+        <div class="slds-text-align_center slds-m-vertical_large">
+            <lightning-button
+                label="Begin Sale"
+                onclick={handleClick}
+                variant="brand"
+                disabled={disableButton}
+            ></lightning-button>
+        </div>
+        <div class="slds-box slds-p-around_medium slds-m-horizontal_small slds-m-bottom_small">
+            <div class="slds-text-align_center slds-m-bottom_x-small">Available Programs</div>
+            <div class="slds-text-align_center slds-p-horizontal_medium slds-m-bottom_medium">{availablePrograms}</div>
+        </div>
+    </lightning-card>
+    <template lwc:if={showTacticsModal}>
+        <c-poe_lwc-account-begin-sale-button-tactic-modal
+            options={programOptions}
+            onclose={hideModal}
+            onconfirm={confirmTactic}
+        ></c-poe_lwc-account-begin-sale-button-tactic-modal>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

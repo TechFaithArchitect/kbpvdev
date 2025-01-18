@@ -1,0 +1,23 @@
+<template>
+	<lightning-modal-header label="DIRECTV Equipment Disclosure"></lightning-modal-header>
+	<lightning-modal-body class="modal-see-more">
+		<div provider="directv">
+			<img src={iconInfoUser} />
+
+			<h2>DIRECTV Equipment Disclosure</h2>
+			<p>
+				Internet Connection is required. To use this device, it is recommended that your connection is 25Mbps or higher. Gemini Device(s) will deactivate after 90 consecutive days without internet connection.
+			</p>
+
+			<div class="group-buttons">
+				<a onclick={handleCancel} class="btn-outline btn-only-rounded">
+					Cancel
+				</a>
+
+				<a onclick={agreeDisclosure} class="btn-provider-color btn-only-rounded">
+					Agree disclosure
+				</a>
+			</div>
+		</div>
+	</lightning-modal-body>
+</template>

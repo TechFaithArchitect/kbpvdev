@@ -1,0 +1,76 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="earthlink"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <lightning-card title={title}>
+            <div class="slds-grid slds-grid_vertical slds-p-around_small">
+                <div class="slds-grid slds-grid_align-center slds-m-top_large slds-m-bottom_large">
+                    <div class="slds-col slds-size_2-of-12">
+                        <p>Reference # {referenceNumber}</p>
+                    </div>
+                    <div class="slds-col slds-size_2-of-12">
+                        <p>Order Type {orderType}</p>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-border_top slds-grid_align-center">
+                    <div class="slds-col slds-size_12-of-12 slds-m-top_large">
+                        <p style="text-align: center">Disclosures</p>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-m-top_large slds-p-around_medium">
+                    <p><strong>{productTitle}</strong></p>
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-p-left_medium slds-p-right_medium">
+                    <template for:each={productDisclosure} for:item="disclosure">
+                        <p key={disclosure.Id}>{disclosure.value}</p>
+                    </template>
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-m-top_large slds-p-around_medium">
+                    <p><strong>INSTALLATION</strong></p>
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-p-left_medium slds-p-right_medium slds-p-bottom_medium">
+                    <p>{productInstallation}</p>
+                    <template for:each={productOptions} for:item="option">
+                        <p key={option.Id} class="slds-p-left_medium">{option.name}) {option.value}</p>
+                    </template>
+                </div>
+            </div>
+            <div class="slds-grid slds-p-around_medium">
+                <div class="slds-col slds-size_2-of-12">
+                    <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                </div>
+            </div>
+            <div class="slds-grid slds-grid_align-spread slds-p-around--medium">
+                <div class="slds-col">
+                    <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                </div>
+                <div class="slds-col">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-2 slds-p-right--medium">
+                            <lightning-button
+                                variant="brand"
+                                label="Previous"
+                                onclick={handlePrevious}
+                            ></lightning-button>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 slds-p-right--medium">
+                            <lightning-button variant="brand" label="Accept" onclick={handleClick}></lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </lightning-card>
+    </template>
+</template>

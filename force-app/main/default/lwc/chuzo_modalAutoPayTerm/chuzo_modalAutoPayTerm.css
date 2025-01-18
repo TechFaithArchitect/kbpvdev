@@ -1,0 +1,91 @@
+lightning-modal-header{
+	display: none !important;
+}
+
+lightning-modal-body.modal-autopay-term{
+	max-width: 615px;
+	min-width: 615px;
+	width: 90%;
+	margin: 0 auto;
+	padding-top: 32px;
+}
+
+form.autopay-term{
+	width: 100%;
+	padding: 0;
+	border: 0;
+	box-shadow: none !important;
+}
+
+form.autopay-term .form-content {
+	padding: 24px 10px;
+	padding-bottom: 16px;
+}
+
+form.autopay-term .form-content .form-group .float-checkbox-right{
+	font-size: 13px;
+	font-weight: normal;
+	color: #444444;
+	position: absolute;
+	top: -1px;
+	margin: 0 !important;
+	text-align: right;
+	right: 32px;
+	display: table;
+	width: auto;
+}
+
+form.autopay-term .form-content p.legal-bottom{
+	width: 100% !important;
+	margin-bottom: 32px !important;
+	opacity: 1;
+	color: #2B3E51 !important;
+}
+
+.modal-autopay-term img{
+	display: block;
+	margin: 0 10px;
+	margin-bottom: 24px;
+}
+
+.modal-autopay-term h2{
+	color: #1C2935;
+	font-size: 18px;
+	font-family: "Inter", sans-serif;
+	width: 100%;
+	margin: 0 auto;
+	margin-bottom: 8px;
+	text-align: left;
+	padding: 0 10px;
+}
+
+.modal-autopay-term p{
+	font-size: 16px;
+	color: #636C72;
+	font-family: "Inter", sans-serif;
+	width: 90%;
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 32px;
+}
+
+.modal-autopay-term p span{
+	font-weight: 500;
+	color: #1C2935;
+}
+
+.modal-autopay-term .group-buttons{
+	display: table;
+	width: 100%;
+	text-align: center;
+	margin-top: 32px;
+	margin-bottom: 16px;
+	padding-top: 16px;
+	border-top: 1px solid #E0E2E3;
+}
+
+.modal-autopay-term .group-buttons a{
+	display: inline-table;
+	margin: 0 12px;
+	padding: 10px 22px;
+}

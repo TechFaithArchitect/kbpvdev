@@ -1,0 +1,234 @@
+<template>
+    <template lwc:if={finishLoad}>
+        <template lwc:if={showCollateral}>
+            <c-collateral-files-component
+                provider="t-mobile"
+                onshowcollateral={handleCollateral}
+            ></c-collateral-files-component>
+        </template>
+        <template lwc:else>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+                <div class="slds-col">
+                    <template lwc:if={hiddenConfirmation}>
+                        <div class="slds-m-left_small slds-m-right_none slds-p-right_none">
+                            <lightning-button variant="brand" label="T-Chart" onclick={sbsHandler}></lightning-button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <template lwc:if={showSBS}>
+                <c-poe_lwc-buyflow-tmobile-s-b-s-button
+                    ongoback={hideSBS}
+                    record-id={recordId}
+                ></c-poe_lwc-buyflow-tmobile-s-b-s-button>
+            </template>
+            <template lwc:else>
+                <template lwc:if={showConfirmation}>
+                    <div
+                        class="slds-box slds-theme_default slds-p-around_medium slds-grid slds-wrap slds-grid_vertical slds-grid_vertical-align-center"
+                    >
+                        <div class="slds-col slds-grid slds-size_12-of-12 slds-grid_align-center slds-m-vertical_small">
+                            <div class="slds-text-heading_large slds-text-align_center" style="color: #00c6b7">
+                                Order Completed Successfully
+                            </div>
+                            <lightning-icon
+                                icon-name="action:approval"
+                                alternative-text="icon"
+                                size="small"
+                                class="slds-m-horizontal_small"
+                            ></lightning-icon>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12 slds-text-heading_small slds-grid_align-center">
+                            <b>Reference Number:</b> {referenceNumber}
+                        </div>
+                        <div class="slds-col slds-size_4-of-12 slds-text-heading_small slds-grid_align-center">
+                            <b>Confirmation Number:</b> {confirmationNumber}
+                        </div>
+                        <button
+                            class="slds-button slds-m-top_large slds-button_brand slds-button_stretch successButtons"
+                            onclick={newOpportunityHandler}
+                        >
+                            New Product
+                        </button>
+                        <button
+                            class="slds-button slds-m-top_small slds-m-bottom_large slds-button_brand slds-button_stretch successButtons"
+                            onclick={homeHandler}
+                        >
+                            New Customer
+                        </button>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div class="slds-box slds-theme_default">
+                        <template lwc:if={showForm}>
+                            <div class="slds-grid slds-gutters slds-wrap slds-p-around_medium">
+                                <div class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-p-bottom_medium">
+                                    Order Information
+                                </div>
+                                <div class="slds-col slds-size_6-of-12 slds-grid slds-wrap slds-var-m-top_large">
+                                    <div class="slds-col slds-size_12-of-12 slds-var-p-bottom_xx-small">
+                                        <lightning-input
+                                            type="text"
+                                            name="confirmation"
+                                            required
+                                            value={confirmationNumber}
+                                            label="Confirmation Number"
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_12-of-12 slds-var-p-bottom_xx-small">
+                                        <lightning-combobox
+                                            name="product"
+                                            required
+                                            value={productDescription}
+                                            label="Product Description"
+                                            options={descriptionOptions}
+                                            onchange={handleChange}
+                                        ></lightning-combobox>
+                                    </div>
+                                </div>
+                                <div
+                                    class="slds-col slds-size_6-of-12 slds-grid slds-grid_vertical slds-grid_align-center"
+                                >
+                                    <div
+                                        class="slds-col slds-size_1-of-1 slds-text-heading_small slds-p-bottom_xx-small"
+                                    >
+                                        Billing Address
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-p-bottom_xx-small">
+                                        <lightning-input
+                                            type="text"
+                                            name="address"
+                                            required
+                                            value={address}
+                                            label="Street Address"
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-p-bottom_xx-small">
+                                        <lightning-input
+                                            type="text"
+                                            name="city"
+                                            required
+                                            value={city}
+                                            label="City"
+                                            onchange={handleChange}
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-grid slds-wrap slds-p-horizontal_none">
+                                        <div class="slds-col slds-size_6-of-12 slds-p-bottom_xx-small">
+                                            <lightning-combobox
+                                                name="state"
+                                                label="State"
+                                                value={state}
+                                                onchange={handleChange}
+                                                options={states}
+                                                required
+                                            ></lightning-combobox>
+                                        </div>
+                                        <div class="slds-col slds-size_6-of-12 slds-p-bottom_xx-small">
+                                            <lightning-input
+                                                type="text"
+                                                name="zip"
+                                                required
+                                                value={zip}
+                                                label="Zip"
+                                                onchange={handleChange}
+                                            ></lightning-input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-input
+                                        type="text"
+                                        name="fname"
+                                        required
+                                        class="slds-m-left_small"
+                                        value={fname}
+                                        label="First Name"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12">
+                                    <lightning-input
+                                        type="email"
+                                        name="email"
+                                        value={email}
+                                        required
+                                        label="Email"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12"></div>
+                                <div class="slds-col slds-size_4-of-12 slds-m-bottom_medium">
+                                    <lightning-input
+                                        type="text"
+                                        name="lname"
+                                        required
+                                        class="slds-m-left_small"
+                                        value={lname}
+                                        label="Last Name"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12 slds-m-bottom_medium">
+                                    <lightning-input
+                                        type="tel"
+                                        pattern="[0-9]{10}"
+                                        max-length="10"
+                                        message-when-pattern-mismatch="Please enter a valid phone number"
+                                        required
+                                        name="phone"
+                                        value={phone}
+                                        label="Phone"
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12 slds-m-bottom_medium">
+                                    <lightning-input
+                                        type="number"
+                                        name="amount"
+                                        label="Order Total"
+                                        value={orderTotal}
+                                        class="slds-m-right_small"
+                                        required
+                                        onchange={handleChange}
+                                        formatter="currency"
+                                        step="0.01"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                        </template>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_2-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-grid_align-spread slds-p-top_medium">
+                            <div class="slds-col slds-size_6-of-12">
+                                <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                            </div>
+                            <div class="slds-grid slds-float_right">
+                                <div class="slds-col slds-p-right_medium">
+                                    <lightning-button
+                                        variant="brand"
+                                        label="Next"
+                                        onclick={handleNext}
+                                        class="slds-float_right"
+                                        disabled={noCompleteInformation}
+                                    ></lightning-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </template>
+        </template>
+    </template>
+    <template lwc:if={showLoaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

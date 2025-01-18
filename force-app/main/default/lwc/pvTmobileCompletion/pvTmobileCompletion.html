@@ -1,0 +1,217 @@
+<template>
+    <template if:true={loader}>
+        <div>
+            <lightning-spinner class="spins" size="medium" variant="brand"></lightning-spinner>
+        </div>
+    </template>
+    <template if:true={showComp}>
+        <div class="slds-card" style="font-family: 'Open Sans', sans-serif">
+            <!-- Header -->
+            <header class="slds-card__header slds-media slds-media_center">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="standard:product" size="small"></lightning-icon>
+                </div>
+
+                <div class="slds-media__body slds-card__header-title slds-text-title_bold" style="font-size: 14px">
+                    Product(s) Installed
+                </div>
+            </header>
+            <!-- Table -->
+            <div class="slds-table_bordered slds-no-row-hover slds-table_cell-buffer slds-p-around_medium" role="grid">
+                <template for:each={productList} for:item="rec">
+                    <div key={rec.index} class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-1 slds-medium-size_1-of-4">
+                            <!-- Product Search -->
+                            <c-pv-product-search rowindex={rec.index} search-key={rec.ProductName}
+                                onproductselect={productselected}></c-pv-product-search>
+                        </div>
+                        <div class="slds-size_1-of-1 slds-medium-size_1-of-4 slds-grid_vertical-align-center slds-grid">
+                            <!-- Serial Number -->
+                            <div class="slds-col">
+                                Serial Number
+                                <lightning-input type="text" variant="label-hidden" label="Serial Number"
+                                    data-id={rec.index} name="SerialNumber" value={rec.SerialNumber}
+                                    onchange={handleInputChange}></lightning-input>
+                            </div>
+                            <div class="slds-col ">
+                                <lightning-button-icon data-rowindex={rec.index} icon-name="action:scan_enabled"
+                                    alternative-text="scan" title="scan" name={rec.scan} onclick={beginScanning}
+                                    class="slds-float--right"></lightning-button-icon>
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-1 slds-medium-size_1-of-4">
+                            <!-- Location -->
+                            <lightning-combobox type="text" label="Location" data-id={rec.index} name="Location"
+                                value={rec.Location} onchange={handleInputChange}
+                                options={location}></lightning-combobox>
+                        </div>
+                        <template if:true={rec.otherTextBoxEnabled}>
+                        <div class="slds-size_1-of-1 slds-medium-size_1-of-4">
+                            <!-- Location -->
+                            <lightning-input label="Other" name="otherTextBox" type="text"
+                                onchange={handleInputChange} value={rec.otherTextBox}
+                                data-id={rec.index}></lightning-input>
+                        </div>
+                        </template>
+                        <div class="slds-size_1-of-1 slds-medium-size_1-of-4">
+                            <!-- Additional Product Checkbox -->
+                            <lightning-input label="Additional Product" name="additionalProduct" type="checkbox"
+                                onchange={handleInputChange} value={rec.additionalProduct}
+                                data-id={rec.index}></lightning-input>
+                        </div>
+                        <template if:true={showDelete}>
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of- slds-p-around_medium">
+                                <!-- Remove Button -->
+                                <lightning-button-icon icon-name="utility:delete" alternative-text="Remove"
+                                    title="Remove" name={rec.index} onclick={removeRow}
+                                    class="slds-float--right"></lightning-button-icon>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+            <!-- Add Product Button -->
+            <div class="slds-p-left_small slds-p-vertical_small">
+                <lightning-button variant="neutral" label="Add Product" title="Add Product" icon-name="utility:add"
+                    onclick={addNewRow}></lightning-button>
+            </div>
+            <!-- Footer -->
+            <footer>
+                <lightning-card>
+                    <!-- Cellular Gateway / Router -->
+                    <div class="slds-p-around_medium">
+                        <h2 class="slds-text-heading_medium slds-p-bottom_small">Speed Test(s)</h2>
+                        <h4 class="slds-text-heading_small">Cellular Gateway / Router</h4>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <!-- Arrival Speed Test -->
+                                <lightning-input label="Upload Speed (Arrival) CG" type="number" min="0" max="999"
+                                    step="1" name="uploadArrivalCG" value={formData.uploadArrivalCG} max-length ="3"
+                                    onchange={handleChange}></lightning-input>
+                            </div>
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Download Speed (Arrival) CG" type="number" min="0" max="999"
+                                    step="1" name="downloadArrivalCG" value={formData.downloadArrivalCG} max-length ="3"
+                                    onchange={handleChange}></lightning-input>
+                            </div>
+                        </div>
+                        <!-- Departure Speed Test -->
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Upload Speed (Departure) CG" type="number" min="0" max="999"
+                                    step="1" name="uploadDepartureCG" value={formData.uploadDepartureCG} max-length ="3"
+                                    onchange={handleChange} required></lightning-input>
+                            </div>
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Download Speed (Departure) CG" type="number" min="0" max="999"
+                                    step="1" name="downloadDepartureCG" value={formData.downloadDepartureCG} max-length ="3"
+                                    onchange={handleChange} required></lightning-input>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tablet/IoT Device -->
+                    <div class="slds-p-around_medium">
+                        <h4 class="slds-text-heading_small">Tablet/IoT Device</h4>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <!-- Arrival Speed Test -->
+                                <lightning-input label="Upload Speed (Arrival) IoT" type="number" min="0" max="999"
+                                    step="1" name="uploadArrivalIoT" value={formData.uploadArrivalIoT} max-length ="3"
+                                    onchange={handleChange}></lightning-input>
+                            </div>
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Download Speed (Arrival) IoT" type="number" min="0" max="999"
+                                    step="1" name="downloadArrivalIoT" value={formData.downloadArrivalIoT} max-length ="3"
+                                    onchange={handleChange}></lightning-input>
+                            </div>
+                        </div>
+                        <!-- Departure Speed Test -->
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Upload Speed (Departure) IoT" type="number" min="0" max="999"
+                                    step="1" name="uploadDepartureIoT" value={formData.uploadDepartureIoT} max-length ="3"
+                                    onchange={handleChange}></lightning-input>
+                            </div>
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Download Speed (Departure) IoT" type="number" min="0" max="999"
+                                    step="1" name="downloadDepartureIoT" value={formData.downloadDepartureIoT} max-length ="3"
+                                    onchange={handleChange}></lightning-input>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SIM Card / MSISDN Information -->
+                    <div class="slds-p-around_medium">
+                        <h2 class="slds-text-heading_medium">SIM Card / MSISDN Information</h2>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Existing SIM Number" type="tel" maxlength="19"
+                                    name="existingSIMNumber" value={formData.existingSIMNumber}
+                                    onchange={handleChange}></lightning-input>
+                            </div>
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Existing MSISDN Number" type="tel" maxlength="10"
+                                    name="existingMSISDNNumber" value={formData.existingMSISDNNumber}
+                                    onchange={handleChange}></lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Installed SIM Number" type="tel" maxlength="19"
+                                    name="installedSIMNumber" value={formData.installedSIMNumber}
+                                    onchange={handleChange} required></lightning-input>
+                            </div>
+                            <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <lightning-input label="Installed MSISDN Number" type="tel" maxlength="10"
+                                    name="installedMSISDNNumber" value={formData.installedMSISDNNumber}
+                                    onchange={handleChange}></lightning-input>
+                            </div>
+                        </div>
+                        <div class="slds-p-around_medium">
+                            <div class="slds-grid slds-wrap">
+                                <h2 class="slds-text-heading_medium slds-size_1-of-1">Customer Acceptance</h2>
+                                
+                                <!-- Equipment Testing and Service Validation Checkbox -->
+                                <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <lightning-input label="Equipment Testing and Service Validation"
+                                        name="equipmentValidation1" type="checkbox" onchange={handleChange}
+                                        checked={formData.equipmentValidation1}></lightning-input>
+                                    <p>- The technician has tested the equipment and validated the system performance.</p>
+                                    <p>- The technician has demonstrated that the equipment is performing properly.</p>
+                                    <p>- The technician has performed a speed test and displayed the results.</p>
+                                </div>
+                    
+                                <!-- Acceptance of Installation/Service Repair Checkbox -->
+                                <div class="slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <lightning-input label="Acceptance of Installation/Service Repair"
+                                        name="installationRepair" type="checkbox" onchange={handleChange}
+                                        checked={formData.installationRepair}></lightning-input>
+                                    <p>- I hereby acknowledge and confirm that the installation or service repair of the T-Mobile Business Internet was performed to my satisfaction.</p>
+                                </div>
+                    
+                                <!-- Site Survey Acknowledgement Checkbox -->
+                                <div class="slds-size_1-of-1">
+                                    <lightning-input label="Site Survey Acknowledgement (Site Survey only)"
+                                        name="siteSurveyAcknowledgement" type="checkbox" onchange={handleChange}
+                                        checked={formData.siteSurveyAcknowledgement}></lightning-input>
+                                    <p>- I acknowledge and authorize the installation to be completed in accordance with the scope of work described in the site survey. I also acknowledge that I have obtained the necessary permission from the landlord/property manager to have T-Mobile Business Internet installed at the address listed on the work order.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-p-top_medium slds-text-align_center">
+                            <lightning-button variant="brand" label="Submit" onclick={handleSubmit}></lightning-button>
+                        </div>
+                    </div>
+                </lightning-card>
+            </footer>
+        </div>
+    </template>
+    <lightning-card class="slds-p-around_small">
+        <template if:false={showComp}>
+            <p>{componentHideMessage}</p>
+        </template>
+    </lightning-card>
+
+</template>

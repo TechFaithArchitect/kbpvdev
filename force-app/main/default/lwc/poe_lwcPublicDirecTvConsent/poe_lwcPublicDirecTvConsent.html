@@ -1,0 +1,44 @@
+<template>
+    <template lwc:if={isLoading}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"> </lightning-spinner>
+    </template>
+    <div class="slds-box slds-p-around--medium slds-theme_default">
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-size_1-of-1">
+                <div
+                    class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                    style="background-color: #ff8200; color: white"
+                >
+                    DIRECTV Marketing Consent
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-p-top_medium slds-p-horizontal_medium">
+                    <p>
+                        <strong>
+                            <lightning-formatted-rich-text value={consentText}> </lightning-formatted-rich-text>
+                        </strong>
+                    </p>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-p-bottom_medium slds-p-horizontal_medium">
+                    <lightning-radio-group
+                        name="dtvConsent"
+                        label=""
+                        options={consentOptions}
+                        type="radio"
+                        onchange={handleConsentChange}
+                        disabled={disableChoice}
+                    ></lightning-radio-group>
+                </div>
+                <div class="slds-col slds-align_absolute-center slds-size_1-of-1">
+                    <div class="slds-var-p-around_small">
+                        <lightning-button
+                            variant="brand"
+                            label={buttonLabel}
+                            disabled={disableButton}
+                            onclick={handleSubmit}
+                        ></lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

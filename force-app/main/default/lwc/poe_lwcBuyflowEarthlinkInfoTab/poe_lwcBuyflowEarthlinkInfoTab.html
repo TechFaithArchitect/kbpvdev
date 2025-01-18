@@ -1,0 +1,114 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="earthlink"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default">
+            <div class="slds-grid slds-gutters slds-wrap slds-p-around_medium">
+                <div class="slds-col slds-size_1-of-1 slds-text-heading_medium slds-p-bottom_medium slds-show_medium">
+                    <lightning-formatted-text 
+                        value={labels.INFO_TAB_NAME_LABEL}
+                    ></lightning-formatted-text>
+                </div>
+                <template lwc:if={isGuestUser}>
+                    <template lwc:if={showAddressComponent}>
+                        <div class="slds-col slds-size_1-of-1">
+                            <c-poe_lwc-address-field
+                                options={addressOptions}
+                                postal-code={zip}
+                                onaddresschange={handleAddressChange}
+                                onlogerror={handleChildLogError}
+                            ></c-poe_lwc-address-field>
+                        </div>
+                    </template>
+                </template>
+                <template lwc:else>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-input
+                            type="text"
+                            name="address"
+                            value={address}
+                            label={labels.STREET_ADDRESS_FIELD_LABEL}
+                            required="true"
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-2">
+                        <lightning-input
+                            type="text"
+                            name="apt"
+                            value={apt}
+                            label={labels.ADDRESS_LINE_2_FIELD_LABEL}
+                            onchange={handleChange}
+                            maxlength="12"
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input
+                            type="text"
+                            name="city"
+                            value={city}
+                            label={labels.CITY_FIELD_LABEL}
+                            required="true"
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_2-of-3 slds-medium-size_2-of-6">
+                        <lightning-combobox
+                            name="state"
+                            label={labels.STATE_FIELD_LABEL}
+                            value={state}
+                            options={stateOptions}
+                            onchange={handleChange}
+                            required="true"
+                        ></lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3 slds-medium-size_1-of-6">
+                        <lightning-input
+                            type="text"
+                            name="zip"
+                            value={zip}
+                            label={labels.ZIP_FIELD_LABEL}
+                            disabled="true"
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+                </template>
+            </div>
+            <div class="slds-grid slds-p-around_medium">
+                <div class="slds-col slds-small-size_4-of-12 slds-medium-size_2-of-12 slds-size_6-of-12">
+                    <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                </div>
+            </div>
+            <c-poe_lwc-buyflow-tab-actions
+                next-label={labels.CHECK_SERVICEABILITY_BUTTON_LABEL}
+                show-cancel="true"
+                disable-next={noCompleteInfo}
+                oncancel={handleCancel}
+                onnext={handleClick}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </div>
+        <template lwc:if={showLoaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-title={labels.SELF_SERVICE_VALIDATE_LEAVING_TITLE}
+            modal-body={labels.SELF_SERVICE_VALIDATE_LEAVING_MESSAGE}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

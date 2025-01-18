@@ -1,0 +1,100 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="frontier"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <div class="slds-grid slds-grid_align-spread">
+            <div class="slds-col">
+                <lightning-button
+                    variant="neutral"
+                    label="Quote Assistance"
+                    onclick={handleShowCCQuoteAssistanceModal}
+                ></lightning-button>
+            </div>
+            <template lwc:if={isNotGuestUser}>
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </template>
+        </div>
+
+        <div class="slds-box slds-theme_default">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="slds-grid slds-wrap slds-p-around_small slds-grid_align-space">
+                        <div class="slds-text-heading_medium slds-size_1-of-1 slds-p-bottom_small">
+                            Terms & Conditions
+                        </div>
+                        <div
+                            class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-medium-size_7-of-12 slds-m-bottom_none slds-p-left_none"
+                        >
+                            <template for:each={termsOptions} for:item="option">
+                                <div
+                                    class="slds-col slds-size_12-of-12 slds-box slds-m-bottom_medium"
+                                    key={option.value}
+                                >
+                                    <lightning-formatted-rich-text value={option.value}></lightning-formatted-rich-text>
+                                    <lightning-input
+                                        type="checkbox"
+                                        class="slds-m-around_xx-small"
+                                        label="Customer has read the Term and agrees to it"
+                                        name={option.id}
+                                        value={option.isChecked}
+                                        checked={option.isChecked}
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+                            </template>
+                        </div>
+                        <div
+                            class="slds-col slds-size_2-of-3 slds-medium-size_4-of-12 slds-m-bottom_none slds-p-left_none"
+                        >
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                    <c-poe_lwc-buyflow-tab-actions
+                        disable-next={noCompleteInformation}
+                        show-cancel="true"
+                        oncancel={handleCancel}
+                        onnext={handleClick}
+                    >
+                    </c-poe_lwc-buyflow-tab-actions>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showTPV}>
+        <c-poe_lwc-buyflow-frontier-tpv-modal
+            description={tpvDisclaimer}
+            number={tpvNumber}
+            onclose={hideTPV}
+            onnext={handleNextTPV}
+        ></c-poe_lwc-buyflow-frontier-tpv-modal>
+    </template>
+    <template lwc:if={showCreditCheckQuoteAssistanceModal}>
+        <c-poe_lwc-buyflow-frontier-credit-check-quote-assistance-modal
+            frontier-user-id={frontierUserId}
+            quote-id={quoteId}
+            quote-number={quoteNumber}
+            customer-t-n={customerTN}
+            onclose={handleCloseCCQuoteAssistanceModal}
+            onlogerror={handleLogError}
+        >
+        </c-poe_lwc-buyflow-frontier-credit-check-quote-assistance-modal>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

@@ -1,0 +1,25 @@
+<template>
+	<lightning-modal-header label="One time non-refundable credit fee"></lightning-modal-header>
+	<lightning-modal-body class="modal-one-time-non-refound">
+        <div provider="directv">
+            <img src={iconInfoPayment}/>
+
+
+			<h2>One time non-refundable credit fee</h2>
+			<p>
+				The one-time non-refundable credit fee of <span>${fee}</span> is required to verify your credit
+			</p>
+
+
+            <div class="group-buttons">
+				<a onclick={handleModifyOrder} class="btn-outline btn-only-rounded">
+					Modify order
+				</a>
+
+				<a onclick={handleContinue} class="btn-provider-color btn-only-rounded">
+					Continue
+				</a>
+			</div>
+        </div>
+    </lightning-modal-body>
+</template>

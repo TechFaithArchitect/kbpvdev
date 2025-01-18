@@ -1,0 +1,61 @@
+<template>
+    <div class="slds-box slds-theme_default slds-var-p-around_small">
+        <div class="slds-grid slds-grid_vertical-align-center slds-var-m-bottom_large">
+            <div class="slds-col slds-size_6-of-12">
+                <lightning-icon icon-name="standard:customers" class="slds-var-m-right_small"></lightning-icon>
+                <span class="slds-text-heading_medium">{labels.title}</span>
+            </div>
+            <div class="slds-col slds-size_6-of-12 slds-text-align_right">
+                <lightning-button
+                    lwc:if={onContactTab}
+                    onclick={handleNewPersonAccount}
+                    label={labels.newButton}
+                    variant="brand-outline"
+                ></lightning-button>
+                <lightning-button
+                    lwc:if={onContactTab}
+                    onclick={handleShowInsertTool}
+                    label={labels.csvTool}
+                    variant="brand-outline"
+                    class="slds-var-m-left_small"
+                ></lightning-button>
+                <lightning-button
+                    lwc:if={showInsertTool}
+                    onclick={handleCSVToolBack}
+                    label={labels.backButton}
+                    variant="brand-outline"
+                ></lightning-button>
+            </div>
+        </div>
+        <template lwc:if={onContactTab}>
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_4-of-12">
+                    <c-lwc_-chuzo-person-account-tab-search-box
+                        onchange={handleFilter}
+                        placeholder={labels.placeholder}
+                    ></c-lwc_-chuzo-person-account-tab-search-box>
+                </div>
+                <div class="slds-col slds-size_8-of-12"></div>
+                <div class="slds-col slds-size_12-of-12">
+                    <div class="slds-m-vertical_small">
+                        <c-lwc_-chuzo-person-account-toggle
+                            ontogglechange={handleToggleChange}
+                        ></c-lwc_-chuzo-person-account-toggle>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <c-lwc_-chuzo-person-account-tab-list
+                    acc-data={data}
+                    columns={columns}
+                    onsort={handleSort}
+                ></c-lwc_-chuzo-person-account-tab-list></div
+        ></template>
+        <template lwc:elseif={showInsertTool}>
+            <c-poe_lwc-c-s-v-uploader></c-poe_lwc-c-s-v-uploader>
+        </template>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

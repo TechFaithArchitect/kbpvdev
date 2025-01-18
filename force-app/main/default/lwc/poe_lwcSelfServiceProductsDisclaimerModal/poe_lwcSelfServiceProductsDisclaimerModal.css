@@ -1,0 +1,60 @@
+lightning-modal-header{
+	display: none !important;
+}
+
+lightning-modal-body.modal-disclaimer{
+	max-width: 520px;
+	min-width: 520px;
+	width: 90%;
+	margin: 0 auto;
+	padding-top: 32px;
+}
+
+.modal-disclaimer img{
+	display: block;
+	margin: 0 auto;
+	margin-bottom: 24px;
+}
+
+.modal-disclaimer h2{
+	color: #1C2935;
+	font-size: 18px;
+	font-family: "Inter", sans-serif;
+	width: 90%;
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 8px;
+}
+
+.modal-disclaimer p{
+	font-size: 16px;
+	color: #636C72;
+	font-family: "Inter", sans-serif;
+	width: 90%;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.modal-disclaimer p span{
+	font-weight: 500;
+	color: #1C2935;
+}
+
+.modal-disclaimer .group-buttons{
+	display: table;
+	width: 100%;
+	text-align: center;
+	margin-top: 32px;
+	margin-bottom: 16px;
+}
+
+.modal-disclaimer .group-buttons a{
+	display: inline-table;
+	margin: 0 12px;
+	padding: 10px 22px;
+}
+
+.body-text {
+	text-align: left !important;
+    margin-top: 0.5rem !important;
+}

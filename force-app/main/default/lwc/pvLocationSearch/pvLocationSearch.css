@@ -1,0 +1,20 @@
+div input[readonly] {
+    padding-left: 2.75rem !important;  
+}
+.slds-input{
+    padding-left: 1.75rem !important;
+}
+
+.slds-input-has-icon .slds-input__icon {
+    top: 60% !important;
+}
+.slds-icon_small, .slds-icon--small {
+    width: 1.5rem;
+    height: 1.5rem;
+    line-height: 2;
+}
+
+
+input[disabled] + lightning-primitive-icon + div {
+	display: none;
+}

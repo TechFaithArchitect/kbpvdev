@@ -1,0 +1,201 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_none">
+            <template lwc:if={showSBS}>
+                <c-poe_lwc-buyflow-direc-tv-enga-s-b-s-button
+                    record-id={recordId}
+                    is-guest-user={isGuestUser}
+                    ongoback={hideSBS}
+                    onlogerror={handleLogError}
+                ></c-poe_lwc-buyflow-direc-tv-enga-s-b-s-button>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_x-small">
+                    <div class="slds-col slds-grid slds-wrap slds-size_1-of-1 slds-medium-size_2-of-3">
+                        <template lwc:if={isDTV}>
+                            <div class="slds-col slds-grid slds-wrap slds-m-top_x-small slds-m-bottom_small">
+                                <div class="slds-col slds-grid slds-size_12-of-12">
+                                    <template lwc:if={internationalAvailable}>
+                                        <div class="slds-col">
+                                            <lightning-radio-group
+                                                name="language"
+                                                label="Language"
+                                                options={languageOptions}
+                                                value={language}
+                                                type="radio"
+                                                onchange={handleFilter}
+                                                class="slds-m-horizontal_x-small"
+                                            >
+                                            </lightning-radio-group>
+                                        </div>
+                                    </template>
+                                    <template lwc:if={showOffersSelection}>
+                                        <div class="slds-col">
+                                            <lightning-radio-group
+                                                name="noLocals"
+                                                label="Type"
+                                                options={typeOptions}
+                                                value={typeOption}
+                                                type="radio"
+                                                onchange={handleFilter}
+                                                class="slds-m-horizontal_x-small"
+                                            >
+                                            </lightning-radio-group>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                        <div class="slds-col slds-size_12-of-12">
+                            <lightning-tabset
+                                class="slds-size_1-of-1"
+                                active-tab-value={productType}
+                                variant="standard"
+                            >
+                                <template lwc:if={orderInfo.orderInfo.atv.serviceAvailability}>
+                                    <lightning-tab
+                                        label="DIRECTV - Via Internet"
+                                        value="atv"
+                                        class="slds-tabs_large"
+                                        onactive={providerCallout}
+                                    >
+                                        <div class="slds-form-element__control">
+                                            <template for:each={products} for:item="product">
+                                                <c-poe_lwc-buyflow-direc-tv-enga-product-option
+                                                    key={product.Id}
+                                                    product={product}
+                                                    included={included}
+                                                    selected-product={selectedProductId}
+                                                    onshowdisclosure={handleDisclosure}
+                                                    onpricechange={handlePriceChange}
+                                                >
+                                                </c-poe_lwc-buyflow-direc-tv-enga-product-option>
+                                            </template>
+                                        </div>
+                                    </lightning-tab>
+                                </template>
+                                <template lwc:else>
+                                    <lightning-tab label="DIRECTV - Via Internet ⚠">
+                                        <lightning-card title="No offers found">
+                                            <p class="slds-p-horizontal_small">{msgAtv}</p>
+                                        </lightning-card>
+                                    </lightning-tab>
+                                </template>
+                                <template lwc:if={orderInfo.orderInfo.dtv.serviceAvailability}>
+                                    <lightning-tab
+                                        label="DIRECTV - Via Satellite"
+                                        value="dtv"
+                                        class="slds-tabs_large"
+                                        onactive={providerCallout}
+                                    >
+                                        <div class="slds-form-element__control">
+                                            <template for:each={products} for:item="product">
+                                                <c-poe_lwc-buyflow-direc-tv-enga-product-option
+                                                    key={product.Id}
+                                                    product={product}
+                                                    included={included}
+                                                    selected-product={selectedProductId}
+                                                    onshowdisclosure={handleDisclosure}
+                                                    onpricechange={handlePriceChange}
+                                                >
+                                                </c-poe_lwc-buyflow-direc-tv-enga-product-option>
+                                            </template>
+                                        </div>
+                                    </lightning-tab>
+                                </template>
+                                <template lwc:else>
+                                    <lightning-tab label="DIRECTV - Via Satellite ⚠">
+                                        <lightning-card title="No offers found">
+                                            <p class="slds-p-horizontal_small">{msgDtv}</p>
+                                        </lightning-card>
+                                    </lightning-tab>
+                                </template>
+                            </lightning-tabset>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-directv-enga-cart cart={cartInfo}> </c-poe_lwc-buyflow-directv-enga-cart>
+                        <template lwc:if={isGuestUser}></template>
+                        <template lwc:else>
+                            <button
+                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                onclick={sbsHandler}
+                            >
+                                T-Chart
+                            </button>
+                        </template>
+                        <div class="slds-grid slds-p-around_medium slds-text-align_center">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    disable-next={disableNext}
+                    show-previous="true"
+                    show-cancel="true"
+                    oncancel={handleCancel}
+                    onprevious={handlePrevious}
+                    onnext={handleClick}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showModal}>
+        <div class="custom-modal">
+            <section role="dialog" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium slds-hyphenate">{modalHeader}</h2>
+                    </header>
+                    <div class="slds-modal__content slds-var-p-around_medium">
+                        <template lwc:if={isNotPhonesalesOrigin}>
+                            <h2 class="slds-text-heading_medium slds-text-align_center slds-var-m-bottom_small">
+                                The disclosures must be shown to the customer
+                            </h2>
+                        </template>
+                        <lightning-formatted-rich-text value={modalBody} linkify></lightning-formatted-rich-text>
+                    </div>
+
+                    <footer class="slds-modal__footer">
+                        <button
+                            class="slds-button slds-button_neutral slds-var-m-right_small"
+                            onclick={hideModal}
+                            style="border-radius: 20px"
+                        >
+                            {disclosureAgreementLabel}
+                        </button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

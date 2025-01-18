@@ -1,0 +1,96 @@
+<template>
+    <div class="pages-with-provider-style page pages-nav" provider="earthlink">
+        <div class="nav-bar">
+            <a onclick={handlePrevious} title="Back button" class="btn-back-rounded">
+                <img src={iconBtnBack} alt="Back button" />
+            </a>
+
+            <h2>{labels.ORDER_CONFIRMATION_TAB_NAME_LABEL}</h2>
+        </div>
+
+        <div class="page-content no-padding-top">
+            <div class="page-invoice">
+                <p>{labels.ORDER_CONFIRMATION_CHARGES_DISCLAIMER}</p>
+
+                <div class="box-invoice">
+                    <h3> {labels.MONTHLY_CHARGES_CART_TITLE} </h3>
+                    <ul>
+                        <template for:each={cartInfo.monthlyCharges} for:item="product">
+                            <li key={product.name}>
+                                <p>{product.name}</p>
+                                <p>
+                                    ${product.fee}
+                                </p>
+                            </li>
+                        </template>
+                        <li class="line-final">
+                            <p>{labels.CART_TAB_FIRST_MONTH_TOTAL_TITLE}</p>
+                            <p>${cartInfo.monthlyTotal}</p>
+                        </li>
+                    </ul>
+
+                    <div class="slds-var-m-top_xx-large"></div>
+
+                    <h3> {labels.ONE_TIME_CHARGE_TITLE} </h3>
+                    <ul>
+                        <template for:each={cartInfo.todayCharges} for:item="activation">
+                            <li key={activation.name}>
+                                <p>{activation.name}</p>
+                                <p>
+                                    ${activation.fee}
+                                </p>
+                            </li>
+                        </template>
+                        <li class="line-final">
+                            <p>{labels.CART_TAB_ONE_TIME_TOTAL_TITLE}</p>
+                            <p>${cartInfo.todayTotal}</p>
+                        </li>
+                    </ul>
+
+                    <template lwc:if={showInstallationDatetime}>
+                        <div class="slds-var-m-top_xx-large"></div>
+
+                        <div class="installation-box">
+                            <h3> {labels.INSTALLATION_DATE_TIME_LABEL} </h3> <p> {installationDatetime} </p>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="box-invoice">
+                    <div class="language-box">
+                        <p>{labels.LANGUAGE_PREFERENCE_TITLE}</p>
+
+                        <fieldset class="slds-form-element">
+                            <legend>{labels.CUSTOMER_CARE_LANGUAGE_FIELD_LABEL}</legend>
+                            <div class="slds-form-element__control">
+                                <template for:each={languagePrefOptions} for:item="option">
+                                    <span key={option.value} class="slds-radio" onclick={handleLanguagePrefChange}>
+                                        <input type="radio" id={option.value} value={option.value} name={option.value} checked={option.checked}/>
+                                        <label class="slds-radio__label" for={option.value}>
+                                            <span class="slds-radio_faux"></span>
+                                            <span class="slds-form-element__label">{option.value}</span>
+                                        </label>
+                                    </span>
+                                </template>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+            </div>
+
+            <a class="btn-rounded btn-center hide-mobile" onclick={handleClick}> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+        </div>
+            
+        <div class="footer-mobile">
+            <a onclick={handlePrevious} title="Back button" class="btn-back-rounded">
+                <img src={iconBtnBack} alt="Back button" />
+            </a>
+            <a class="btn-rounded btn-center" onclick={handleClick}> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+        </div>
+    </div>
+
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

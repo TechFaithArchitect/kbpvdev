@@ -1,0 +1,176 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="windstream"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <lightning-card title="Order Summary">
+            <div class="slds-grid slds-wrap slds-grid_vertical slds-p-around_small">
+                <div
+                    class="slds-col slds-p-horizontal_small slds-p-top_large slds-p-bottom_x-large slds-border_bottom slds-size_2-of-2"
+                >
+                    <p>{labels.orderSummaryReminder}</p>
+                </div>
+                <template lwc:if={cartInfo.hasUpfront}>
+                    <div
+                        class="slds-col slds-p-horizontal_small slds-p-top_large slds-p-bottom_x-large slds-border_bottom slds-size_2-of-2"
+                    >
+                        <p class="slds-text-heading_small slds-p-bottom_medium">
+                            <strong>{labels.Todays_Charges_labels}</strong>
+                        </p>
+                        <div class="slds-grid slds-wrap">
+                            <template for:each={cartInfo.upfrontCharges} for:item="upfront">
+                                <div key={upfront.name} class="slds-col slds-size_2-of-3">
+                                    <p key={upfront.name}>{upfront.name}</p>
+                                </div>
+                                <div key={upfront.name} class="slds-col slds-size_1-of-3">
+                                    <p key={upfront.name} class="slds-text-align_right slds-p-right_small">
+                                        ${upfront.fee}
+                                    </p>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_2-of-3">
+                                <p><strong>{labels.Todays_Total_plus_taxes_and_surcharges_labels}</strong></p>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <p class="slds-text-align_right slds-p-right_small">
+                                    <strong>${cartInfo.upfrontTotal}</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template lwc:if={cartInfo.hasToday}>
+                    <div
+                        class="slds-col slds-p-horizontal_small slds-p-top_large slds-p-bottom_x-large slds-border_bottom slds-size_2-of-2"
+                    >
+                        <p class="slds-text-heading_small slds-p-bottom_medium">
+                            <strong>{labels.One_Time_Payments_labels}</strong>
+                        </p>
+                        <div class="slds-grid slds-wrap">
+                            <template for:each={cartInfo.todayCharges} for:item="today">
+                                <div key={today.name} class="slds-col slds-size_2-of-3">
+                                    <p key={today.name}>{today.name}</p>
+                                </div>
+                                <div key={today.name} class="slds-col slds-size_1-of-3">
+                                    <p key={today.name} class="slds-text-align_right slds-p-right_small">
+                                        ${today.fee}
+                                    </p>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_2-of-3">
+                                <p><strong>{labels.One_Time_Payments_Total_plus_taxes_and_surcharges_labels}</strong></p>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <p class="slds-text-align_right slds-p-right_small">
+                                    <strong>${cartInfo.todayTotal}</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template lwc:if={cartInfo.hasBundles}>
+                    <div
+                        class="slds-col slds-p-horizontal_small slds-p-top_large slds-p-bottom_x-large slds-border_bottom slds-size_2-of-2"
+                    >
+                        <p class="slds-text-heading_small slds-p-bottom_medium">
+                            <strong>{labels.First_Months_Estimated_Bundle_Charges_labels}</strong>
+                        </p>
+                        <div class="slds-grid slds-wrap">
+                            <template for:each={cartInfo.bundlesCharges} for:item="product">
+                                <div key={product.name} class="slds-col slds-size_2-of-3">
+                                    <p key={product.name}>{product.name}</p>
+                                </div>
+                                <div key={product.name} class="slds-col slds-size_1-of-3">
+                                    <p key={product.name} class="slds-text-align_right slds-p-right_small">
+                                        ${product.fee}
+                                    </p>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_2-of-3">
+                                <p><strong>{labels.Estimated_First_Months_Total_plus_taxes_and_surcharges_lables}</strong></p>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <p class="slds-text-align_right slds-p-right_small">
+                                    <strong>${cartInfo.bundlesTotal}</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template lwc:if={cartInfo.hasAdders}>
+                    <div
+                        class="slds-col slds-p-horizontal_small slds-p-right_medium slds-p-top_x-large slds-size_2-of-2"
+                    >
+                        <p class="slds-text-heading_small slds-p-bottom_medium">
+                            <strong>{labels.First_Months_Estimated_Adders_Charges_labels}</strong>
+                        </p>
+                        <div class="slds-grid slds-wrap">
+                            <template for:each={cartInfo.addersCharges} for:item="adder">
+                                <div key={adder.name} class="slds-col slds-size_2-of-3">
+                                    <p key={adder.name}>{adder.name}</p>
+                                </div>
+                                <div key={adder.name} class="slds-col slds-size_1-of-3">
+                                    <p key={adder.name} class="slds-text-align_right slds-p-right_small">
+                                        ${adder.fee}
+                                    </p>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_2-of-3">
+                                <p><strong>{labels.Estimated_First_Months_Total_plus_taxes_and_surcharges_lables}</strong></p>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <p class="slds-text-align_right slds-p-right_small">
+                                    <strong>${cartInfo.addersTotal}</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div class="slds-grid slds-p-around_medium">
+                <div class="slds-col slds-size_6-of-12 slds-small-size_4-of-12 slds-medium-size_2-of-12">
+                    <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                </div>
+            </div>
+
+            <c-poe_lwc-buyflow-tab-actions
+                show-previous="true"
+                show-cancel="true"
+                oncancel={handleCancel}
+                onprevious={handlePrevious}
+                onnext={handleClick}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </lightning-card>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

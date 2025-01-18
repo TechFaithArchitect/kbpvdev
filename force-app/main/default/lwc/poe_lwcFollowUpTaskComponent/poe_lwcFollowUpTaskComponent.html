@@ -1,0 +1,60 @@
+<template>
+    <lightning-button variant="brand" label="New Follow Up" title="Follow Up" onclick={handleClick}> </lightning-button>
+    <template lwc:if={showModal}>
+        <div class="custom-modal">
+            <section role="dialog" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium slds-hyphenate">New Follow Up Task</h2>
+                    </header>
+                    <div class="slds-modal__content slds-var-p-around_medium">
+                        <lightning-input
+                            type="text"
+                            variant="standard"
+                            name="subjectField"
+                            label="Subject"
+                            placeholder="Add task subject here..."
+                            class="slds-var-p-bottom_medium"
+                            onchange={handleChange}
+                            maxlength="50"
+                        ></lightning-input>
+                        <lightning-input
+                            type="datetime"
+                            variant="standard"
+                            name="dateTimeField"
+                            label="Follow Up Date/Time"
+                            placeholder="Select a date..."
+                            onchange={handleChange}
+                            required="true"
+                        ></lightning-input>
+                        <lightning-textarea
+                            name="notesField"
+                            label="Notes"
+                            placeholder="Add your notes here..."
+                            onchange={handleChange}
+                        ></lightning-textarea>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button
+                            label="Cancel"
+                            title="Cancel"
+                            class="slds-var-m-right_small"
+                            onclick={hideModal}
+                        ></lightning-button>
+                        <lightning-button
+                            variant="brand"
+                            label="Save"
+                            title="Save"
+                            onclick={handleTaskSave}
+                            disabled={noCompleteInfo}
+                        ></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

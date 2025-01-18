@@ -1,0 +1,35 @@
+<template>
+    <div class="slds-theme_default">
+        <lightning-record-view-form object-api-name="Order" record-id={recordId} density="comfy">
+            <div class="slds-grid slds-col slds-size_10-of-12">
+                <div class="slds-size_1-of-2 slds-var-p-around_small column-cont">
+                    <lightning-output-field field-name="OrderNumber"> </lightning-output-field>
+                    <lightning-output-field field-name="OpportunityId"> </lightning-output-field>
+                    <lightning-output-field field-name="AccountId"> </lightning-output-field>
+                    <lightning-output-field field-name="Phone__c"> </lightning-output-field>
+                    <lightning-output-field field-name="BillingAddress"> </lightning-output-field>
+                    <lightning-output-field field-name="EffectiveDate"> </lightning-output-field>
+                    <lightning-output-field field-name="POE_Dealer__c"> </lightning-output-field>
+                    <lightning-output-field field-name="POE_InstallationDate__c"> </lightning-output-field>
+                    <lightning-output-field field-name="POE_Program__c"> </lightning-output-field>
+                    <lightning-output-field field-name="DTV_Program_Selected__c"> </lightning-output-field>
+                    <lightning-output-field field-name="POE_RepTitle__c"> </lightning-output-field>
+                    <lightning-output-field field-name="CreatedById"> </lightning-output-field>
+                </div>
+                <div class="slds-size_1-of-2 slds-var-p-around_small column-cont">
+                    <lightning-output-field field-name="TotalAmount"> </lightning-output-field>
+                    <lightning-output-field field-name="Type"> </lightning-output-field>
+                    <lightning-output-field field-name="Status"> </lightning-output-field>
+                    <lightning-output-field field-name="Email__c"> </lightning-output-field>
+                    <lightning-output-field field-name="ShippingAddress"> </lightning-output-field>
+                    <lightning-output-field field-name="ActivatedDate"> </lightning-output-field>
+                    <lightning-output-field field-name="POE_OrderNumber__c"> </lightning-output-field>
+                    <lightning-output-field field-name="POE_AccountNumber__c"> </lightning-output-field>
+                    <lightning-output-field field-name="POE_OrderId__c"> </lightning-output-field>
+                    <lightning-output-field field-name="POE_TransactionId__c"> </lightning-output-field>
+                    <lightning-output-field field-name="LastModifiedById"> </lightning-output-field>
+                </div>
+            </div>
+        </lightning-record-view-form>
+    </div>
+</template>

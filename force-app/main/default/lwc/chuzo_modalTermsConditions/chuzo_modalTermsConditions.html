@@ -1,0 +1,80 @@
+<template>
+    <lightning-modal-header label={content.label}></lightning-modal-header>
+    <lightning-modal-body class="modal-term-conditions">
+        <div provider="directv">
+            <img src={iconInfoTerm} />
+
+            <h2>Terms, Conditions and/or Disclosures</h2>
+            <h4>{termsAndConditionsInstructions}</h4>
+            <form class="autopay-term">
+                <div class="form-content">
+                    <template lwc:if={content.isNotGuestUser}>
+                        <div class="slds-grid slds-wrap slds-size_1-of-1 slds-m-bottom_small slds-grid_align-space">
+                            <div class="slds-col slds-max-medium-size_1-of-1 slds-m-bottom_small">
+                                <a class="btn-rounded slds-max-medium-size_1-of-1" onclick={handleSendViaEmail}>
+                                    Send via Email
+                                </a>
+                            </div>
+                            <div class="slds-col slds-max-medium-size_1-of-1 slds-m-bottom_small">
+                                <a class="btn-rounded slds-max-medium-size_1-of-1" onclick={handleSendViaSMS}>
+                                    Send via SMS
+                                </a>
+                            </div>
+                            <div class="slds-col slds-max-medium-size_1-of-1 slds-m-bottom_small">
+                                <a class="btn-rounded slds-max-medium-size_1-of-1" onclick={handleRefresh}>
+                                    Refresh Fields
+                                </a>
+                            </div>
+                        </div>
+                    </template>
+                    <template for:each={terms} for:item="term">
+                        <div class="form-group" key={term.id}>
+                            <p><b>{term.consentLabel}</b></p>
+                        </div>
+                        <p class="legal-bottom" key={term.id}>
+                            <lightning-formatted-rich-text
+                                linkify
+                                value={term.consentText}
+                            ></lightning-formatted-rich-text>
+                        </p>
+                    </template>
+                    <template lwc:if={showConsentRadio}>
+                        <div class="form-group">
+                            <lightning-radio-group
+                                name="dtvConsent"
+                                label={dtvConsentLabel}
+                                options={consentOptions}
+                                type="radio"
+                                onchange={handleConsentChange}
+                            ></lightning-radio-group>
+                        </div>
+                    </template>
+                    <template lwc:if={isEventOrD2D}>
+                        <a class="btn-rounded slds-max-medium-size_1-of-1" onclick={handleShowModal}>
+                            View NOTICE OF RIGHT TO CANCEL
+                        </a>
+                    </template>
+                </div>
+            </form>
+
+            <div class="group-buttons">
+                <a class="btn-outline btn-only-rounded" onclick={handleCancel}> Cancel </a>
+                <a onclick={acceptTerms} class="btn-provider-color btn-only-rounded" data-id="next">
+                    Accept all terms and conditions
+                </a>
+            </div>
+        </div>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </lightning-modal-body>
+    <template lwc:if={showTermsSignatureModal}>
+        <c-poe_lwc-buyflow-direc-tv-terms-signature-modal
+            onclose={handleSignatureConfirmation}
+            record-id={content.recordId}
+            name={signatureName}
+            address={signatureAddress}
+        >
+        </c-poe_lwc-buyflow-direc-tv-terms-signature-modal>
+    </template>
+</template>

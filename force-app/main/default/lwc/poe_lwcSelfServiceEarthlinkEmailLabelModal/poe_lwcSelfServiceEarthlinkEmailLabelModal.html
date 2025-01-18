@@ -1,0 +1,52 @@
+<template>
+	<lightning-modal-header label={labels.EMAIL_BROADBAND_LABEL_MODAL_TITLE}></lightning-modal-header>
+	<lightning-modal-body class="modal-label">
+        <div provider="earthlink">
+            <template lwc:if={loaderSpinner}>
+                <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+            </template>
+
+			<h2>{labels.EMAIL_BROADBAND_LABEL_MODAL_TITLE}</h2>
+			<p>
+				{labels.EMAIL_BROADBAND_LABEL_MODAL_INSTRUCTIONS}
+			</p>
+
+            <form class="email-label-form">
+                <div class="form-content">
+                    <div class="form-group">
+                        <lightning-select
+                            required
+                            name="products"
+                            label={labels.EMAIL_BROADBAND_LABEL_MODAL_PRODUCT_FIELD_LABEL}
+                            placeholder={labels.PRODUCT_FIELD_PLACEHOLDER}
+                            value={product}
+                            options={productOptions}
+                            onchange={handleChange}
+                        ></lightning-select>
+                    </div>
+                    <div class="form-group">
+                        <lightning-input
+                            required
+                            type="email"
+                            name="email"
+                            label={labels.EMAIL_BROADBAND_LABEL_MODAL_EMAIL_FIELD_LABEL}
+                            placeholder={labels.EMAIL_FIELD_PLACEHOLDER}
+                            value={email}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+                </div>
+            </form>
+
+            <div class="group-buttons">
+				<a onclick={hideModal} class="btn-outline btn-only-rounded">
+					{labels.CANCEL_BUTTON_LABEL}
+				</a>
+
+				<a onclick={handleConfirm} class={confirmBtnClass}>
+					{labels.CONFIRM_BUTTON_LABEL}
+				</a>
+			</div>
+        </div>
+    </lightning-modal-body>
+</template>

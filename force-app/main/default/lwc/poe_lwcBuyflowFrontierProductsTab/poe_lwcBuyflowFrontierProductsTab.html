@@ -1,0 +1,254 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="frontier"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_small">
+            <template lwc:if={showSBS}>
+                <c-poe_lwc-buyflow-frontier-s-b-s-button
+                    record-id={recordId}
+                    is-guest-user={isGuestUser}
+                    ongoback={hideSBS}
+                ></c-poe_lwc-buyflow-frontier-s-b-s-button>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_small">
+                    <div class="slds-col slds-box slds-size_1-of-1 slds-medium-size_2-of-3 slds-p-around_small">
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-grid slds-wrap slds-grid_align-spread slds-p-top_x-small slds-p-horizontal_none slds-m-horizontal_none"
+                        >
+                            <div class="slds-col slds-text-heading_medium slds-p-bottom_medium">Broadband Products</div>
+                        </div>
+                        <template lwc:if={isGuestUser}>
+                            <div class="slds-col">
+                                <lightning-radio-group
+                                    name="language"
+                                    label="Language"
+                                    options={languageOptions}
+                                    value={language}
+                                    type="radio"
+                                    onchange={handleLanguageSelection}
+                                    class="slds-m-horizontal_x-small"
+                                >
+                                </lightning-radio-group>
+                            </div>
+                            <div
+                                class="slds-grid slds-max-small-size_1-of-1 slds-p-horizontal_x-small slds-m-bottom_x-small"
+                            >
+                                <lightning-button
+                                    class="slds-max-small-size_1-of-1"
+                                    label="View All Broadbands"
+                                    variant="brand"
+                                    onclick={handleShowBroadbandLabels}
+                                    stretch
+                                >
+                                </lightning-button>
+                            </div>
+                        </template>
+                        <div class="slds-form-element__control slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                            <template for:each={broadbandProds} for:item="broadband">
+                                <span key={broadband.Id} class="slds-radio">
+                                    <input
+                                        type="radio"
+                                        id={broadband.Id}
+                                        value={broadband.Id}
+                                        name="broadband"
+                                        checked={broadband.isChecked}
+                                        onchange={handlePriceChange}
+                                    />
+                                    <label class="slds-radio__label" for={broadband.Id}>
+                                        <span class="slds-form-element__label">
+                                            <div class="slds-box slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_1-of-12 slds-align_absolute-center">
+                                                    <span class="slds-radio_faux slds-m-right_none"></span>
+                                                </div>
+                                                <div
+                                                    class="slds-col slds-grid slds-grid_vertical-align-center slds-size_10-of-12 slds-small-size_6-of-12"
+                                                >
+                                                    <div class="slds-text-heading_small">
+                                                        <strong>{broadband.Name}</strong>
+                                                    </div>
+                                                    &nbsp;&nbsp;&nbsp;<a
+                                                        onclick={handleDescription}
+                                                        data-id={broadband.Name}
+                                                        >See Details</a
+                                                    >
+                                                </div>
+                                                <div class="slds-hide_small slds-size_1-of-1 slds-m-bottom_small"></div>
+                                                <template lwc:if={broadband.hasPromo}>
+                                                    <div
+                                                        class="slds-col slds-size_8-of-12 slds-small-size_3-of-12 slds-p-right_none slds-text-heading_small"
+                                                    >
+                                                        <strong>with Auto Pay ${broadband.AutoPayPrice}</strong>
+                                                    </div>
+                                                    <div
+                                                        class="slds-col slds-size_4-of-12 slds-small-size_2-of-12 slds-p-right_none"
+                                                    >
+                                                        <s>${broadband.PromoPrice}</s>
+                                                    </div>
+                                                </template>
+                                                <template lwc:else>
+                                                    <div
+                                                        class="slds-col slds-size_8-of-12 slds-small-size_3-of-12 slds-p-horizontal_none"
+                                                    ></div>
+                                                    <div
+                                                        class="slds-col slds-size_4-of-12 slds-small-size_2-of-12 slds-p-right_none slds-text-heading_small"
+                                                    >
+                                                        <strong>${broadband.PromoPrice}</strong>
+                                                    </div>
+                                                </template>
+                                                <template lwc:if={broadband.hasLimitedDiscount}>
+                                                    <div
+                                                        class="slds-col slds-text-heading_small slds-p-around_small slds-text-align_center slds-size_12-of-12 slds-p-top_small"
+                                                        style="color: #ff0037"
+                                                    >
+                                                        <b>{broadband.discountVerbiage}</b>
+                                                    </div></template
+                                                >
+                                                <div
+                                                    class="slds-col slds-var-p-top_medium slds-var-p-left_large slds-size_12-of-12"
+                                                >
+                                                    {broadband.campaignDescription}&nbsp;<strong
+                                                        >{broadband.disclaimerDescription} <br />
+                                                        {broadband.paymentDisclaimer}
+                                                    </strong>
+                                                </div>
+
+                                                <div
+                                                    class="slds-col slds-var-p-top_small slds-size_1-of-1 slds-medium-size_4-of-12"
+                                                >
+                                                    <div class="slds-text-heading_small">
+                                                        <strong>Download Speed:</strong>&nbsp;
+                                                        <span style="color: #ff8200">{broadband.download} </span>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="slds-col slds-var-p-top_small slds-size_1-of-1 slds-medium-size_4-of-12"
+                                                >
+                                                    <div class="slds-text-heading_small">
+                                                        <strong>Upload Speed:</strong>&nbsp;
+                                                        <span style="color: #ff8200">{broadband.upload} </span>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="slds-col slds-var-p-top_small slds-size_1-of-1 slds-medium-size_4-of-12"
+                                                >
+                                                    <strong>Bundle Term:</strong> {broadband.PriceType}
+                                                </div>
+                                                <template lwc:if={isGuestUser}>
+                                                    <template lwc:if={broadband.broadbandLabelUrl}>
+                                                        <c-poe_lwc-broadband-label
+                                                            class="slds-size_1-of-1"
+                                                            broadband-label={broadband.broadbandLabelUrl}
+                                                        >
+                                                        </c-poe_lwc-broadband-label>
+                                                    </template>
+                                                </template>
+                                            </div>
+                                        </span>
+                                    </label>
+                                </span>
+                            </template>
+                        </div>
+                        <template lwc:if={isGuestUser}></template>
+                        <template lwc:else>
+                            <div class="slds-col slds-size_12-of-12 slds-p-vertical_small slds-m-horizontal_small">
+                                <div class="slds-text-heading_small">
+                                    Please read the URL to customer if they want to view the Customer Broadband Labels:
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12 slds-p-bottom_x-small slds-m-horizontal_small">
+                                <lightning-formatted-rich-text value={broadbandURLs.EN}></lightning-formatted-rich-text>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12 slds-p-bottom_small slds-m-horizontal_small">
+                                <lightning-formatted-rich-text value={broadbandURLs.SP}></lightning-formatted-rich-text>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-frontier-cart cart={cart}> </c-poe_lwc-buyflow-frontier-cart>
+                        <template lwc:if={isGuestUser}></template>
+                        <template lwc:else>
+                            <button
+                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                onclick={sbsHandler}
+                            >
+                                T-Chart
+                            </button>
+                        </template>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    disable-next={disableNext}
+                    show-previous="true"
+                    show-cancel="true"
+                    oncancel={handleCancel}
+                    onprevious={handlePrevious}
+                    onnext={handleClick}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={showModal}>
+        <c-poe_lwc-buyflow-frontier-customer-validation-modal
+            acp={acp}
+            control-number={controlNumber}
+            environment-code={environmentCode}
+            product-selected={productSelected}
+            cart={cart}
+            is-guest-user={isGuestUser}
+            agent-id={agentId}
+            product-ids={productIds}
+            frontier-user-id={frontierUserId}
+            onlogerror={handleLogError}
+            onshowacp={handleACPModal}
+            onproductselection={handleSaveModal}
+            onclose={handleCloseModal}
+        ></c-poe_lwc-buyflow-frontier-customer-validation-modal>
+    </template>
+    <template lwc:if={showProductDescription}>
+        <c-poe_lwc-buyflow-frontier-product-description-modal
+            description={productDescription}
+            onclosedescription={handleDescription}
+        ></c-poe_lwc-buyflow-frontier-product-description-modal>
+    </template>
+    <template lwc:if={showACPModal}>
+        <c-poe_lwc-buyflow-frontier-products-l-i-modal
+            quote-id={quoteId}
+            account-id={accountUuid}
+            frontier-user-id={frontierUserId}
+            onclose={handleCloseACPModal}
+            onconfirm={handleACPResult}
+            onlogerror={handleLogError}
+        ></c-poe_lwc-buyflow-frontier-products-l-i-modal>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

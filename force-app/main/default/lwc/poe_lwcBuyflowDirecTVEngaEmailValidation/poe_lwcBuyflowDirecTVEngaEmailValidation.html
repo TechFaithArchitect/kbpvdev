@@ -1,0 +1,137 @@
+<template>
+    <div class="slds-m-bottom_small slds-size_12-of-12 slds-grid slds-wrap slds-p-around_small">
+        <div
+            class="slds-col slds-size_12-of-12 slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+            style="background-color: #ff8200; color: white"
+        >
+            Email Validation
+        </div>
+        <template lwc:if={isD2DorEvent}>
+            <div class="slds-col slds-size_12-of-12 slds-p-around_x-small slds-m-top_medium">
+                You have the option to receive applicable documents and disclosures electronically or receive a paper
+                copy. If you would like to receive them electronically, please provide your email address so that we can
+                send you a 6-digit verification PIN that you will need to read to me. You will be asked later in the
+                order process to read and accept a Consent to Electronic Delivery of Disclosures. Please note: If you
+                are ordering DIRECTV STREAM, you must consent to electronic delivery so that any installment agreement
+                applicable to your order can be delivered electronically. If you do not want to consent to electronic
+                delivery, you can complete that type of order by visiting an authorized DIRECTV retail store.
+            </div>
+        </template>
+        <template lwc:else>
+            <div class="slds-col slds-size_12-of-12 slds-p-around_x-small slds-m-top_medium">
+                In order to proceed with your order we will need an email address for your account which we will
+                validate in this next step.
+            </div>
+        </template>
+        <div
+            class="slds-col slds-medium-size_4-of-12 slds-small-size_6-of-12 slds-size_12-of-12 slds-m-vertical_x-small"
+        >
+            <lightning-input
+                type="email"
+                name="email"
+                value={email}
+                required
+                label="Contact Email"
+                onchange={handleChangeEmail}
+                disabled={pinValidated}
+            ></lightning-input>
+        </div>
+        <template lwc:if={isNotD2DorEvent}>
+            <div class="slds-col slds-size_12-of-12 slds-m-vertical_x-small">
+                Please Read to Customer:
+                <lightning-formatted-rich-text value={streamEmailValidationVerbiage}></lightning-formatted-rich-text>
+            </div>
+        </template>
+        <div
+            class="slds-col slds-medium-size_4-of-12 slds-small-size_6-of-12 slds-size_12-of-12 slds-m-vertical_x-small"
+        >
+            <lightning-input
+                type="email"
+                name="confirmemail"
+                value={confirmEmail}
+                required
+                label="Confirm Email"
+                onchange={handleChangeEmail}
+                disabled={pinValidated}
+            ></lightning-input>
+        </div>
+        <template lwc:if={noEqualEmail}>
+            <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                <p style="color: #cc0000">Email must be identical</p>
+            </div>
+        </template>
+        <template lwc:if={isNotD2DorEvent}>
+            <template lwc:if={pinValidated}>
+                <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                    The customer will receive an email from DIRECTV to complete Quick Account Registration after order
+                    submission.
+                </div>
+
+                <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                    Please Read to Customer:
+                    <lightning-formatted-rich-text value={streamCreateAccountVerbiage}></lightning-formatted-rich-text>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                    The customer will receive an email from DIRECTV to complete Quick Account Registration after order
+                    submission.
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                    Please complete the email verification steps below. Email confirmation is required for DIRECTV Via
+                    Internet account setup.
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                    1. Send Pin to customer email address. 2. Validate Pin received by customer.
+                </div>
+                <div class="slds-col slds-size_12-of-12 slds-p-around_x-small">
+                    <strong> Note: This email will be used for DIRECTV Via Internet Secure Data T&C.</strong>
+                </div>
+            </template>
+        </template>
+        <template lwc:if={pinNotValidated}>
+            <template lwc:if={pinSent}>
+                <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                    <lightning-button
+                        label="Re-Send PIN"
+                        variant="brand"
+                        disabled={noEmail}
+                        onclick={sendPin}
+                    ></lightning-button>
+                </div>
+                <div class="slds-col slds-hide_small slds-size_1-of-1 slds-m-bottom_small"></div>
+                <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                    <lightning-button
+                        label="Validate PIN"
+                        variant="brand"
+                        onclick={validatePin}
+                        disabled={cantValidatePin}
+                    ></lightning-button>
+                </div>
+                <div
+                    class="slds-col slds-medium-size_4-of-12 slds-small-size_6-of-12 slds-size_12-of-12 slds-m-bottom_x-small slds-p-horizontal_x-small"
+                >
+                    <lightning-input
+                        type="text"
+                        placeholder="Enter PIN"
+                        max-length="6"
+                        onchange={handlePINInput}
+                    ></lightning-input>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-col slds-size_1-of-1 slds-p-around_x-small">
+                    <lightning-button
+                        label="Send PIN"
+                        variant="brand"
+                        disabled={noEmail}
+                        onclick={sendPin}
+                    ></lightning-button>
+                </div>
+            </template>
+        </template>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

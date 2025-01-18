@@ -1,0 +1,120 @@
+<template>
+    <lightning-card>
+        <h2 slot="title">
+            <lightning-icon icon-name="utility:cart" size="small" class="slds-var-m-right_small"></lightning-icon>
+            <lightning-formatted-text
+                value={labels.ORDER_SUMMARY_TITLE}
+            ></lightning-formatted-text>
+        </h2>
+        <div>
+            <div class="slds-border_top slds-grid slds-wrap">
+                <template lwc:if={cart.hasToday}>
+                    <div class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                        style="background-color: #ff8200; color: white">
+                        <span>
+                            <lightning-formatted-text
+                                value={labels.TODAYS_CHARGES_TITLE}
+                            ></lightning-formatted-text>            
+                        </span>
+                    </div>
+                    <template for:each={cart.todayCharges} for:item="charge">
+                        <div key={charge.id}
+                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap">
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <b>{charge.name}</b>
+                            </div>
+                            <template lwc:if={charge.discount}>
+                                <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                    style="color: #00c6b7">
+                                    ${charge.fee}
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right">
+                                    ${charge.fee}
+                                </div>
+                            </template>
+                            <template lwc:if={charge.hasDescription}>
+                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                    {charge.description}
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium">
+                        <div class="slds-col slds-size_9-of-12">
+                            <b>
+                                <lightning-formatted-text
+                                    value={labels.TODAYS_TOTAL_TITLE}
+                                ></lightning-formatted-text>
+                            </b>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-m-right_medium">
+                            <b>${cart.todayTotal}</b>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                        <span>
+                            <lightning-formatted-text
+                                value={labels.CART_BOTTOM_NOTE}
+                            ></lightning-formatted-text>
+                        </span>
+                    </div>
+                </template>
+                <template lwc:if={cart.hasMonthly}>
+                    <div class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                        style="background-color: #ff8200; color: white">
+                        <span>
+                            <lightning-formatted-text
+                                value={labels.MONTHLY_CHARGES_CART_TITLE}
+                            ></lightning-formatted-text>
+                        </span>
+                    </div>
+                    <template for:each={cart.monthlyCharges} for:item="charge">
+                        <div key={charge.id}
+                            class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap">
+                            <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                <b>{charge.name}</b>
+                            </div>
+                            <template lwc:if={charge.discount}>
+                                <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                    style="color: #00c6b7">
+                                    ${charge.fee}
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right">
+                                    ${charge.fee}
+                                </div>
+                            </template>
+                            <template lwc:if={charge.hasDescription}>
+                                <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                    {charge.description}
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small">
+                        <div class="slds-col slds-size_9-of-12">
+                            <b>
+                                <lightning-formatted-text
+                                    value={labels.CART_MONTHLY_TOTAL_SECTION_TITLE}
+                                ></lightning-formatted-text>
+                            </b>
+                        </div>
+                        <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                            <b>${cart.monthlyTotal}</b>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                        <span>
+                            <lightning-formatted-text
+                                value={labels.CART_BOTTOM_NOTE}
+                            ></lightning-formatted-text>
+                        </span>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,163 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open slds-modal_medium"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-p-around_xx-small slds-float_right">
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text="Close Modal"
+                    title="Close Modal"
+                    variant="inverse"
+                    onclick={hideModal}
+                    size="small"
+                    class="slds-float_right"
+                    style="cursor: pointer"
+                ></lightning-icon>
+            </div>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <lightning-card>
+                    <div class="slds-p-around_medium">
+                        <div class="slds-grid slds-wrap">
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-text-heading_small slds-text-align_center slds-m-bottom_small"
+                                style="background-color: #ff8200; color: white"
+                            >
+                                Customer Information
+                            </div>
+                            <div
+                                class="slds-col slds-around_small slds-size_6-of-12 slds-p-left_small slds-p-vertical_x-small"
+                            >
+                                <p><strong>Customer Name & Install Address</strong></p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-p-left_small slds-size_6-of-12"></div>
+                            <div class="slds-col slds-p-bottom_small slds-size_6-of-12 slds-p-left_small">
+                                <p>{orderInfo.customer.firstName} {orderInfo.customer.lastName}</p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-p-left_small slds-size_6-of-12">
+                                <p><strong>Primary Phone: </strong> {orderInfo.customer.phoneNumber}</p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-p-left_small slds-size_6-of-12">
+                                <p>
+                                    {orderInfo.account.shippingAddress.addressLine1}
+                                    {orderInfo.account.shippingAddress.addressLine2}
+                                    {orderInfo.account.shippingAddress.city} {orderInfo.account.shippingAddress.state},
+                                    {orderInfo.account.shippingAddress.zipCode}
+                                </p>
+                            </div>
+                            <div
+                                class="slds-col slds-p-bottom_small slds-m-bottom_small slds-p-left_small slds-size_6-of-12"
+                            >
+                                <p><strong>Email: </strong>{orderInfo.customer.emailAddress}</p>
+                            </div>
+                        </div>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_small slds-text-align_center"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Services Ordered
+                        </div>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            {serviceType}
+                        </div>
+                        <div class="slds-grid slds-wrap slds-p-around_small">
+                            <div class="slds-col slds-p-bottom_small slds-size_6-of-12">
+                                <p><strong>Package Option: </strong>{productSelected}</p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_6-of-12">
+                                <p>
+                                    <strong>Hardware Option: </strong>
+                                    <lightning-formatted-rich-text
+                                        value={hardwareSelected}
+                                    ></lightning-formatted-rich-text>
+                                </p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_6-of-12">
+                                <p><strong>Email: </strong>{orderInfo.customer.emailAddress}</p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_6-of-12">
+                                <p><strong>Order Number: </strong>{orderInfo.partnerOrderNumber}</p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_12-of-12">
+                                <p>
+                                    <strong>
+                                        <lightning-formatted-text
+                                            linkify
+                                            value="Customer can go to directv.com/AccountLogin"
+                                        >
+                                        </lightning-formatted-text>
+                                    </strong>
+                                </p>
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_12-of-12"></div>
+                        </div>
+
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_small slds-text-align_center"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Payment Information
+                        </div>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            DIRECTV
+                        </div>
+                        <div
+                            class="slds-grid slds-wrap slds-p-around_small slds-grid_vertical slds-grid_vertical-align-center slds-grid_align-center"
+                        >
+                            <div class="slds-col slds-p-bottom_small slds-size_3-of-12">
+                                <strong>Amount Paid Today: </strong>${paymentInfo.amount}
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_3-of-12">
+                                <strong>Card Type: </strong> {type}
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_3-of-12">
+                                <strong>Name: </strong>{paymentInfo.firstName} {paymentInfo.lastName}
+                            </div>
+                            <div class="slds-col slds-p-bottom_small slds-size_3-of-12">
+                                <strong>Zip Code: </strong>{paymentInfo.zipCode}
+                            </div>
+                        </div>
+
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Order Information
+                        </div>
+                        <div class="slds-grid slds-wrap slds-p-around_small">
+                            <div class="slds-col slds-p-bottom_small slds-size_4-of-12">
+                                <p><strong>Completed On: </strong>{confirmedDate}</p>
+                            </div>
+                            <template lwc:if={showSignatureModal}>
+                                <div class="slds-col slds-align_absolute-center slds-size_12-of-12">
+                                    <div class="slds-p-around_medium">
+                                        <lightning-button
+                                            variant="brand"
+                                            label="Click here to Sign"
+                                            onclick={openSummarySignatureModal}
+                                        ></lightning-button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </lightning-card>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+
+    <template lwc:if={showLoaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

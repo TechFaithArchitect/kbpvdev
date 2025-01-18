@@ -1,0 +1,173 @@
+<template>
+    <div class="slds-form-element__control slds-col slds-size_12-of-12 slds-p-around_none">
+        <template for:each={products} for:item="product">
+            <span key={product.Id} class="slds-radio">
+                <input
+                    type="radio"
+                    id={product.Id}
+                    value={product.Id}
+                    name={product.category}
+                    checked={product.isChecked}
+                    onchange={handlePriceChange}
+                />
+                <label class="slds-radio__label" for={product.Id}>
+                    <span class="slds-form-element__label">
+                        <div class="slds-box slds-grid slds-wrap slds-p-horizontal_xx-small">
+                            <div class="slds-col slds-size_1-of-12 slds-align_absolute-center">
+                                <span class="slds-radio_faux slds-m-right_none"></span>
+                            </div>
+                            <div
+                                class="slds-col slds-grid slds-grid_vertical-align-center slds-align-middle slds-size_10-of-12 slds-small-size_11-of-12 slds-medium-size_5-of-12"
+                            >
+                                <div class="slds-text-heading_small">
+                                    <strong>{product.Name}</strong>
+                                </div>
+                            </div>
+                            <!-- This is a small margin for the mobile UI -->
+                            <div class="slds-hide_medium slds-size_1-of-1 slds-var-p-top_medium"></div>
+                            <template lwc:if={product.hasAutoPayPromo}>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                                    <strong>${product.PromoPrice}</strong>/mo for {product.promoTerm} months&nbsp;
+                                    <strong>with Auto Pay</strong>
+                                </div>
+                                <!-- This is a small margin for the mobile UI -->
+                                <div class="slds-hide_medium slds-size_1-of-1 slds-var-p-top_medium"></div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_2-of-12">
+                                    <span style="text-decoration: line-through">${product.AutoPayNetPrice}</span>
+                                </div>
+                            </template>
+                            <template lwc:elseif={product.hasPromo}>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                                    <strong>${product.PromoPrice}</strong>/mo for {product.promoTerm} months&nbsp;
+                                </div>
+                                <!-- This is a small margin for the mobile UI -->
+                                <div class="slds-hide_medium slds-size_1-of-1 slds-var-p-top_medium"></div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_2-of-12">
+                                    <span style="text-decoration: line-through">${product.Price}</span>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div
+                                    class="slds-col slds-size_1-of-1 slds-medium-size_3-of-12 slds-p-horizontal_none"
+                                ></div>
+                                <!-- This is a small margin for the mobile UI -->
+                                <div class="slds-hide_medium slds-size_1-of-1 slds-var-p-top_medium"></div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_2-of-12">
+                                    <div class="slds-text-heading_small">
+                                        <strong>$ {product.PromoPrice}</strong>/mo
+                                    </div>
+                                </div>
+                            </template>
+                            <!-- This is a small margin for the mobile UI -->
+                            <div class="slds-show_medium slds-size_1-of-1 slds-var-p-top_medium"></div>
+
+                            <div class="slds-col slds-size_1-of-2 slds-medium-size_12-of-12">
+                                <template lwc:if={isGuestUser}>
+                                    <div class="slds-text-heading_small slds-text-align_right slds-m-right_small">
+                                        <a onclick={handleDescription} data-id={product.Id}>See Details</a>
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div class="slds-text-heading_small">
+                                        <a onclick={handleDescription} data-id={product.Id}>See Details</a>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div
+                                class="slds-col slds-var-p-top_medium slds-var-p-left_large slds-size_1-of-1 slds-medium-size_4-of-12"
+                            >
+                                <strong>Download Speed:</strong>&nbsp;
+                                <span style="color: #ff8200">{product.download} </span>
+                            </div>
+                            <div
+                                class="slds-col slds-var-p-top_medium slds-var-p-left_large slds-size_1-of-1 slds-medium-size_4-of-12"
+                            >
+                                <strong>Upload Speed:</strong>&nbsp;
+                                <span style="color: #ff8200">{product.upload} </span>
+                            </div>
+                            <div
+                                class="slds-col slds-var-p-top_medium slds-var-p-left_large slds-size_1-of-1 slds-medium-size_4-of-12"
+                            >
+                                <strong>Payment Recurrence:</strong> {product.PriceType}
+                            </div>
+
+                            <div class="slds-col slds-var-p-top_small slds-var-p-left_large slds-size_12-of-12">
+                                <lightning-formatted-rich-text
+                                    value={product.productHeader}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <div class="slds-col slds-m-top_small slds-var-p-left_large slds-size_12-of-12">
+                                <lightning-formatted-rich-text
+                                    value={product.productBullets}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <div class="slds-col slds-m-top_medium slds-var-p-left_large slds-size_12-of-12">
+                                <lightning-formatted-rich-text
+                                    value={product.internetHeader}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <div class="slds-col slds-m-top_small slds-var-p-left_large slds-size_12-of-12">
+                                <lightning-formatted-rich-text
+                                    value={product.internetBullets}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <div class="slds-col slds-m-top_medium slds-var-p-left_large slds-size_12-of-12">
+                                <lightning-formatted-rich-text
+                                    value={product.phoneHeader}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <div class="slds-col slds-m-top_small slds-var-p-left_large slds-size_12-of-12">
+                                <lightning-formatted-rich-text
+                                    value={product.phoneBullets}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <div class="slds-col slds-m-top_medium slds-var-p-left_large slds-size_12-of-12">
+                                <lightning-formatted-rich-text
+                                    value={product.mobileHeader}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <div class="slds-col slds-m-top_small slds-var-p-left_large slds-size_12-of-12">
+                                <lightning-formatted-rich-text
+                                    value={product.mobileBullets}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <template lwc:if={isGuestUser}>
+                                <div class="slds-col slds-m-top_small slds-var-p-left_large slds-size_12-of-12">
+                                    <lightning-formatted-text value={emailLabel} linkify></lightning-formatted-text>
+                                </div>
+                                <template lwc:if={product.broadbandLabel}>
+                                    <c-poe_lwc-broadband-label class="slds-size_1-of-1" broadband-label={product.url}>
+                                    </c-poe_lwc-broadband-label>
+                                </template>
+                                <template lwc:if={product.mobileLabel}>
+                                    <c-poe_lwc-broadband-label class="slds-size_1-of-1" broadband-label={product.url}>
+                                    </c-poe_lwc-broadband-label>
+                                </template>
+                            </template>
+                            <template lwc:else>
+                                <template lwc:if={product.broadbandLabel}>
+                                    <div class="slds-col slds-m-top_small slds-var-p-left_large slds-size_12-of-12">
+                                        <lightning-formatted-rich-text
+                                            value={product.broadbandLabel}
+                                        ></lightning-formatted-rich-text>
+                                    </div>
+                                </template>
+                                <template lwc:if={product.mobileLabel}>
+                                    <div class="slds-col slds-m-top_small slds-var-p-left_large slds-size_12-of-12">
+                                        <lightning-formatted-rich-text
+                                            value={product.mobileLabel}
+                                        ></lightning-formatted-rich-text>
+                                    </div>
+                                </template>
+                                <div class="slds-col slds-m-top_small slds-var-p-left_large slds-size_12-of-12">
+                                    <lightning-formatted-text value={emailLabel} linkify></lightning-formatted-text>
+                                </div>
+                            </template>
+                        </div>
+                    </span>
+                </label>
+            </span>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,129 @@
+<template>
+    <div
+        class="slds-box slds-card slds-var-m-bottom_small slds-size_12-of-12 slds-grid slds-wrap slds-var-p-horizontal_small"
+    >
+        <div
+            class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-text-align_center slds-var-m-bottom_x-small"
+            style="background-color: #ff8200; color: white"
+        >
+            Personal Information
+        </div>
+        <div class="slds-col slds-size_1-of-1 slds-grid slds-wrap slds-var-p-around_small">
+            <template lwc:if={showMethods}>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-radio-group
+                        name="method"
+                        label="Providing SSN or Driver's License:"
+                        onchange={handleSSNorDL}
+                        options={radioOptions}
+                        value={radioOption}
+                        class="slds-var-m-top_xxx-small"
+                        required="true"
+                        type="radio"
+                    ></lightning-radio-group>
+                </div>
+            </template>
+            <template lwc:if={showSSN}>
+                <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                    <div class="slds-var-p-around_xx-small">
+                        <lightning-input
+                            type="password"
+                            min-length="9"
+                            max-length="9"
+                            label="SSN"
+                            required
+                            value={ssn}
+                            name="ssn"
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                    <div class="slds-var-p-around_xx-small">
+                        <lightning-input
+                            type="password"
+                            min-length="9"
+                            max-length="9"
+                            label="Confirm SSN"
+                            required
+                            value={repeatSSN}
+                            name="repeatSSN"
+                            onchange={handleChange}
+                            onblur={handleSSNRepeatValidation}
+                            data-id="repeatSSN"
+                        ></lightning-input>
+                    </div>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                    <div class="slds-var-p-around_xx-small">
+                        <lightning-input
+                            type="text"
+                            label="Driver's License Number"
+                            required
+                            value={dlNumber}
+                            name="dlNumber"
+                            onchange={handleChange}
+                        >
+                        </lightning-input>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                    <div class="slds-var-p-around_xx-small">
+                        <lightning-combobox
+                            name="dlState"
+                            label="DL State"
+                            value={dlState}
+                            required
+                            options={states}
+                            onchange={handleChange}
+                        ></lightning-combobox>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2">
+                    <div class="slds-var-p-around_xx-small">
+                        <lightning-input
+                            type="date"
+                            date-style="short"
+                            label="DL Expiration Date"
+                            name="dlExpDate"
+                            value={dlExpDate}
+                            required
+                            onchange={handleChange}
+                            min={todayDate}
+                            message-when-range-underflow="Expiration date must be greater than today"
+                        ></lightning-input>
+                    </div></div
+            ></template>
+            <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2">
+                <div class="slds-var-p-around_xx-small">
+                    <lightning-input
+                        type="date"
+                        date-style="short"
+                        label="Date of Birth"
+                        required
+                        value={dob}
+                        name="dob"
+                        onchange={handleChange}
+                        max={maximumDOB}
+                        message-when-range-overflow="Must be over 18 years old"
+                    ></lightning-input>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid_align-end slds-size_12-of-12">
+            <div class="slds-col slds-var-p-right_small">
+                <lightning-button
+                    variant="brand"
+                    label="Finish"
+                    onclick={handleClick}
+                    disabled={noCompleteInformation}
+                ></lightning-button>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

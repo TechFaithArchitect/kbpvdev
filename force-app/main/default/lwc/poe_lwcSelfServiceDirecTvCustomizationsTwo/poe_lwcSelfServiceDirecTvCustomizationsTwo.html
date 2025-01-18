@@ -1,0 +1,74 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <a onclick={changeViewToServiceDirecTVPlanOne} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <h2>{title}</h2>
+                </div>
+
+                <div class="page-content no-padding-top">
+                    <div class="group-cards">
+                        <template lwc:if={showLanguageOptions}>
+                            <div class="card full-width">
+                                <img src={iconLangPreference} />
+                                <div class="card-content">
+                                    <h3>Language preferences</h3>
+                                    <p>
+                                        Your choice of language is integral to your viewing experience, and we provide
+                                        options to accommodate your preferences. Please select from one of these
+                                        available options.
+                                    </p>
+
+                                    <lightning-radio-group
+                                        name="LangPreference"
+                                        options={serviceDirecTVPlanTwoOptionsLang}
+                                        value={serviceDirecTVPlanTwoOptionsLangValue}
+                                        type="radio"
+                                        class="radio-two-options"
+                                        onchange={handleChange}
+                                    ></lightning-radio-group>
+                                </div>
+                            </div>
+                        </template>
+                        <template lwc:if={showConnectionOptions}>
+                            <div class="card full-width">
+                                <img src={iconConnectionPreference} />
+                                <div class="card-content">
+                                    <h3>Connection preferences</h3>
+                                    <p>
+                                        Select your preference: Choose 'Local Offers' to see deals available in your
+                                        area, or 'No Local Offers' to explore national deals and offers without local
+                                        restrictions.
+                                    </p>
+
+                                    <lightning-radio-group
+                                        name="ConnectionPreference"
+                                        options={serviceDirecTVPlanTwoOptionsConnection}
+                                        value={serviceDirecTVPlanTwoOptionsConnectionValue}
+                                        type="radio"
+                                        class="radio-two-options"
+                                        onchange={handleChange}
+                                    ></lightning-radio-group>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <a onclick={handleNext} class={nextBtnDesktopClass} data-id="next"> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <a onclick={changeViewToServiceDirecTVPlanOne} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <a onclick={handleNext} class={nextBtnMobileClass} data-id="next"> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

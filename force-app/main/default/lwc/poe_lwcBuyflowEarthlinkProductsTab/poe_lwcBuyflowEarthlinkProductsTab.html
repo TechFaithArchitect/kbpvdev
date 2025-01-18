@@ -1,0 +1,218 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="earthlink"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_x-small">
+            <template lwc:if={showSBS}>
+                <c-poe_lwc-buyflow-earthlink-s-b-s-button
+                    ongoback={hideSBS}
+                    record-id={recordId}
+                ></c-poe_lwc-buyflow-earthlink-s-b-s-button>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-wrap slds-gutters slds-p-around_small">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                        <div class="slds-text-heading_medium slds-m-bottom_medium">
+                            <lightning-formatted-text 
+                                value={labels.PRODUCT_SELECTION_TITLE}
+                            ></lightning-formatted-text>
+                        </div>
+                        <div class="slds-m-bottom_large slds-grid slds-wrap slds-grid_align-spread">
+                            <template lwc:if={hasOptions}
+                                ><div class="slds-text-heading_small">
+                                    <lightning-formatted-text 
+                                        value={productType}
+                                    ></lightning-formatted-text>
+                                </div>
+                            </template>
+                            <div class="slds-grid">
+                                <template lwc:if={hasMultiplePromoCodes}>
+                                    <div class="slds-col">
+                                        <lightning-radio-group
+                                            label={labels.SALE_TYPE_SELECTION_FIELD_LABEL}
+                                            options={promoCodes}
+                                            value={selectedPromoCode}
+                                            onchange={handleSaleTypeChange}
+                                        ></lightning-radio-group>
+                                    </div>
+                                </template>
+                                <template lwc:if={hasOptions}>
+                                    <div class="slds-col">
+                                        <lightning-radio-group
+                                            label={labels.PRODUCT_TYPE_SELECTION_FIELD_LABEL}
+                                            options={productsOptions}
+                                            value={selectedOptionValue}
+                                            onchange={handleChangeProductType}
+                                        ></lightning-radio-group>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                        <template lwc:if={isResidentialSale}>
+                            <div class="slds-m-bottom_xx-small slds-grid slds-wrap slds-grid_align-end">
+                                <lightning-button
+                                    variant="brand"
+                                    label={labels.EMAIL_BROADBAND_LABELS_BUTTON_LABEL}
+                                    onclick={handleBroadbandModal}
+                                ></lightning-button>
+                            </div>
+                        </template>
+                        <div class="slds-m-bottom_large slds-grid slds-wrap slds-grid_align-end"></div>
+                        <div class="slds-form-element__control">
+                            <template for:each={products} for:item="product">
+                                <span key={product.Id} class="slds-radio">
+                                    <input
+                                        type="radio"
+                                        id={product.Id}
+                                        value={product.Id}
+                                        checked={product.isChecked}
+                                        name="products"
+                                        onchange={handlePriceChange}
+                                    />
+                                    <label class="slds-radio__label" for={product.Id}>
+                                        <span class="slds-form-element__label">
+                                            <div class="slds-box slds-grid slds-wrap">
+                                                <div class="slds-col slds-size_1-of-12 slds-align_absolute-center">
+                                                    <span class="slds-radio_faux slds-m-right_none"></span>
+                                                </div>
+                                                <div class="slds-col slds-size_10-of-12 slds-small-size_7-of-12">
+                                                    <b>
+                                                        <lightning-formatted-text 
+                                                            value={product.Name}
+                                                        ></lightning-formatted-text>
+                                                    </b>
+                                                    <template lwc:if={product.hasTerms}>
+                                                        &nbsp;&nbsp;&nbsp;<a
+                                                                onclick={handleDescription}
+                                                                data-id={product.Id}
+                                                                data-terms={product.terms}
+                                                            >
+                                                                {labels.SEE_DETAILS_BUTTON_LABEL}
+                                                            </a>
+                                                    </template>
+                                                </div>
+                                                <div class="slds-hide_small slds-m-top_x-small slds-size_1-of-1"></div>
+                                                <div
+                                                    class="slds-col slds-size_1-of-1 slds-small-size_4-of-12 slds-text-align_right"
+                                                >
+                                                    $ {product.Price} {product.PriceType}
+                                                </div>
+                                                <div
+                                                    class="slds-col slds-p-top_medium slds-p-left_large slds-size_2-of-12 slds-show_large"
+                                                >
+                                                    <lightning-formatted-text
+                                                        value={labels.PRODUCT_DESCRIPTION_LABEL}
+                                                    ></lightning-formatted-text>
+                                                </div>
+                                                <div
+                                                    class="slds-col slds-size_1-of-1 slds-large-size_10-of-12 slds-p-top_medium"
+                                                >
+                                                    {product.Description} {product.Speed}
+                                                </div>
+                                                <template lwc:if={isGuestUser}>
+                                                    <template lwc:if={product.broadbandLabel}>
+                                                        <c-poe_lwc-broadband-label 
+                                                            class="slds-size_1-of-1" 
+                                                            broadband-label={product.broadbandLabel}
+                                                            template=true
+                                                        ></c-poe_lwc-broadband-label>
+                                                    </template>
+                                                </template>
+                                            </div>
+                                        </span>
+                                    </label>
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-earthlink-cart cart={cart}> </c-poe_lwc-buyflow-earthlink-cart>
+                        <template lwc:if={isGuestUser}></template>
+                        <template lwc:else>
+                            <button
+                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                onclick={sbsHandler}
+                            >
+                                <lightning-formatted-text
+                                    value={labels.T_CHART_BUTTON_LABEL}
+                                ></lightning-formatted-text>
+                            </button>
+                        </template>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    show-cancel="true"
+                    show-previous="true"
+                    disable-next={disableNext}
+                    oncancel={handleCancel}
+                    onprevious={handlePrevious}
+                    onnext={handleShowGeneralDisclaimer}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showModal}>
+        <c-poe_lwc-buyflow-earthlink-products-modal
+            suggested-addresses={suggestedAddresses}
+            promo-code={selectedPromoCode}
+            onclose={hideModal}
+            onconfirm={handleWireProducts}
+            onlogerror={handleChildLogError}
+            is-guest-user={isGuestUser}
+        ></c-poe_lwc-buyflow-earthlink-products-modal>
+    </template>
+    <template lwc:if={showProductDescription}>
+        <c-poe_lwc-buyflow-earthlink-product-description-modal
+            onclosedescription={handleDescription}
+            description={productDescription}
+        ></c-poe_lwc-buyflow-earthlink-product-description-modal>
+    </template>
+    <template lwc:if={showDisclaimer}>
+        <c-poe_lwc-buyflow-windstream-products-disclaimer-modal
+            disclaimer={productDisclaimer}
+            onagree={handleDisclaimerAgree}
+            oncancelorder={handleCancelAgreement}
+        ></c-poe_lwc-buyflow-windstream-products-disclaimer-modal>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-title={labels.SELF_SERVICE_VALIDATE_LEAVING_TITLE}
+            modal-body={labels.SELF_SERVICE_VALIDATE_LEAVING_MESSAGE}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showBroadbandModal}>
+        <c-poe_lwc-buyflow-earthlink-email-label-modal
+            products={products}
+            onclose={handleBroadbandModal}
+            promo-code={selectedPromoCode}
+            log-id={logId}
+            onlogerror={handleChildLogError}
+            is-guest-user={isGuestUser}
+            broadband-labels={broadbandLabels}
+            onbroadbandlabelupdate={handleBroadbandUpdate}
+        ></c-poe_lwc-buyflow-earthlink-email-label-modal>
+    </template>
+</template>

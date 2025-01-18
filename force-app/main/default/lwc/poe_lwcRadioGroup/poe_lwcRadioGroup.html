@@ -1,0 +1,39 @@
+<template>
+    <fieldset class="slds-form-element">
+    <legend class="slds-form-element__legend slds-form-element__label">
+        <lightning-formatted-text
+            value={label}
+        >
+        </lightning-formatted-text>
+    </legend>
+    <div class="slds-form-element__control">
+        <template for:each={options} for:item="opt">
+            <span class="slds-radio slds-p-bottom_small" key={opt.value}>
+                <input 
+                    class="slds-col" 
+                    type="radio" 
+                    id={opt.value} 
+                    value={opt.value} 
+                    name={opt.label} 
+                    checked={opt.checked}
+                    oninput={handleInput}
+                />
+                <label class="slds-radio__label slds-grid" for={opt.value}>
+                    <span class="slds-radio_faux slds-col slds-size_1-of-12 slds-m-top_xxx-small"></span>
+                    <span class="slds-form-element__label slds-col">
+                        <lightning-formatted-text
+                            value={opt.label}
+                        >
+                        </lightning-formatted-text>
+                        <br>
+                        <lightning-formatted-text
+                            value={opt.description}
+                        >
+                        </lightning-formatted-text>
+                    </span>
+                </label>
+            </span>
+        </template>
+    </div>
+    </fieldset>
+</template>

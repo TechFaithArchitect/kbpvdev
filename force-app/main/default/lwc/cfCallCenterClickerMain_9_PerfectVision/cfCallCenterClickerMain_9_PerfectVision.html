@@ -1,0 +1,193 @@
+<template>
+            <div class="slds-grid slds-wrap slds-is-relative ">
+            <div style="position: fixed;z-index: 999999;top: 0;right: 0;">
+  <vlocity_cmt-toast class="flexcard-toast-element" theme="slds" title="" message="" styletype=""> </vlocity_cmt-toast>
+</div>
+            <div if:true={showLoader} class="slds-is-absolute vloc-loader_override" style="height: 100%; width: 100%; min-height:50px; background: transparent; z-index: 99;">
+  <div>
+   <vlocity_cmt-spinner
+      variant="brand"
+      alternative-text="Loading content..."
+      size="medium"
+      theme="slds"
+      ></vlocity_cmt-spinner>
+  </div>
+</div>
+            <template if:false={hasPermission}>
+              You don't have required permissions to view this card.
+            </template>
+            <template if:true={hasPermission}>
+              <template if:true={hasRecords}>
+                        <template for:each={_records} for:item="record" for:index="rindex">
+                            <vlocity_cmt-flex-card-state if:true={record}  key={record._flex.uniqueKey} data-recordid={record.Id} record={record} data-statue="true"  data-index="0" data-rindex={rindex} class="cf-vlocity-state-0 cf-vlocity-state slds-size_12-of-12 "  tracking-obj={_childCardTrackingObj} >
+      <div if:true={cardLoaded} class="slds-grid slds-wrap slds-card " style="      
+         ">
+          <div data-style-id="state0element0" class="slds-col   slds-size_12-of-12 " data-rindex={rindex} style="" ><vlocity_cmt-output-field data-style-id="state0element0_child"   record={record}  card={card}  merge-field="%3Cdiv%20class=%22slds-text-align_center%22%3E%3Cspan%20style=%22font-size:%2014pt;%20color:%20#e03e2d;%22%3EUser%20blocked%20for%20Security%20Reasons%3C/span%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element1" class="slds-col   slds-p-around_x-small  slds-size_12-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state0element1_child"  card={card}  record={record}  label="Block"  collapsible="false"  collapsed-by-default="false"  theme="slds"  ><div class="slds-grid slds-wrap">
+          
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element2" class="slds-col   slds-size_12-of-12" data-rindex={rindex} style="" >
+    <vlocity_cmt-custom-lwc-wrapper class="" element-name="c-poe-get-clicker-localization-component" property='\{}' data-rindex={rindex} records={records} record={record} record-id={recordId} card={card} ><c-poe-get-clicker-localization-component  ></c-poe-get-clicker-localization-component></vlocity_cmt-custom-lwc-wrapper>
+    </div>
+        </div>
+      </vlocity_cmt-flex-card-state><vlocity_cmt-flex-card-state if:true={record}  key={record._flex.uniqueKey} data-recordid={record.Id} record={record} data-statue="true"  data-index="1" data-rindex={rindex} class="cf-vlocity-state-1 cf-vlocity-state slds-size_12-of-12 "  tracking-obj={_childCardTrackingObj} >
+      <div if:true={cardLoaded} class="slds-grid slds-wrap slds-card " style="      
+         ">
+          <div data-style-id="state1element0" class="slds-col   slds-p-around_x-small  slds-size_12-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state1element0_child"  card={card}  record={record}  label="Block"  collapsible="false"  collapsed-by-default="false"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state1element0block_element0" class="slds-col   slds-p-around_x-small  slds-size_4-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state1element0block_element0_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element0block_element1" class="slds-col   slds-text-align_center slds-p-around_x-small  slds-size_4-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state1element0block_element1_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state1element0block_element1block_element0" class="slds-col  slds-p-vertical_large slds-p-horizontal_medium  slds-size_12-of-12  " data-rindex={rindex} style="      
+         --slds-c-input-line-height: 4rem;
+--slds-c-input-radius-border: 0.75rem;
+--slds-c-input-spacing-inline-end: 2.5rem;
+--slds-c-input-spacing-inline-start: 2.5rem;" ><vlocity_cmt-base-input-element data-style-id="state1element0block_element1block_element0_child"   card={card}  record={record}  type="typeahead"  property-obj='\{"label":"Enter Zip Code to Begin Sale","type":"typeahead","options":[],"fieldBinding":"{zipCode}","placeholder":"Zip Code","required":true,"imask":"99999","value":""}'  theme="slds"  ></vlocity_cmt-base-input-element>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element0block_element2" class="slds-col   slds-p-around_x-small slds-size_4-of-12  " data-rindex={rindex} style="" >
+    <vlocity_cmt-block data-style-id="state1element0block_element2_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element0block_element3" class="slds-col   slds-p-around_x-small  slds-size_4-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state1element0block_element3_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element0block_element4" class="slds-col   slds-p-around_x-small  slds-size_4-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state1element0block_element4_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state1element0block_element4block_element0" class="slds-col  slds-text-align_center slds-p-vertical_large slds-p-horizontal_medium  slds-size_12-of-12  condition-element" data-rindex={rindex} style="      
+         --slds-c-button-brand-color-background: #FF8200;
+--slds-c-button-brand-color-border: #FF8200;
+--slds-c-button-line-height: 4rem;
+--slds-c-button-radius-border: 0.75rem;
+--slds-c-button-outline-brand-spacing-inline-end: 2.5rem;
+--slds-c-button-outline-brand-spacing-inline-start: 2.5rem;"  data-conditions='\{"id":"state-condition-object","isParent":true,"group":[{"id":"state-new-group-1","group":[{"id":"state-new-condition-0","field":"zipCode","operator":"==","value":"undefined","type":"custom","hasMergeField":false},{"id":"state-new-condition-13","field":"zipCode","operator":"==","value":"null","type":"custom","hasMergeField":false,"logicalOperator":"||"},{"id":"state-new-condition-18","field":"zipCode","operator":"==","value":"","type":"custom","hasMergeField":false,"logicalOperator":"||"}]}]}' ><vlocity_cmt-flex-action data-style-id="state1element0block_element4block_element0_child"  tracking-obj={_childCardTrackingObj}  class= "state1element0block_element4block_element0_child flexActionElement" 
+        data-action-element-class="state1element0block_element4block_element0_child" onexecuteaction={performAction} data-show-spinner="false"
+        data-element-label="block1block3clone0action0clone0"   state-obj={record}  card={card}  record={record}  label="Begin Sale"  icon-name="standard-default"  action-list='\[{"key":"1682019585466-2gbq1b9i0","label":"Display Error","draggable":false,"isOpen":true,"card":"{card}","stateAction":{"id":"flex-action-1682087579824","type":"Flyout","displayName":"Action","vlocityIcon":"standard-default","openUrlIn":"Current Window","flyoutType":"childCard","openFlyoutIn":"Modal","channelName":"close_modal","cardName":"clickerNoZipError","flyoutLwc":"clickerNoZipError"},"actionIndex":0}]'  hide-action-icon="true"  display-as-button="true"  button-variant="outline-brand"  flyout-details='\{"openFlyoutIn":"Modal"}'  styles='\{"label":{"fontSize":"1.5rem"}}'  data-conditions='\{"id":"state-condition-object","isParent":true,"group":[{"id":"state-new-group-1","group":[{"id":"state-new-condition-0","field":"zipCode","operator":"==","value":"undefined","type":"custom","hasMergeField":false},{"id":"state-new-condition-13","field":"zipCode","operator":"==","value":"null","type":"custom","hasMergeField":false,"logicalOperator":"||"},{"id":"state-new-condition-18","field":"zipCode","operator":"==","value":"","type":"custom","hasMergeField":false,"logicalOperator":"||"}]}]}'  flyout-channel="close_modal"  theme="slds"  ><div slot="modalflyout" class="block1block3clone0action0clone0action0" > <c-cf-clicker-no-zip-error data-style-id="state1element0block_element4block_element0_child"  parent-record={record}  records={_records}  parent-mergefields={card}  record-id={recordId}  object-api-name={objectApiName}  parent-attribute='\{}'  ></c-cf-clicker-no-zip-error></div></vlocity_cmt-flex-action>
+      </div><div data-style-id="state1element0block_element4block_element1" class="slds-col  slds-text-align_center slds-p-vertical_large slds-p-horizontal_medium  slds-size_12-of-12  condition-element" data-rindex={rindex} style="      
+         --slds-c-button-brand-color-background: #FF8200;
+--slds-c-button-brand-color-border: #FF8200;
+--slds-c-button-line-height: 4rem;
+--slds-c-button-radius-border: 0.75rem;
+--slds-c-button-brand-spacing-inline-end: 2.5rem;
+--slds-c-button-brand-spacing-inline-start: 2.5rem;"  data-conditions='\{"id":"state-condition-object","isParent":true,"group":[{"id":"state-new-condition-19","field":"zipCode","operator":"!=","value":"undefined","type":"custom","hasMergeField":false},{"id":"state-new-condition-36","field":"zipCode","operator":"!=","value":"null","type":"custom","hasMergeField":false,"logicalOperator":"&&"},{"id":"state-new-condition-88","field":"zipCode","operator":"!=","value":"","type":"custom","hasMergeField":false,"logicalOperator":"&&"}]}' ><vlocity_cmt-flex-action data-style-id="state1element0block_element4block_element1_child"  tracking-obj={_childCardTrackingObj}  class= "state1element0block_element4block_element1_child flexActionElement" 
+        data-action-element-class="state1element0block_element4block_element1_child" onexecuteaction={performAction} data-show-spinner="false"
+        data-element-label="beginsale"   state-obj={record}  card={card}  record={record}  label="Begin Sale"  icon-name="standard-default"  action-list='\[{"stateAction":{"targetParams":{"clickerOrigin":"phonesales","zipCode":"{zipCode}"},"hasExtraParams":true,"Community Named Page":{"targetName":"Addres_Serviceability_Check__c"},"targetType":"Community Named Page","id":"flex-action-1683223707670","type":"Custom","openUrlIn":"Current Window","actionConditions":{"id":"state-condition-object","isParent":true,"group":[{"id":"state-new-condition-16","field":"zipCode","operator":"!=","value":"","type":"custom","hasMergeField":false},{"id":"state-new-condition-97","field":"zipCode","operator":"!=","value":"undefined","type":"custom","hasMergeField":false,"logicalOperator":"&&"},{"id":"state-new-condition-98","field":"zipCode","operator":"!=","value":"null","type":"custom","hasMergeField":false,"logicalOperator":"&&"}]}},"key":"1649806304407-8fuvvfj6c","label":"Open Address Serviceability Check","draggable":false,"isOpen":true,"actionIndex":0}]'  hide-action-icon="true"  display-as-button="true"  button-variant="brand"  flyout-details='\{}'  styles='\{"label":{"fontSize":"1.5rem"}}'  data-conditions='\{"id":"state-condition-object","isParent":true,"group":[{"id":"state-new-condition-19","field":"zipCode","operator":"!=","value":"undefined","type":"custom","hasMergeField":false},{"id":"state-new-condition-36","field":"zipCode","operator":"!=","value":"null","type":"custom","hasMergeField":false,"logicalOperator":"&&"},{"id":"state-new-condition-88","field":"zipCode","operator":"!=","value":"","type":"custom","hasMergeField":false,"logicalOperator":"&&"}]}'  theme="slds"  ></vlocity_cmt-flex-action>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element0block_element5" class="slds-col   slds-p-around_x-small slds-size_4-of-12  " data-rindex={rindex} style="" >
+    <vlocity_cmt-block data-style-id="state1element0block_element5_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          
+        </div></vlocity_cmt-block>
+    </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element1" class="slds-col   slds-size_12-of-12" data-rindex={rindex} style="" >
+    <vlocity_cmt-custom-lwc-wrapper class="" element-name="c-poe-get-clicker-localization-component" property='\{}' data-rindex={rindex} records={records} record={record} record-id={recordId} card={card} ><c-poe-get-clicker-localization-component  ></c-poe-get-clicker-localization-component></vlocity_cmt-custom-lwc-wrapper>
+    </div>
+        </div>
+      </vlocity_cmt-flex-card-state>
+                        </template>
+                      </template>
+                      <template if:false={hasRecords}>
+                            <vlocity_cmt-flex-card-state  record={record} data-statue="false"  data-index="0" data-rindex={rindex} class="cf-vlocity-state-0 cf-vlocity-state slds-size_12-of-12 "  tracking-obj={_childCardTrackingObj} >
+      <div if:true={cardLoaded} class="slds-grid slds-wrap slds-card " style="      
+         ">
+          <div data-style-id="state0element0" class="slds-col   slds-size_12-of-12 " data-rindex={rindex} style="" ><vlocity_cmt-output-field data-style-id="state0element0_child"   record={record}  card={card}  merge-field="%3Cdiv%20class=%22slds-text-align_center%22%3E%3Cspan%20style=%22font-size:%2014pt;%20color:%20#e03e2d;%22%3EUser%20blocked%20for%20Security%20Reasons%3C/span%3E%3C/div%3E"  theme="slds"  ></vlocity_cmt-output-field>
+      </div><div data-style-id="state0element1" class="slds-col   slds-p-around_x-small  slds-size_12-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state0element1_child"  card={card}  record={record}  label="Block"  collapsible="false"  collapsed-by-default="false"  theme="slds"  ><div class="slds-grid slds-wrap">
+          
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state0element2" class="slds-col   slds-size_12-of-12" data-rindex={rindex} style="" >
+    <vlocity_cmt-custom-lwc-wrapper class="" element-name="c-poe-get-clicker-localization-component" property='\{}' data-rindex={rindex} records={records} record={record} record-id={recordId} card={card} ><c-poe-get-clicker-localization-component  ></c-poe-get-clicker-localization-component></vlocity_cmt-custom-lwc-wrapper>
+    </div>
+        </div>
+      </vlocity_cmt-flex-card-state><vlocity_cmt-flex-card-state  record={record} data-statue="false"  data-index="1" data-rindex={rindex} class="cf-vlocity-state-1 cf-vlocity-state slds-size_12-of-12 "  tracking-obj={_childCardTrackingObj} >
+      <div if:true={cardLoaded} class="slds-grid slds-wrap slds-card " style="      
+         ">
+          <div data-style-id="state1element0" class="slds-col   slds-p-around_x-small  slds-size_12-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state1element0_child"  card={card}  record={record}  label="Block"  collapsible="false"  collapsed-by-default="false"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state1element0block_element0" class="slds-col   slds-p-around_x-small  slds-size_4-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state1element0block_element0_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element0block_element1" class="slds-col   slds-text-align_center slds-p-around_x-small  slds-size_4-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state1element0block_element1_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state1element0block_element1block_element0" class="slds-col  slds-p-vertical_large slds-p-horizontal_medium  slds-size_12-of-12  " data-rindex={rindex} style="      
+         --slds-c-input-line-height: 4rem;
+--slds-c-input-radius-border: 0.75rem;
+--slds-c-input-spacing-inline-end: 2.5rem;
+--slds-c-input-spacing-inline-start: 2.5rem;" ><vlocity_cmt-base-input-element data-style-id="state1element0block_element1block_element0_child"   card={card}  record={record}  type="typeahead"  property-obj='\{"label":"Enter Zip Code to Begin Sale","type":"typeahead","options":[],"fieldBinding":"{zipCode}","placeholder":"Zip Code","required":true,"imask":"99999","value":""}'  theme="slds"  ></vlocity_cmt-base-input-element>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element0block_element2" class="slds-col   slds-p-around_x-small slds-size_4-of-12  " data-rindex={rindex} style="" >
+    <vlocity_cmt-block data-style-id="state1element0block_element2_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element0block_element3" class="slds-col   slds-p-around_x-small  slds-size_4-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state1element0block_element3_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element0block_element4" class="slds-col   slds-p-around_x-small  slds-size_4-of-12  " data-rindex={rindex} style="      
+         " >
+    <vlocity_cmt-block data-style-id="state1element0block_element4_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          <div data-style-id="state1element0block_element4block_element0" class="slds-col  slds-text-align_center slds-p-vertical_large slds-p-horizontal_medium  slds-size_12-of-12  condition-element" data-rindex={rindex} style="      
+         --slds-c-button-brand-color-background: #FF8200;
+--slds-c-button-brand-color-border: #FF8200;
+--slds-c-button-line-height: 4rem;
+--slds-c-button-radius-border: 0.75rem;
+--slds-c-button-outline-brand-spacing-inline-end: 2.5rem;
+--slds-c-button-outline-brand-spacing-inline-start: 2.5rem;"  data-conditions='\{"id":"state-condition-object","isParent":true,"group":[{"id":"state-new-group-1","group":[{"id":"state-new-condition-0","field":"zipCode","operator":"==","value":"undefined","type":"custom","hasMergeField":false},{"id":"state-new-condition-13","field":"zipCode","operator":"==","value":"null","type":"custom","hasMergeField":false,"logicalOperator":"||"},{"id":"state-new-condition-18","field":"zipCode","operator":"==","value":"","type":"custom","hasMergeField":false,"logicalOperator":"||"}]}]}' ><vlocity_cmt-flex-action data-style-id="state1element0block_element4block_element0_child"  tracking-obj={_childCardTrackingObj}  class= "state1element0block_element4block_element0_child flexActionElement" 
+        data-action-element-class="state1element0block_element4block_element0_child" onexecuteaction={performAction} data-show-spinner="false"
+        data-element-label="block1block3clone0action0clone0"   state-obj={record}  card={card}  record={record}  label="Begin Sale"  icon-name="standard-default"  action-list='\[{"key":"1682019585466-2gbq1b9i0","label":"Display Error","draggable":false,"isOpen":true,"card":"{card}","stateAction":{"id":"flex-action-1682087579824","type":"Flyout","displayName":"Action","vlocityIcon":"standard-default","openUrlIn":"Current Window","flyoutType":"childCard","openFlyoutIn":"Modal","channelName":"close_modal","cardName":"clickerNoZipError","flyoutLwc":"clickerNoZipError"},"actionIndex":0}]'  hide-action-icon="true"  display-as-button="true"  button-variant="outline-brand"  flyout-details='\{"openFlyoutIn":"Modal"}'  styles='\{"label":{"fontSize":"1.5rem"}}'  data-conditions='\{"id":"state-condition-object","isParent":true,"group":[{"id":"state-new-group-1","group":[{"id":"state-new-condition-0","field":"zipCode","operator":"==","value":"undefined","type":"custom","hasMergeField":false},{"id":"state-new-condition-13","field":"zipCode","operator":"==","value":"null","type":"custom","hasMergeField":false,"logicalOperator":"||"},{"id":"state-new-condition-18","field":"zipCode","operator":"==","value":"","type":"custom","hasMergeField":false,"logicalOperator":"||"}]}]}'  flyout-channel="close_modal"  theme="slds"  ><div slot="modalflyout" class="block1block3clone0action0clone0action0" > <c-cf-clicker-no-zip-error data-style-id="state1element0block_element4block_element0_child"  parent-record={record}  records={_records}  parent-mergefields={card}  record-id={recordId}  object-api-name={objectApiName}  parent-attribute='\{}'  ></c-cf-clicker-no-zip-error></div></vlocity_cmt-flex-action>
+      </div><div data-style-id="state1element0block_element4block_element1" class="slds-col  slds-text-align_center slds-p-vertical_large slds-p-horizontal_medium  slds-size_12-of-12  condition-element" data-rindex={rindex} style="      
+         --slds-c-button-brand-color-background: #FF8200;
+--slds-c-button-brand-color-border: #FF8200;
+--slds-c-button-line-height: 4rem;
+--slds-c-button-radius-border: 0.75rem;
+--slds-c-button-brand-spacing-inline-end: 2.5rem;
+--slds-c-button-brand-spacing-inline-start: 2.5rem;"  data-conditions='\{"id":"state-condition-object","isParent":true,"group":[{"id":"state-new-condition-19","field":"zipCode","operator":"!=","value":"undefined","type":"custom","hasMergeField":false},{"id":"state-new-condition-36","field":"zipCode","operator":"!=","value":"null","type":"custom","hasMergeField":false,"logicalOperator":"&&"},{"id":"state-new-condition-88","field":"zipCode","operator":"!=","value":"","type":"custom","hasMergeField":false,"logicalOperator":"&&"}]}' ><vlocity_cmt-flex-action data-style-id="state1element0block_element4block_element1_child"  tracking-obj={_childCardTrackingObj}  class= "state1element0block_element4block_element1_child flexActionElement" 
+        data-action-element-class="state1element0block_element4block_element1_child" onexecuteaction={performAction} data-show-spinner="false"
+        data-element-label="beginsale"   state-obj={record}  card={card}  record={record}  label="Begin Sale"  icon-name="standard-default"  action-list='\[{"stateAction":{"targetParams":{"clickerOrigin":"phonesales","zipCode":"{zipCode}"},"hasExtraParams":true,"Community Named Page":{"targetName":"Addres_Serviceability_Check__c"},"targetType":"Community Named Page","id":"flex-action-1683223707670","type":"Custom","openUrlIn":"Current Window","actionConditions":{"id":"state-condition-object","isParent":true,"group":[{"id":"state-new-condition-16","field":"zipCode","operator":"!=","value":"","type":"custom","hasMergeField":false},{"id":"state-new-condition-97","field":"zipCode","operator":"!=","value":"undefined","type":"custom","hasMergeField":false,"logicalOperator":"&&"},{"id":"state-new-condition-98","field":"zipCode","operator":"!=","value":"null","type":"custom","hasMergeField":false,"logicalOperator":"&&"}]}},"key":"1649806304407-8fuvvfj6c","label":"Open Address Serviceability Check","draggable":false,"isOpen":true,"actionIndex":0}]'  hide-action-icon="true"  display-as-button="true"  button-variant="brand"  flyout-details='\{}'  styles='\{"label":{"fontSize":"1.5rem"}}'  data-conditions='\{"id":"state-condition-object","isParent":true,"group":[{"id":"state-new-condition-19","field":"zipCode","operator":"!=","value":"undefined","type":"custom","hasMergeField":false},{"id":"state-new-condition-36","field":"zipCode","operator":"!=","value":"null","type":"custom","hasMergeField":false,"logicalOperator":"&&"},{"id":"state-new-condition-88","field":"zipCode","operator":"!=","value":"","type":"custom","hasMergeField":false,"logicalOperator":"&&"}]}'  theme="slds"  ></vlocity_cmt-flex-action>
+      </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element0block_element5" class="slds-col   slds-p-around_x-small slds-size_4-of-12  " data-rindex={rindex} style="" >
+    <vlocity_cmt-block data-style-id="state1element0block_element5_child"  record={record}  card={card}  collapsed-by-default="false"  collapsible="false"  label="Block"  theme="slds"  ><div class="slds-grid slds-wrap">
+          
+        </div></vlocity_cmt-block>
+    </div>
+        </div></vlocity_cmt-block>
+    </div><div data-style-id="state1element1" class="slds-col   slds-size_12-of-12" data-rindex={rindex} style="" >
+    <vlocity_cmt-custom-lwc-wrapper class="" element-name="c-poe-get-clicker-localization-component" property='\{}' data-rindex={rindex} records={records} record={record} record-id={recordId} card={card} ><c-poe-get-clicker-localization-component  ></c-poe-get-clicker-localization-component></vlocity_cmt-custom-lwc-wrapper>
+    </div>
+        </div>
+      </vlocity_cmt-flex-card-state>
+                      </template>
+            </template>
+            <template if:true={hasError}>
+            {error}
+            </template>
+            
+      <vlocity_cmt-action action-wrapperclass="slds-hide" re-render-flyout class="action-trigger slds-col" onupdateos={updateOmniscript} onselectcards={updateSelectedCards} onsetvalue={updateAction} onfireactionevent={actionEvtHandler}>
+      
+      </vlocity_cmt-action>
+  
+            <vlocity_cmt-action class="execute-action" re-render-flyout action-wrapperclass="slds-hide" onupdateos={updateOmniscript} onselectcards={updateSelectedCards} onsetvalue={updateAction} onfireactionevent={actionEvtHandler}>
+            
+            </vlocity_cmt-action>
+            </div>
+          </template>

@@ -1,0 +1,71 @@
+<template>
+    <template if:true={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template if:false={showCollateral}>
+        <div class="slds-grid slds-grid_align-end">
+            <div class="slds-col">
+                <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+            </div>
+        </div>
+        <div
+            class="slds-box slds-theme_default slds-m-around_large slds-p-around_large slds-grid slds-wrap slds-grid_vertical slds-grid_vertical-align-center"
+        >
+            <div class="slds-col slds-grid slds-size_12-of-12 slds-grid_align-center slds-m-vertical_small">
+                <div class="slds-text-heading_large slds-text-align_center" style="color: #00c6b7">
+                    Order Completed Successfully
+                </div>
+                <lightning-icon
+                    icon-name="action:approval"
+                    alternative-text="icon"
+                    size="small"
+                    class="slds-m-horizontal_small"
+                ></lightning-icon>
+            </div>
+            <div class="slds-col slds-size_4-of-12 slds-text-heading_small">
+                <b>Reference Number:</b> {referenceNumber}
+            </div>
+            <div class="slds-col slds-size_4-of-12 slds-text-heading_small">
+                <b>Confirmation Number:</b> {orderNumber}
+            </div>
+            <template if:true={hasReturnUrl}>
+                <button
+                    class="slds-button slds-m-top_large slds-button_brand slds-button_stretch successButtons"
+                    onclick={returnToUrlHandler}
+                >
+                    Continue
+                </button>
+            </template>
+            <template if:false={hasReturnUrl}>
+                <button
+                    class="slds-button slds-m-top_large slds-button_brand slds-button_stretch successButtons"
+                    onclick={newOpportunityHandler}
+                >
+                    New Product
+                </button>
+                <button
+                    class="slds-button slds-m-top_small slds-m-bottom_large slds-button_brand slds-button_stretch successButtons"
+                    onclick={homeHandler}
+                >
+                    New Customer
+                </button>
+            </template>
+        </div>
+    </template>
+    <template if:true={showSignature}>
+        <c-poe_lwc-buyflow-signature-modal
+            record-id={recordId}
+            program="EarthLink"
+            onsave={handleSignatureDone}
+            name={name}
+            address={address}
+            onclose={handleSignatureCancel}
+        ></c-poe_lwc-buyflow-signature-modal>
+    </template>
+    <template if:true={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

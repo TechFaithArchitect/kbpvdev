@@ -1,0 +1,212 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider="frontier">
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <h2 class="slds-m-bottom_medium">{labels.selfServiceConfigurationsTabTitle}</h2>
+                    <form class="slds-m-bottom_medium">
+                        <div class="form-header router-header">
+                            <h3>{labels.selfServiceConfigurationsRouterTitle}</h3>
+                            <p>Choose one of the available routers for your {productName} plan</p>
+                        </div>
+                        <div class="form-content router-body">
+                            <template lwc:if={showRouters}>
+                                <div class="form-group">
+                                    <lightning-select
+                                        name="routerOptions"
+                                        label="Router Options"
+                                        value={routerOption}
+                                        class="label-semi-bold"
+                                        onchange={handleRouter}
+                                        options={routerOptions}
+                                        variant="label-hidden"
+                                        required
+                                    ></lightning-select>
+                                </div>
+                            </template>
+                            <template lwc:if={showIncludedRouters}>
+                                <template for:each={includedRouters} for:item="router">
+                                    <div class="form-group" key={router.value}>
+                                        <lightning-input
+                                            type="checkbox"
+                                            label={router.label}
+                                            checked
+                                            disabled
+                                        ></lightning-input>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </form>
+                </div>
+                <div class="page-content no-padding-top">
+                    <form class="slds-m-bottom_medium">
+                        <div class="form-header">
+                            <img align="left" src={iconFormExtra} />
+
+                            <h3>{labels.selfServiceConfigurationsTabSubTitle}</h3>
+                            <p>Get the most out of your new fiber internet with these optional add-ons</p>
+                        </div>
+                        <div class="form-content">
+                            <template lwc:if={hasOffers}>
+                                <template lwc:if={hasYoutube}>
+                                    <div class="form-group">
+                                        <lightning-input
+                                            class="label-semi-bold"
+                                            type="toggle"
+                                            label={youtubeName}
+                                            onchange={handleYoutube}
+                                            checked={youtubeWanted}
+                                        >
+                                        </lightning-input>
+                                    </div>
+                                    <hr class="between-toggles" />
+                                </template>
+                                <template lwc:if={hasReward}>
+                                    <div class="form-group">
+                                        <lightning-input
+                                            type="toggle"
+                                            class="label-semi-bold"
+                                            label={rewardName}
+                                            onchange={handleReward}
+                                            checked={rewardWanted}
+                                        >
+                                        </lightning-input>
+                                    </div>
+                                    <p class="input-description-toggle">
+                                        After you've been a customer for 90 days and paid your first Frontier bill in
+                                        full, we'll send you an email with redemption instructions for your reward card.
+                                        If you disconnect your internet service in the first year, a pro-rated early
+                                        termination fee up to {rewardValue} will apply.
+                                    </p>
+                                    <hr class="between-toggles" />
+                                </template>
+                            </template>
+                            <template for:each={secureOptions} for:item="service">
+                                <div key={service.Id}>
+                                    <div class="form-group">
+                                        <lightning-input
+                                            class="label-semi-bold"
+                                            type="toggle"
+                                            checked={service.isChecked}
+                                            label={service.Name}
+                                            data-id={service.Id}
+                                            onchange={handleServiceChange}
+                                            disabled={service.required}
+                                        ></lightning-input>
+                                    </div>
+                                    <p class="input-description-toggle">
+                                        {service.Description}
+                                        <template lwc:if={service.hasTerms}>
+                                            <a
+                                                class="hyperlink"
+                                                onclick={handleShowDetailsModal}
+                                                data-id={service.Id}
+                                                data-terms={service.terms}
+                                            >
+                                                &nbsp;Learn More.
+                                            </a>
+                                        </template>
+                                    </p>
+                                    <hr class="between-toggles" />
+                                </div>
+                            </template>
+                            <div>
+                                <div class="form-group">
+                                    <lightning-input
+                                        class="label-semi-bold"
+                                        type="toggle"
+                                        checked={voipOption}
+                                        label="Unlimited Digital Voice"
+                                        onchange={handleVoip}
+                                    ></lightning-input>
+                                </div>
+                                <p class="input-description-toggle">
+                                    <template lwc:if={voiceHasDiscount}>
+                                        <strong
+                                            >Per month for {voiceDuration} months, ${voiceBasePrice}
+                                            onwards.&nbsp;</strong
+                                        ></template
+                                    >{voiceDescription}
+                                </p>
+                            </div>
+                            <template lwc:if={voipWanted}>
+                                <hr class="between-toggles" />
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="toggle"
+                                        name="portableWanted"
+                                        class="label-semi-bold"
+                                        label="Keep my Current Non-Frontier Phone Number"
+                                        message-toggle-active="Yes"
+                                        message-toggle-inactive="No"
+                                        checked={portableWanted}
+                                        onchange={handlePortableWanted}
+                                    ></lightning-input>
+                                </div>
+                                <p class="input-description-toggle">
+                                    You may keep your current phone number, or you will be assigned a new number.
+                                    Transferring of phone numbers is not guaranteed, and can not be done from one state
+                                    to another. Number must be in service to be ported.
+                                </p>
+                                <template lwc:if={portableWanted}>
+                                    <p class="input-description-toggle">
+                                        Frontier needs to check if your current phone number is portable. Please enter
+                                        the number Customer wants to port in.
+                                    </p>
+                                    <div class="form-group">
+                                        <lightning-input
+                                            type="tel"
+                                            name="phoneNumber"
+                                            value={phoneNumber}
+                                            class="label-semi-bold"
+                                            label="Telephone Number"
+                                            placeholder="(000) 000-0000"
+                                            max-length="10"
+                                            onchange={handlePhone}
+                                            required="true"
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-m-bottom_small">
+                                        <a
+                                            class="btn-rounded btn-center"
+                                            onclick={handlePortable}
+                                            disabled={disablePortable}
+                                            >Check Number</a
+                                        >
+                                    </div>
+                                    <p class="input-description-toggle">{portableResult}</p>
+                                </template>
+                            </template>
+                        </div>
+                    </form>
+                    <a onclick={handleClick} class={nextButtonClass}> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <a onclick={handleClick} class={nextButtonClassMobile}> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showPosIdModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.posIdMessage}
+            modal-title="Manual Review Pending"
+            onclose={hidePosIdModal}
+            onconfirm={hidePosIdModal}
+            is-rich-text="false"
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

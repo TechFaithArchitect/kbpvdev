@@ -1,0 +1,316 @@
+<template>
+    <header class={headerMode} provider="frontier">
+        <div class="content-header">
+            <div class="content-logo">
+                <a onclick={handleCancel} title="Logo" class="logo">
+                    <img src={logoHeader} alt="Logo" />
+                </a>
+            </div>
+
+            <div class="content-menu">
+                <ul>
+                    <li>
+                        <button>Providers</button>
+                    </li>
+
+                    <li>
+                        <button>About</button>
+                    </li>
+
+                    <li>
+                        <button>FAQ’s</button>
+                    </li>
+
+                    <li>
+                        <button>Contact us</button>
+                    </li>
+                </ul>
+            </div>
+
+            <template lwc:if={stepInformation}>
+                <div class="content-steps-information">
+                    <ul>
+                        <template lwc:if={isNotGuestUser}>
+                            <li>
+                                <i style="width: 50%" data-id="service-item"></i>
+                                Service information
+                            </li>
+                            <li>
+                                <i style="width: 0%" data-id="customizations-item"></i>
+                                Plan customization
+                            </li>
+                        </template>
+                        <template lwc:else>
+                            <li>
+                                <i style="width: 50%" data-id="customizations-item"></i>
+                                Plan customization
+                            </li>
+                        </template>
+
+                        <li>
+                            <i style="width: 0%" data-id="personal-item"></i>
+                            Personal information
+                        </li>
+
+                        <li>
+                            <i style="width: 0%" data-id="configuration-item"></i>
+                            Plan configuration
+                        </li>
+
+                        <li>
+                            <i style="width: 0%" data-id="payment-item"></i>
+                            Payment
+                        </li>
+
+                        <li>
+                            <i style="width: 0%" data-id="confirmation-item"></i>
+                            Confirmation
+                        </li>
+                        <template lwc:if={installationPresent}>
+                            <li>
+                                <i style="width: 0%" data-id="installation-item"></i>
+                                Installation
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+
+                <div class="content-steps-information-mobile">
+                    <template lwc:if={currentCart}>
+                        <div class="cart-right-float" onclick={toggleCart}>
+                            <img src={iconCart} />
+                            <p class="float-label">{cartItemsCount}</p>
+                        </div>
+                    </template>
+
+                    <p class="current-step">
+                        <i style="width: 0%" data-id="mobile-stepper"></i>
+                        {currentTabName} <span>Step {displayStep}/{totalSteps}</span>
+                    </p>
+                </div>
+            </template>
+        </div>
+    </header>
+
+    <div class="page-container">
+        <template lwc:if={stepInformation}>
+            <div class="pages-with-provider-style" provider="frontier">
+                <div class={pageClass}>
+                    <template lwc:if={showCollateral}>
+                        <c-collateral-files-component
+                            provider="frontier"
+                            onshowcollateral={handleCollateral}
+                        ></c-collateral-files-component>
+                    </template>
+                    <template lwc:else>
+                        <template lwc:if={isNotGuestUser}>
+                            <div class="slds-grid slds-grid_align-end">
+                                <div class="slds-col">
+                                    <c-collateral-files-button
+                                        onshowcollateral={handleCollateral}
+                                    ></c-collateral-files-button>
+                                </div>
+                            </div>
+                        </template>
+                        <template lwc:if={isViewInfoTab}>
+                            <c-poe_lwc-self-service-frontier-info-tab
+                                record-id={recordId}
+                                client-info={clientInfo}
+                                logo={logo}
+                                origin={origin}
+                                frontier-user-id={frontierUserId}
+                                is-guest-user={isGuestUser}
+                                self-service-address={selfServiceAddress}
+                                referral-code-data={referralCodeData}
+                                oncheckserviceability={handleCheckServiceability}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-frontier-info-tab>
+                        </template>
+                        <template lwc:if={isViewProducts}>
+                            <c-poe_lwc-self-service-frontier-products-tab
+                                record-id={recordId}
+                                user-id={userId}
+                                agent-id={agentId}
+                                logo={logo}
+                                origin={origin}
+                                selected={selectedProduct}
+                                client-info={clientInfo}
+                                frontier-user-id={frontierUserId}
+                                is-guest-user={isGuestUser}
+                                onproductselection={handleProductSelection}
+                                onconfigurationsendproducts={handleConfigProducts}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-frontier-products-tab>
+                        </template>
+                        <template lwc:if={isViewCreditCheck}>
+                            <c-poe_lwc-self-service-frontier-credit-check-tab
+                                record-id={recordId}
+                                logo={logo}
+                                origin={origin}
+                                cart-info={cartInfo}
+                                account-id={accountId}
+                                paper-bill={paperBill}
+                                contact-info={clientInfo.contactInfo}
+                                address-info={clientInfo.addressInfo}
+                                account-info={clientInfo.accountInfo}
+                                product-selected={productSelected}
+                                frontier-user-id={frontierUserId}
+                                is-guest-user={isGuestUser}
+                                referral-code-data={referralCodeData}
+                                customer-validation-params={customerValidationParams}
+                                oncreditcheckpassed={handleCreditCheckPassed}
+                                onebill={handleEBill}
+                                onauto={handleAutoPay}
+                                onquote={handleQuote}
+                                onback={handleBack}
+                                onaddressinfoupdate={handleAddressInfoUpdate}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-frontier-credit-check-tab>
+                        </template>
+                        <template lwc:if={isConfigurationsTab}>
+                            <c-poe_lwc-self-service-frontier-configurations-tab
+                                record-id={recordId}
+                                user-id={userId}
+                                logo={logo}
+                                origin={origin}
+                                cart-info={creditCheckCart}
+                                customer-info={creditCheckCallout.customer}
+                                account-id={accountUuid}
+                                product-info={productInfo}
+                                e-bill={eBill}
+                                auto-pay={autoPay}
+                                client-phone={clientInfo.contactInfo.phone}
+                                email={clientInfo.contactInfo.email}
+                                address-info={clientInfo.address}
+                                quote-id={quoteId}
+                                add-on-products={addOnProducts}
+                                voice-products={voiceProducts}
+                                manual-credit-check={manualCreditCheck}
+                                frontier-secure-products={frontierSecureProducts}
+                                frontier-user-id={frontierUserId}
+                                is-guest-user={isGuestUser}
+                                onconfigselection={handleConfigSelection}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                                oncartupdate={handleCartUpdate}
+                            ></c-poe_lwc-self-service-frontier-configurations-tab>
+                        </template>
+                        <template lwc:if={isInstallationTab}>
+                            <c-poe_lwc-self-service-frontier-installation-tab
+                                record-id={recordId}
+                                cart={configurationsCart}
+                                origin={origin}
+                                customer={clientInfo}
+                                time-zone={timeZone}
+                                logo={logo}
+                                quote-id={quoteId}
+                                frontier-user-id={frontierUserId}
+                                installation-options={installationOptions}
+                                is-guest-user={isGuestUser}
+                                quote-number={quoteNumber}
+                                customer-t-n={reservedTN}
+                                onnext={handleTPVNext}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-frontier-installation-tab>
+                        </template>
+                        <template lwc:if={isViewPayment}>
+                            <c-poe_lwc-self-service-frontier-payment-tab
+                                record-id={recordId}
+                                logo={logo}
+                                client-info={clientInfo}
+                                cart={configurationsCart}
+                                payment-attempts={paymentAttempts}
+                                account-id={accountUuid}
+                                auto-pay-node={autoPayNode}
+                                auto-pay-discounts={autoPayDiscounts}
+                                reference-number={referenceNumber}
+                                reserved={reservedTN}
+                                origin={origin}
+                                e-bill={eBill}
+                                auto-pay={autoPay}
+                                portable-number={portableNumber}
+                                quote-number={quoteNumber}
+                                quote-id={quoteId}
+                                frontier-user-id={frontierUserId}
+                                is-guest-user={isGuestUser}
+                                oncreditcardvalidated={handleCheckoutNext}
+                                onupdatecart={handlePaymentCart}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-frontier-payment-tab>
+                        </template>
+                        <template lwc:if={isViewBillPreview}>
+                            <c-poe_lwc-self-service-frontier-order-confirmation-tab
+                                record-id={recordId}
+                                logo={logo}
+                                origin={origin}
+                                preview={preview}
+                                account-id={accountUuid}
+                                quote-id={quoteId}
+                                frontier-user-id={frontierUserId}
+                                quote-number={quoteNumber}
+                                is-guest-user={isGuestUser}
+                                customer-t-n={reservedTN}
+                                onnext={handleOrderConfirmationNext}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-frontier-order-confirmation-tab>
+                        </template>
+                        <template lwc:if={isViewTerms}>
+                            <c-poe_lwc-self-service-frontier-terms-tab
+                                record-id={recordId}
+                                logo={logo}
+                                user-id={userId}
+                                origin={origin}
+                                terms={terms}
+                                sf-order-id={sfOrderId}
+                                order-item-id={orderItemId}
+                                quote-number={quoteNumber}
+                                account-id={accountUuid}
+                                quote-id={quoteId}
+                                cart-info={configurationsCart}
+                                installation-date={installationDate}
+                                earliest-date={earliestDate}
+                                frontier-user-id={frontierUserId}
+                                is-guest-user={isGuestUser}
+                                customer-t-n={reservedTN}
+                                onnext={handleTermsNext}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-frontier-terms-tab>
+                        </template>
+                        <template lwc:if={isViewOrderSuccess}>
+                            <c-poe_lwc-self-service-order-success-tab
+                                program="frontier"
+                                order-number={orderNumber}
+                                record-id={recordId}
+                                quote-number={quoteNumber}
+                                btn={btn}
+                                return-url={returnUrl}
+                                reference-number={referenceNumber}
+                                origin={origin}
+                                is-guest-user={isGuestUser}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-order-success-tab>
+                        </template>
+
+                        <template lwc:if={currentCart}>
+                            <div class="panel-right">
+                                <c-poe_lwc-self-service-direc-tv-cart
+                                    cart-info={currentCart}
+                                    cart-icon={providerLogoFrontier}
+                                    cart-title="Frontier"
+                                    cart-subtitle={cartSubtitle}
+                                >
+                                </c-poe_lwc-self-service-direc-tv-cart>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

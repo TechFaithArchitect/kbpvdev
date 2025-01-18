@@ -1,0 +1,38 @@
+.broadband-label-frame {
+    height: 30rem;
+}
+
+.section-title {
+    cursor: pointer;
+}
+
+.section-title:hover {
+    color: var(--dxp-g-brand-1, rgb(214, 109, 0));
+    --slds-c-icon-color-foreground-default: var(--dxp-g-brand-1, rgb(214, 109, 0));
+}
+
+.section-title:active {
+    color: var(--dxp-g-brand-1, rgb(214, 109, 0));
+    --slds-c-icon-color-foreground-default: var(--dxp-g-brand-1, rgb(214, 109, 0));
+}
+
+.section-title:focus {
+    text-decoration: underline;
+
+    color: var(--dxp-g-brand-1, rgb(214, 109, 0));
+    --slds-c-icon-color-foreground-default: var(--dxp-g-brand-1, rgb(214, 109, 0));
+}
+
+.section-title:hover .title-text {
+    color: var(--dxp-g-brand-1, rgb(214, 109, 0));
+}
+
+.section-title:active .title-text {
+    color: var(--dxp-g-brand-1, rgb(214, 109, 0));
+}
+
+.section-title:focus .title-text {
+    text-decoration: underline;
+
+    color: var(--dxp-g-brand-1, rgb(214, 109, 0));
+}

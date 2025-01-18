@@ -1,0 +1,295 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default">
+            <template lwc:if={hideSBS}>
+                <div class="slds-grid slds-gutters slds-wrap slds-p-around--medium">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3 slds-var-m-bottom_large">
+                        <div
+                            class="slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            {pageTitle}
+                        </div>
+                        <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_xx-small">
+                            <div class="slds-hide_small slds-size_1-of-12 slds-var-m-left_medium"></div>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-small-size_7-of-12 slds-grid slds-grid_align-left"
+                            >
+                                <lightning-combobox
+                                    label="Select number of TVs"
+                                    value={numberOfTVs}
+                                    options={numberOfTVsOptions}
+                                    onchange={handleChangeNumberOfTVs}
+                                    variant="label-inline"
+                                >
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-hide_small slds-size_1-of-12"></div>
+                            <template lwc:if={showMultipleGenieButton}>
+                                <div class="slds-hide_medium slds-size_1-of-1 slds-var-m-top_medium"></div>
+                                <div class="slds-col">
+                                    <lightning-button
+                                        variant="brand"
+                                        label="1 Genie and Multiple Genie Minis"
+                                        name="multipleGenieButton"
+                                        onclick={handleGenieMiniButton}
+                                    ></lightning-button>
+                                </div>
+                                <div class="slds-hide_medium slds-size_1-of-1 slds-var-m-bottom_medium"></div>
+                            </template>
+                            <div class="slds-col slds-size_12-of-12">
+                                <p lwc:if={showAlert} class="slds-m-vertical_medium slds-text-color_error">
+                                    This order will not automate and will have to be processed manually by DIRECTV/AT&T
+                                </p>
+                                <p class="slds-m-vertical_xx-small">Hardware selection</p>
+                            </div>
+
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-grid_align-center"
+                            >
+                                <div
+                                    class="slds-form-element__control slds-col slds-size_12-of-12 slds-m-horizontal_none"
+                                >
+                                    <template for:each={beamHardwareOptions} for:item="product">
+                                        <span key={product.Id} class="slds-radio">
+                                            <input
+                                                type="radio"
+                                                id={product.Id}
+                                                value={product.Id}
+                                                checked={product.isChecked}
+                                                name="products"
+                                                onchange={handleHardwareSelection}
+                                            />
+                                            <label class="slds-radio__label" for={product.Id}>
+                                                <span class="slds-form-element__label">
+                                                    <div class="slds-box slds-grid slds-wrap slds-gutters">
+                                                        <div
+                                                            class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                        >
+                                                            <span class="slds-radio_faux slds-m-right_none"></span>
+                                                        </div>
+                                                        <div
+                                                            class="slds-col slds-size_10-of-12 slds-small-size_7-of-12"
+                                                        >
+                                                            <b
+                                                                ><lightning-formatted-rich-text
+                                                                    value={product.quantity}
+                                                                ></lightning-formatted-rich-text
+                                                            ></b>
+                                                        </div>
+                                                        <div
+                                                            class="slds-col slds-size_12-of-12 slds-small-size_4-of-12 slds-text-align_right"
+                                                        >
+                                                            {product.price}
+                                                        </div>
+                                                        <div
+                                                            class="slds-col slds-size_12-of-12 slds-p-top_medium slds-p-left_large"
+                                                        >
+                                                            {product.description}
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            </label>
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <div lwc:if={showAdditionalHardwareSelection} class="slds-size_12-of-12">
+                                <div class="slds-m-vertical_xx-small slds-grid slds-col">
+                                    <p>Select Additional Hardware Options</p>
+                                </div>
+                                <template lwc:if={alternativeHardwareOptionsOpen}>
+                                    <div
+                                        class="slds-grid slds-gutters slds-wrap slds-size_12-of-12 slds-m-bottom_medium slds-p-horizontal_medium"
+                                    >
+                                        <template lwc:if={showDeviceSelection}>
+                                            <div class="slds-col slds-size_1-of-1">
+                                                <lightning-combobox
+                                                    class="slds-m-right_small slds-small-size_3-of-12"
+                                                    name="device"
+                                                    label={labels.dtvSelectDeviceMessage}
+                                                    options={deviceOptions}
+                                                    onchange={handleDeviceSelection}
+                                                    value={deviceSelected}
+                                                ></lightning-combobox>
+                                            </div>
+                                        </template>
+                                        <div class="slds-size_1-of-1 slds-var-m-bottom_medium"></div>
+                                        <template lwc:if={geminiSelected}>
+                                            <template for:each={additionalHardwareOptionsGemini} for:item="product">
+                                                <div
+                                                    key={product.Id}
+                                                    class="slds-col slds-size_1-of-1 slds-small-size_3-of-12"
+                                                >
+                                                    <lightning-combobox
+                                                        class="slds-m-right_small"
+                                                        key={product.Id}
+                                                        name="hardware"
+                                                        label={product.shortName}
+                                                        data-id={product.Id}
+                                                        disabled={product.disabled}
+                                                        options={product.options}
+                                                        onchange={handleChangeAdditionalHardware}
+                                                        value={product.value}
+                                                    ></lightning-combobox>
+                                                </div>
+                                            </template>
+                                        </template>
+                                        <template lwc:else>
+                                            <template for:each={additionalHardwareOptionsGenieMini} for:item="product">
+                                                <div
+                                                    key={product.Id}
+                                                    class="slds-col slds-size_1-of-1 slds-small-size_3-of-12"
+                                                >
+                                                    <lightning-combobox
+                                                        class="slds-m-right_small"
+                                                        key={product.Id}
+                                                        name="hardware"
+                                                        label={product.shortName}
+                                                        data-id={product.Id}
+                                                        disabled={product.disabled}
+                                                        options={product.options}
+                                                        onchange={handleChangeAdditionalHardware}
+                                                        value={product.value}
+                                                    ></lightning-combobox>
+                                                </div>
+                                            </template>
+                                        </template>
+                                        <div class="slds-size_1-of-1 slds-var-m-bottom_medium"></div>
+                                    </div>
+                                </template>
+                                <div
+                                    lwc:else
+                                    class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-grid_align-center"
+                                >
+                                    <div class="slds-form-element__control slds-size_12-of-12">
+                                        <template for:each={additionalHardwareOptions} for:item="product">
+                                            <span key={product.Id} class="slds-radio">
+                                                <input
+                                                    type="radio"
+                                                    id={product.Id}
+                                                    value={product.Id}
+                                                    checked={product.isChecked}
+                                                    name="additional"
+                                                    onchange={handleAdditionalHardwareSelection}
+                                                />
+                                                <label class="slds-radio__label" for={product.Id}>
+                                                    <span class="slds-form-element__label">
+                                                        <div class="slds-box slds-grid slds-gutters slds-wrap">
+                                                            <div
+                                                                class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                            >
+                                                                <span class="slds-radio_faux slds-m-right_none"></span>
+                                                            </div>
+                                                            <div
+                                                                class="slds-col slds-size_10-of-12 slds-small-size_7-of-12"
+                                                            >
+                                                                <b
+                                                                    ><lightning-formatted-rich-text
+                                                                        value={product.name}
+                                                                    ></lightning-formatted-rich-text
+                                                                ></b>
+                                                            </div>
+                                                            <div
+                                                                class="slds-col slds-size_1-of-1 slds-small-size_4-of-12 slds-text-align_right"
+                                                            >
+                                                                {product.formattedPrice}
+                                                            </div>
+                                                            <div
+                                                                class="slds-col slds-size_12-of-12 slds-p-left_large slds-p-top_medium"
+                                                            >
+                                                                {product.description}
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                                                </label>
+                                            </span>
+                                        </template>
+                                    </div>
+                                </div>
+                                <lightning-button
+                                    variant="base"
+                                    label={alternativeHardwareButtonText}
+                                    onclick={handleAlternativeHardwareOptions}
+                                    class="slds-col"
+                                ></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-directv-enga-cart cart={cart}></c-poe_lwc-buyflow-directv-enga-cart>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    show-cancel="true"
+                    show-previous="true"
+                    onnext={handleClick}
+                    onprevious={handlePrevious}
+                    disable-next={noCompleteInfo}
+                    oncancel={handleCancel}
+                ></c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showModal}>
+        <div class="custom-modal">
+            <section role="dialog" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium slds-hyphenate">{modalTitle}</h2>
+                    </header>
+                    <div class="slds-modal__content slds-var-p-around_medium">
+                        <h2
+                            lwc:if={notPhonesalesOrigin}
+                            class="slds-text-heading_medium slds-text-align_center slds-var-m-bottom_small"
+                        >
+                            The disclosures must be shown to the customer
+                        </h2>
+                        <lightning-formatted-rich-text value={modalBody}></lightning-formatted-rich-text>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button
+                            class="slds-button slds-button_neutral slds-var-m-right_small"
+                            onclick={hideModal}
+                            style="border-radius: 20px"
+                        >
+                            {modalButton}
+                        </button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

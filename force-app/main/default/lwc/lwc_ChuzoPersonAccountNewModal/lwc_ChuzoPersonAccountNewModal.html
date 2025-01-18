@@ -1,0 +1,106 @@
+<template>
+    <lightning-modal-header label={label}></lightning-modal-header>
+    <lightning-modal-body class="modal-see-more">
+        <div>
+            <template lwc:if={isLoading}>
+                <div class="slds-align_absolute-center">
+                    <lightning-spinner></lightning-spinner>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="First Name" name="firstName" type="text" value={firstName} onchange={handleChange} required></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="Last Name" name="lastName" type="text" value={lastName} onchange={handleChange} required></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12">
+                        <c-poe_lwc-address-field
+                            always-send-changes="true"
+                            street={streetLineOne}
+                            address-line-2={streetLineTwo}
+                            city={city}
+                            country={country}
+                            postal-code={zip}
+                            province={state}
+                            onaddresschange={handleAddressChange}
+                        ></c-poe_lwc-address-field>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="Phone 1" name="phoneOne" type="text" value={phoneOne} onchange={handleChange} required></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="Phone 2" name="phoneTwo" type="text" value={phoneTwo} onchange={handleChange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="Email 1" name="emailOne" type="email" value={emailOne} onchange={handleChange} required></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="Email 2" name="emailTwo" type="email" value={emailTwo} onchange={handleChange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-combobox label="Lead Origin" name="leadOrigin" options={leadOriginOptions} value={leadOrigin} onchange={handleChange}></lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <template lwc:if={isLeadOriginOther}>
+                            <lightning-input label="Other Lead Origin" name="leadOriginOther" type="text" value={leadOriginOther} onchange={handleChange}></lightning-input>
+                        </template>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-dual-listbox 
+                            label="Program Lead Type" 
+                            name="programLeadType" 
+                            source-label="Available"
+                            selected-label="Selected"
+                            options={programLeadTypeOptions} 
+                            value={programLeadType} 
+                            onchange={handleChange}>
+                        </lightning-dual-listbox>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <template lwc:if={isProgramLeadTypeOther}>
+                            <lightning-input label="Other Program Lead Type" name="programLeadTypeOther" type="text" value={programLeadTypeOther} onchange={handleChange}></lightning-input>
+                        </template>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="Current Provider(s)" name="currentProviders" type="text" value={currentProvider} onchange={handleChange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="Current Provider(s) Cost" name="currentProvidersCost" type="number" formatter="currency" step=".01" value={currentProviderCost} onchange={handleChange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12" style="align-self: center;">
+                        <lightning-input label="Under Contract" name="underContract" type='checkbox' checked={underContract} onchange={handleChange} ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="Contract Expiration Date" name="contractExpirationDate" type="date" value={contractExpirationDate} onchange={handleChange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="Suggested Provider(s)" name="suggestedProviders" type="text" value={suggestedProviders} onchange={handleChange} ></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-input label="Suggested Provider(s) Cost" name="suggestedProvidersCost" type="number" formatter="currency" step=".01" value={suggestedProvidersCost} onchange={handleChange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_12-of-12">
+                        <lightning-input label="First Date Contacted" name="firstDateContacted" type="date" value={firstDateContacted} onchange={handleChange}></lightning-input>
+                        <lightning-input label="Second Date Contacted" name="secondDateContacted" type="date" value={secondDateContacted} onchange={handleChange}></lightning-input>
+                        <lightning-input label="Third Date Contacted" name="thirdDateContacted" type="date" value={thirdDateContacted} onchange={handleChange}></lightning-input>
+                        <lightning-input label="Sold Date" name="soldDate" type="date" value={soldDate} onchange={handleChange}></lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-combobox label="Opportunity Stage" name="stage" options={stageOptions} value={stage} onchange={handleChange} ></lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-combobox label="Rating" name="rating" options={ratingOptions} value={rating} onchange={handleChange}></lightning-combobox>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <div class="group-buttons">
+            <lightning-button class='slds-p-right_medium' variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
+            <lightning-button variant="brand" disabled={disableSaving} label="Save" onclick={handleSubmit}></lightning-button>
+        </div>
+    </lightning-modal-footer>
+</template>

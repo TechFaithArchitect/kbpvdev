@@ -1,0 +1,43 @@
+<template>
+    <lightning-tabset variant="standard" active-tab-value="Onboarding">
+        <lightning-tab label="Onboarding" value="Onboarding" onactive={setRepresentativeList}>
+            <template lwc:if={displayOnboarding}>
+                <c-poe_lwc-rep-onboarding-representatives-tab
+                    contact-list={contactData}
+                    contact-length={contactData.length}
+                    tpv={tpvControl}
+                    list-type="Onboarding"
+                    onrefresh={handleUpdate}
+                    onlogerror={handleLogError}
+                ></c-poe_lwc-rep-onboarding-representatives-tab>
+            </template>
+        </lightning-tab>
+        <lightning-tab label="Active" value="Active" onactive={setRepresentativeList}>
+            <template lwc:if={displayActive}>
+                <c-poe_lwc-rep-onboarding-representatives-tab
+                    contact-list={contactData}
+                    contact-length={contactData.length}
+                    tpv={tpvControl}
+                    list-type="Active"
+                    onrefresh={handleUpdate}
+                    onlogerror={handleLogError}
+                ></c-poe_lwc-rep-onboarding-representatives-tab>
+            </template>
+        </lightning-tab>
+        <lightning-tab label="Inactive" value="Inactive" onactive={setRepresentativeList}>
+            <template lwc:if={displayInactive}>
+                <c-poe_lwc-rep-onboarding-representatives-tab
+                    contact-list={contactData}
+                    contact-length={contactData.length}
+                    tpv={tpvControl}
+                    list-type="Inactive"
+                    onrefresh={handleUpdate}
+                    onlogerror={handleLogError}
+                ></c-poe_lwc-rep-onboarding-representatives-tab>
+            </template>
+        </lightning-tab>
+        <template lwc:if={loaderSpinner}>
+            <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </lightning-tabset>
+</template>

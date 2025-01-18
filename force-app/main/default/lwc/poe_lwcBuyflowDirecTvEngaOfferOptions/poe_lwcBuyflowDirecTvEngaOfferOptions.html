@@ -1,0 +1,163 @@
+<template>
+    <div
+        class="slds-grid slds-grid--vertical-stretch slds-gutters_x-small slds-wrap slds-m-vertical_small slds-m-horizontal_small"
+    >
+        <div
+            class="slds-col slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+            style="background-color: #ffb769; color: white"
+        >
+            <lightning-formatted-text
+                class="slds-align_absolute-center"
+                value="Select"
+            >
+            </lightning-formatted-text>
+        </div>
+
+        <template lwc:if={showCategoryColumn}>
+            <div
+                class="slds-col slds-size_7-of-12 slds-small-size_5-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                style="background-color: #ffb769; color: white"
+            >
+                <lightning-formatted-text
+                    class="slds-align_absolute-center"
+                    value="Name"
+                >
+                </lightning-formatted-text>
+            </div>
+
+            <div
+                class="slds-col slds-show_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                style="background-color: #ffb769; color: white"
+            >
+                <lightning-formatted-text
+                    class="slds-align_absolute-center"
+                    value={categorySectionLabel}
+                >
+                </lightning-formatted-text>
+            </div>
+            <div
+                class="slds-col slds-size_3-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                style="background-color: #ffb769; color: white"
+            >
+                <lightning-formatted-text
+                    class="slds-align_absolute-center"
+                    value={feeSectionLabel}
+                >
+                </lightning-formatted-text>
+            </div>
+        </template>
+        <template lwc:else>
+            <div
+                class="slds-col slds-size_7-of-12 slds-small-size_8-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                style="background-color: #ffb769; color: white"
+            >
+                <lightning-formatted-text
+                    class="slds-align_absolute-center"
+                    value="Name"
+                >
+                </lightning-formatted-text>
+            </div>
+            <div
+                class="slds-col slds-size_3-of-12 slds-small-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                style="background-color: #ffb769; color: white"
+            >
+                <lightning-formatted-text
+                    class="slds-align_absolute-center"
+                    value={feeSectionLabel}
+                >
+                </lightning-formatted-text>
+            </div>
+        </template>
+        
+        <template for:each={promos} for:item="promo">
+            <template lwc:if={promo.show}>
+                <div
+                    key={promo.id}
+                    class="slds-col slds-size_2-of-12 slds-p-around_small slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                >
+                    <lightning-input
+                        type="checkbox"
+                        name={promo.name}
+                        checked={promo.checked}
+                        data-id={promo.id}
+                        data-choice={promo.choiceCode}
+                        disabled={promo.required}
+                        onchange={handleToggleChange}
+                    ></lightning-input>
+                </div>
+
+                <template lwc:if={showCategoryColumn}>
+                    <div
+                        key={promo.id}
+                        class="slds-col slds-p-around_small slds-size_7-of-12 slds-small-size_5-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid-vertical slds-grid_align-center slds-grid–vertical-align-center"
+                    >
+                        <lightning-formatted-rich-text
+                            class="slds-align_absolute-center"
+                            value={promo.name}
+                        ></lightning-formatted-rich-text>
+                    </div>
+                    <div
+                        key={promo.id}
+                        class="slds-col slds-show_small slds-p-around_small slds-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center"
+                    >
+                        <lightning-formatted-rich-text
+                            class="slds-align_absolute-center"
+                            value={promo.category}
+                        ></lightning-formatted-rich-text>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div
+                        key={promo.id}
+                        class="slds-col slds-p-around_small slds-size_7-of-12 slds-small-size_8-of-12 slds-text-align_center slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid-vertical slds-grid_align-center slds-grid–vertical-align-center"
+                    >
+                        <lightning-formatted-rich-text
+                            class="slds-align_absolute-center"
+                            value={promo.name}
+                        ></lightning-formatted-rich-text>
+                    </div>
+                </template>
+
+                <template lwc:if={showDescriptionIcon}>
+                    <div
+                        key={promo.id}
+                        class="slds-col slds-p-around_small slds-size_3-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-wrap"
+                    >
+                        <lightning-formatted-rich-text
+                            value={promo.fee}
+                        ></lightning-formatted-rich-text>
+                        <template lwc:if={promo.hasDescription}>
+                            <lightning-icon
+                                class="slds-m-left_xx-small"
+                                icon-name="action:info"
+                                data-id={promo.id}
+                                onclick={handleShowInfo}
+                                alternative-text="Open Info"
+                                title="Open Info"
+                                size="xx-small"
+                                style="cursor: pointer"
+                            ></lightning-icon>
+                        </template>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div
+                        key={promo.id}
+                        class="slds-col slds-p-around_small slds-size_3-of-12 slds-small-size_2-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom slds-grid slds-grid_align-center slds-grid_vertical-align-center"
+                    >
+                        <lightning-formatted-rich-text
+                            value={promo.fee}
+                        ></lightning-formatted-rich-text>
+                    </div>
+                    <div
+                        key={promo.id}
+                        class="slds-col slds-p-around_small slds-size_12-of-12 slds-border_left slds-border_right slds-border_top slds-border_bottom"
+                    >
+                        <lightning-formatted-rich-text value={promo.description}>
+                        </lightning-formatted-rich-text>
+                    </div>
+                </template>
+            </template>
+        </template>
+    </div>
+</template>

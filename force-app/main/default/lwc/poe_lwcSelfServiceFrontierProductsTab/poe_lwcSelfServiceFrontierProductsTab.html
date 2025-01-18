@@ -1,0 +1,137 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider="frontier">
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <a onclick={handlePrevious} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+                    <h2>Select your service package</h2>
+                </div>
+
+                <div class="page-content width-large">
+                    <div class="slds-grid slds-grid_align-end slds-m-bottom_small">
+                        <div class="toggle-container">
+                            <label class="switch">
+                                <input type="checkbox" onchange={handleShowMore} />
+                                <span class="slider"></span>
+                            </label>
+                            <span class="label-text">Show More</span>
+                        </div>
+                    </div>
+                    <template lwc:if={loadingFinished}>
+                        <div class="price-table-comparative carousel-container">
+                            <template lwc:if={showScrollArrows}>
+                                <button class="arrow left-arrow" onclick={scrollLeft}>&#9664;</button>
+                            </template>
+                            <div class="carousel">
+                                <template for:each={broadbandProds} for:item="broadband">
+                                    <template lwc:if={broadband.show}>
+                                        <div
+                                            class={broadband.styleClass}
+                                            key={broadband.Id}
+                                            data-product-id={broadband.Id}
+                                            onclick={handlePriceChange}
+                                        >
+                                            <div class="price-header">
+                                                <p>
+                                                    {broadband.Name}
+                                                    <template lwc:if={broadband.popular}>
+                                                        <span class="badge">popular</span>
+                                                    </template>
+                                                </p>
+                                                <h2>
+                                                    ${broadband.AutoPayPrice}
+                                                    <span class="inline-price"
+                                                        >{broadband.PriceType} &nbsp;
+                                                        <a
+                                                            class="hyperlink"
+                                                            onclick={handleDescriptionModal}
+                                                            data-id={broadband.Name}
+                                                        >
+                                                            See Details
+                                                        </a>
+                                                        &nbsp;
+                                                    </span>
+                                                    <span>Discounted price per month with Auto Pay for 12 months.</span>
+                                                </h2>
+
+                                                <template lwc:if={broadband.hasLimitedDiscount}>
+                                                    <p class="description hyperlink">
+                                                        <lightning-formatted-text value={broadband.discountVerbiage}>
+                                                        </lightning-formatted-text>
+                                                    </p>
+                                                </template>
+
+                                                <p class="description">
+                                                    {broadband.campaignDescription}&nbsp;
+                                                    {broadband.disclaimerDescription}
+                                                    <br />
+                                                    {broadband.paymentDisclaimer}
+                                                </p>
+                                            </div>
+
+                                            <div class="price-list">
+                                                <p>Included in this plan</p>
+                                                <ul>
+                                                    <li><img src={iconCheckRed} /> {broadband.speedUpToText}</li>
+                                                    <template lwc:if={broadband.hasAdvancedRouter}>
+                                                        <li>
+                                                            <img src={iconCheckRed} />
+                                                            {labels.ADVANCED_ROUTER_INCLUDED_VERBIAGE}
+                                                        </li>
+                                                    </template>
+                                                    <template lwc:else>
+                                                        <li>
+                                                            <img src={iconCheckRed} />
+                                                            {labels.REGULAR_ROUTER_INCLUDED_VERBIAGE}
+                                                        </li>
+                                                    </template>
+                                                    <template lwc:if={broadband.usageOrPricingIncentive}>
+                                                        <li>
+                                                            <img src={iconCheckRed} />
+                                                            {broadband.usageOrPricingIncentive}
+                                                        </li>
+                                                    </template>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </template>
+                            </div>
+                            <template lwc:if={showScrollArrows}>
+                                <button class="arrow right-arrow" onclick={scrollRight}>&#9654;</button>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template lwc:if={loaderSpinner}>
+                        <div>
+                            <h2 class="slds-text-align_center">Searching available products for your address...</h2>
+                            <div class="slds-var-p-top_xx-large slds-var-m-top_xx-large">
+                                <lightning-spinner
+                                    variant="brand"
+                                    alternative-text="Loading..."
+                                    size="medium"
+                                ></lightning-spinner>
+                            </div>
+                        </div>
+                    </template>
+                    <template lwc:elseif={noProductsAvailable}>
+                        <div>
+                            <h2 class="slds-text-align_center">No products were found for your address.</h2>
+                        </div>
+                    </template>
+
+                    <a onclick={handleClick} class={nextButtonClass}> Next step </a>
+                </div>
+                <div class="footer-mobile">
+                    <a onclick={handleClick} class={nextButtonClassMobile}> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loadingNextStep}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

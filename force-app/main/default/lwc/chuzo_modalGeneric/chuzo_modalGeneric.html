@@ -1,0 +1,30 @@
+<template>
+    <lightning-modal-header label={content.title}></lightning-modal-header>
+    <lightning-modal-body class="modal-see-more">
+        <div provider={content.provider}>
+            <template lwc:if={showIcon}>
+                <div class="slds-align_absolute-center slds-m-bottom_large">
+                    <lightning-icon 
+                        class="info-icon"
+                        icon-name="action:info" 
+                        size="large" 
+                    ></lightning-icon>
+                </div>
+            </template>
+            <template lwc:else>
+                <img src={iconInfoUser} />
+            </template>
+
+            <h2>{content.title}</h2>
+            <lightning-formatted-rich-text linkify value={content.body}></lightning-formatted-rich-text>
+
+            <div class="group-buttons">
+                <template lwc:if={content.canClose}>
+                    <a class="btn-outline btn-only-rounded" onclick={cancel}> Cancel </a>
+                </template>
+
+                <a onclick={agreeDisclosure} class="btn-provider-color btn-only-rounded">{content.agreeLabel} </a>
+            </div>
+        </div>
+    </lightning-modal-body>
+</template>

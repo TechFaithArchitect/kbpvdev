@@ -1,0 +1,572 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="earthlink"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-var-p-horizontal_x-small">
+            <div class="slds-grid slds-wrap slds-gutters_x-small slds-var-p-around_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3 slds-grid slds-wrap">
+                    <div
+                        class="slds-box slds-var-m-bottom_small slds-size_12-of-12 slds-grid slds-wrap slds-var-p-horizontal_small"
+                    >
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_medium slds-text-align_center slds-var-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Payment Information
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-grid slds-var-p-around_small" style="color: #ff8200">
+                            <div class="slds-col slds-size_1-of-1 slds-text-heading_small">
+                                Today's Charges $
+                                <strong>{total}</strong> (Includes Sales Tax)
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-wrap slds-var-p-horizontal_x-small">
+                            <div class="slds-col slds-size_12-of-12">
+                                <p>
+                                    <strong>
+                                        The last name on the credit card being used should match the last name of the
+                                        customer signing up for service.
+                                    </strong>
+                                </p>
+                            </div>
+                        </div>
+                        <template lwc:if={isNotGuestUser}>
+                            <div
+                                class="slds-col slds-size_1-of-1 slds-grid slds-grid_align-spread slds-gutters slds-var-p-around_small slds-var-p-bottom_medium slds-border_bottom"
+                            ></div>
+                            <div class="slds-var-m-around_medium slds-m-top_none slds-col slds-size_3-of-12">
+                                <lightning-radio-group
+                                    name="methods"
+                                    label="Payment Input"
+                                    options={methods}
+                                    value={method}
+                                    onchange={handleMethod}
+                                    type="radio"
+                                ></lightning-radio-group>
+                            </div>
+                            <template lwc:if={isPCI}>
+                                <div class="slds-var-m-around_medium slds-m-top_none slds-col slds-size_3-of-12">
+                                    <lightning-radio-group
+                                        name="pci"
+                                        label="Send PCI link via:"
+                                        options={pciOptions}
+                                        value={pciValue}
+                                        onchange={handlePCI}
+                                        type="radio"
+                                    ></lightning-radio-group>
+                                </div>
+                                <template lwc:if={isEmail}>
+                                    <div
+                                        class="slds-grid slds-wrap slds-grid_vertical slds-size_12-of-12 slds-var-m-around_small slds-align_absolute-center"
+                                    >
+                                        <div class="slds-col slds-size_10-of-12">
+                                            <lightning-input
+                                                type="email"
+                                                value={pciEmail}
+                                                onchange={handleEmail}
+                                                name="pciEmail"
+                                                label="PCI Email Address"
+                                                required="true"
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_10-of-12 slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_6-of-12 slds-var-p-right_small">
+                                                <button
+                                                    class="slds-button slds-var-m-vertical_small slds-button_brand slds-button_stretch"
+                                                    onclick={sendEmail}
+                                                    disabled={noEmail}
+                                                >
+                                                    Send PCI Link Email
+                                                </button>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12 slds-var-p-left_small">
+                                                <button
+                                                    class="slds-button slds-var-m-vertical_small slds-button_brand slds-button_stretch"
+                                                    onclick={handleRefresh}
+                                                    disabled={noEmail}
+                                                >
+                                                    Refresh Fields
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div
+                                        class="slds-grid slds-wrap slds-grid_vertical slds-size_12-of-12 slds-var-m-around_small slds-align_absolute-center"
+                                    >
+                                        <div class="slds-col slds-size_10-of-12">
+                                            <lightning-input
+                                                type="tel"
+                                                value={phone}
+                                                onchange={handlePhone}
+                                                name="phone"
+                                                label="Contact Phone Number"
+                                                required="true"
+                                            ></lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_10-of-12 slds-var-p-top_xx-small">
+                                            <lightning-formatted-text value={phoneDisclaimer}>
+                                            </lightning-formatted-text>
+                                            <lightning-input
+                                                type="checkbox"
+                                                label={phoneDisclaimer2}
+                                                checked={hasOptedInSMS}
+                                                name="hasOptedInSMS"
+                                                onchange={handleChange}
+                                            >
+                                            </lightning-input>
+                                        </div>
+                                        <div class="slds-col slds-size_10-of-12 slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_6-of-12 slds-var-p-right_small">
+                                                <button
+                                                    class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                                    onclick={sendSMS}
+                                                    disabled={disableSendSMSButton}
+                                                >
+                                                    Send PCI SMS
+                                                </button>
+                                            </div>
+                                            <div class="slds-col slds-size_6-of-12 slds-var-p-left_small">
+                                                <button
+                                                    class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                                    onclick={handleRefresh}
+                                                    disabled={disableSendSMSButton}
+                                                >
+                                                    Refresh Fields
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </template>
+                        </template>
+                        <div class="slds-grid slds-wrap slds-var-p-around_small">
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                <div class="slds-var-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        type="text"
+                                        label="First Name"
+                                        name="firstName"
+                                        onchange={handleChange}
+                                        min-length="2"
+                                        value={firstName}
+                                        disabled={isPCI}
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                <div class="slds-var-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        type="text"
+                                        label="Last Name"
+                                        name="lastName"
+                                        value={lastName}
+                                        onchange={handleChange}
+                                        min-length="2"
+                                        disabled={isPCI}
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                                <div class="slds-var-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        type="password"
+                                        max-length="19"
+                                        min-length="13"
+                                        message-when-pattern-mismatch="Enter a valid Credit Card Number."
+                                        value={ccNumber}
+                                        onchange={handleChange}
+                                        name="ccNumber"
+                                        label="Card Number"
+                                        pattern="[0-9]{13,19}"
+                                        disabled={isPCI}
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_2-of-3 slds-medium-size_3-of-12">
+                                <div class="slds-var-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        type="text"
+                                        value={cardName}
+                                        onchange={handleChange}
+                                        name="cardName"
+                                        label="Name on Credit Card"
+                                        disabled={isPCI}
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-3 slds-medium-size_3-of-12">
+                                <div class="slds-var-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        type="text"
+                                        max-length="5"
+                                        min-length="5"
+                                        value={zip}
+                                        onchange={handleChange}
+                                        name="zip"
+                                        label="Zip Code"
+                                        disabled={isPCI}
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-medium-size_3-of-12">
+                                <div class="slds-var-p-around_xx-small lgc-bg">
+                                    <lightning-combobox
+                                        options={months}
+                                        value={month}
+                                        onchange={handleChange}
+                                        name="month"
+                                        label="Expiration Month"
+                                        disabled={isPCI}
+                                        required="true"
+                                    ></lightning-combobox>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-medium-size_3-of-12">
+                                <div class="slds-var-p-around_xx-small lgc-bg">
+                                    <lightning-combobox
+                                        options={years}
+                                        value={year}
+                                        onchange={handleChange}
+                                        name="year"
+                                        label="Expiration Year"
+                                        disabled={isPCI}
+                                        required="true"
+                                    ></lightning-combobox>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2">
+                                <div class="slds-var-p-around_xx-small lgc-bg">
+                                    <lightning-input
+                                        value={cvv}
+                                        onchange={handleChange}
+                                        name="cvv"
+                                        type="password"
+                                        max-length="4"
+                                        message-when-pattern-mismatch="Enter a valid Security Code."
+                                        min-length="3"
+                                        label="Security Code"
+                                        pattern="[0-9]{3,4}"
+                                        disabled={isPCI}
+                                        required="true"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-grid slds-wrap slds-var-m-vertical_xx-small slds-var-p-horizontal_x-small slds-border_bottom slds-var-p-bottom_small"
+                        >
+                            <p>
+                                <lightning-formatted-rich-text
+                                    value={verbiages.paymentDisclosure}
+                                ></lightning-formatted-rich-text>
+                            </p>
+                            <template lwc:if={isNonCallcenter}>
+                                <lightning-input
+                                    class="slds-m-top_medium"
+                                    type="checkbox"
+                                    label={paymentTClabel}
+                                    name="agreementPayment"
+                                    required="true"
+                                    id="agreementPayment"
+                                    checked={agreementPayment}
+                                    onchange={handleAgreement}
+                                ></lightning-input>
+                            </template>
+                        </div>
+                        <div
+                            class="slds-col slds-grid slds-grid_vertical-align-end slds-gutters slds-size_12-of-12 slds-wrap slds-var-m-vertical_xx-small slds-var-m-horizontal_small"
+                        >
+                            <div class="slds-col slds-size_1-of-1 slds-large-size_6-of-12">
+                                <lightning-input
+                                    type="email"
+                                    value={email}
+                                    onchange={handleEmail}
+                                    name="email"
+                                    label="Email"
+                                    required="true"
+                                ></lightning-input>
+                            </div>
+                            <div
+                                class="slds-col slds-small-size_8-of-12 slds-medium-size_9-of-12 slds-large-size_4-of-12 slds-text-body_regular"
+                            >
+                                Customer agrees to sign up for AutoPay and Paperless Billing
+                            </div>
+                            <div
+                                class="slds-col slds-small-size_4-of-12 slds-medium-size_3-of-12 slds-large-size_2-of-12"
+                            >
+                                <lightning-input
+                                    type="checkbox"
+                                    name="costumerAutopay"
+                                    label="Agree"
+                                    checked={autoPay}
+                                    disabled={noEmail}
+                                    onchange={handleCostumerAutopayChange}
+                                ></lightning-input>
+                            </div>
+                        </div>
+                        <template lwc:if={autoPay}>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-grid slds-var-p-around_small slds-var-m-top_medium"
+                            >
+                                <div class="slds-col slds-size_8-of-12 slds-text-heading_small" style="color: #ff8200">
+                                    Credit Card AutoPay
+                                </div>
+                            </div>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-var-p-horizontal_medium slds-var-m-horizontal_x-small"
+                            >
+                                <strong
+                                    >This on-file payment method CANNOT be a non-reloadable prepaid card or gift
+                                    card.</strong
+                                >
+                            </div>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-grid slds-var-p-around_small slds-var-m-horizontal_medium"
+                            >
+                                <lightning-input
+                                    type="checkbox"
+                                    label="Use same payment as today's info? (uncheck to use a different method)"
+                                    name="sameCardAutopay"
+                                    checked={useSameAutopay}
+                                    onchange={handleSameCard}
+                                ></lightning-input>
+                            </div>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-var-p-horizontal_medium slds-var-m-horizontal_x-small"
+                            >
+                                <strong
+                                    >The last name on the credit card being used should match the last name of the
+                                    customer signing up for service.</strong
+                                >
+                            </div>
+                            <div class="slds-grid slds-wrap slds-var-p-around_small">
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                    <div class="slds-var-p-around_xx-small lgc-bg">
+                                        <lightning-input
+                                            type="text"
+                                            label="First Name"
+                                            name="autopayFirstName"
+                                            onchange={handleChange}
+                                            min-length="2"
+                                            value={autopayFirstName}
+                                            disabled={disableAutoPayFields}
+                                            required="true"
+                                        ></lightning-input>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                    <div class="slds-var-p-around_xx-small lgc-bg">
+                                        <lightning-input
+                                            type="text"
+                                            label="Last Name"
+                                            name="autopayLastName"
+                                            value={autopayLastName}
+                                            onchange={handleChange}
+                                            min-length="2"
+                                            disabled={disableAutoPayFields}
+                                            required="true"
+                                        ></lightning-input>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                                    <div class="slds-var-p-around_xx-small lgc-bg">
+                                        <lightning-input
+                                            type="password"
+                                            max-length="19"
+                                            min-length="13"
+                                            message-when-pattern-mismatch="Enter a valid Credit Card Number."
+                                            value={autopayCcNumber}
+                                            onchange={handleChange}
+                                            name="autopayCcNumber"
+                                            label="Card Number"
+                                            pattern="[0-9]{13,19}"
+                                            disabled={disableAutoPayFields}
+                                            required="true"
+                                        ></lightning-input>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_2-of-3 slds-medium-size_3-of-12">
+                                    <div class="slds-var-p-around_xx-small lgc-bg">
+                                        <lightning-input
+                                            type="text"
+                                            value={autopayCardName}
+                                            onchange={handleChange}
+                                            name="autopayCardName"
+                                            label="Name on Credit Card"
+                                            disabled={disableAutoPayFields}
+                                            required="true"
+                                        ></lightning-input>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-3 slds-medium-size_3-of-12">
+                                    <div class="slds-var-p-around_xx-small lgc-bg">
+                                        <lightning-input
+                                            type="text"
+                                            max-length="5"
+                                            min-length="5"
+                                            value={autopayZip}
+                                            onchange={handleChange}
+                                            name="autopayZip"
+                                            label="Zip Code"
+                                            disabled={disableAutoPayFields}
+                                            required="true"
+                                        ></lightning-input>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_3-of-12">
+                                    <div class="slds-var-p-around_xx-small lgc-bg">
+                                        <lightning-combobox
+                                            options={months}
+                                            value={autopayMonth}
+                                            onchange={handleChange}
+                                            name="autopayMonth"
+                                            label="Expiration Month"
+                                            disabled={disableAutoPayFields}
+                                            required="true"
+                                        ></lightning-combobox>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-medium-size_3-of-12">
+                                    <div class="slds-var-p-around_xx-small lgc-bg">
+                                        <lightning-combobox
+                                            options={years}
+                                            value={autopayYear}
+                                            onchange={handleChange}
+                                            name="autopayYear"
+                                            label="Expiration Year"
+                                            disabled={disableAutoPayFields}
+                                            required="true"
+                                        ></lightning-combobox>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-2">
+                                    <div class="slds-var-p-around_xx-small lgc-bg">
+                                        <lightning-input
+                                            value={autopayCvv}
+                                            onchange={handleChange}
+                                            name="autopayCvv"
+                                            type="password"
+                                            max-length="4"
+                                            message-when-pattern-mismatch="Enter a valid Security Code."
+                                            min-length="3"
+                                            label="Security Code"
+                                            pattern="[0-9]{3,4}"
+                                            disabled={disableAutoPayFields}
+                                            required="true"
+                                        ></lightning-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-grid slds-var-p-around_small slds-var-m-top_medium"
+                            >
+                                <div
+                                    class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12 slds-text-heading_small"
+                                    style="color: #ff8200"
+                                >
+                                    The AutoPay and Paperless Billing verbiages must be read to the customer before
+                                    continuing
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-grid_vertical slds-var-m-top_small">
+                                <div class="slds-col slds-size_12-of-12">
+                                    <lightning-formatted-rich-text value={paperlessVerbiage}>
+                                    </lightning-formatted-rich-text>
+                                </div>
+                                <lightning-input
+                                    class="slds-var-m-bottom_x-small slds-var-m-top_xx-small"
+                                    type="checkbox"
+                                    label={agreementLabel}
+                                    name="agreementPaperlessBilling"
+                                    required="true"
+                                    id="agreementPaperlessBilling"
+                                    checked={agreementPaperlessBilling}
+                                    onchange={handleAgreement}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-grid slds-grid_vertical slds-border_bottom slds-var-m-vertical_small">
+                                <div class="slds-col slds-size_12-of-12">
+                                    <lightning-formatted-rich-text value={autoPayVerbiage}>
+                                    </lightning-formatted-rich-text>
+                                </div>
+                                <lightning-input
+                                    class="slds-m-bottom_x-small slds-m-top_xx-small"
+                                    type="checkbox"
+                                    label={agreementLabel}
+                                    name="agreementAutoPay"
+                                    id="agreementAutoPay"
+                                    required="true"
+                                    checked={agreementAutoPay}
+                                    onchange={handleAgreement}
+                                ></lightning-input>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-directv-enga-cart cart={cart} bold-description="false">
+                    </c-poe_lwc-buyflow-directv-enga-cart>
+                    <div class="slds-grid slds-p-around_medium">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <c-poe_lwc-buyflow-tab-actions
+                show-cancel="true"
+                next-label={nextLabel}
+                disable-next={noCompleteInformation}
+                show-previous={showNext}
+                show-next={showNext}
+                oncancel={handleCancel}
+                onprevious={handlePrevious}
+                onnext={handleClick}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <!-- <template lwc:if={showSchedule}>
+        <c-poe_lwc-buyflow-direc-tv-future-charges-modal
+            future-charges={futureCharges}
+            onclose={handleSchedule}
+        ></c-poe_lwc-buyflow-direc-tv-future-charges-modal>
+    </template> -->
+    <template lwc:if={showPopup}>
+        <c-poe_lwc-buyflow-direc-t-v-info-popup
+            onclose={hideData}
+            description={declineWarning}
+        ></c-poe_lwc-buyflow-direc-t-v-info-popup>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

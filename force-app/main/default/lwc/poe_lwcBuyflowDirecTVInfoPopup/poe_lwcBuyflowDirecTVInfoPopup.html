@@ -1,0 +1,19 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-modal="true"
+        aria-label="Meaningful description of the modal content"
+        class="slds-modal slds-fade-in-open"
+    >
+        <div class="slds-modal__container">
+            <div class="slds-modal__content slds-p-around_medium slds-modal__content_headless" id="modal-content-id-1">
+                <lightning-formatted-rich-text value={description}> </lightning-formatted-rich-text>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick={hideModal}>Close</button>
+            </div>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

@@ -1,0 +1,163 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="earthlink"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <lightning-card title={labels.ORDER_CONFIRMATION_TAB_NAME_LABEL}>
+            <div class="slds-grid slds-wrap slds-grid_vertical slds-p-around_small">
+                <div class="slds-col slds-p-horizontal_small slds-size_1-of-1">
+                    <p class="slds-text-title">
+                        <lightning-formatted-text
+                            value={labels.ORDER_CONFIRMATION_CHARGES_DISCLAIMER}
+                        ></lightning-formatted-text>
+                    </p>
+                </div>
+                <div
+                    class="slds-col slds-p-horizontal_small slds-p-top_medium slds-p-bottom_x-large slds-border_bottom slds-size_1-of-1"
+                >
+                    <p class="slds-text-heading_small slds-p-bottom_x-large">
+                        <strong>
+                            <lightning-formatted-text
+                                value={labels.MONTHLY_CHARGES_CART_TITLE}
+                            ></lightning-formatted-text>
+                        </strong>
+                    </p>
+                    <div class="slds-grid slds-wrap">
+                        <template for:each={cartInfo.monthlyCharges} for:item="product">
+                            <div key={product.name} class="slds-col slds-size_2-of-3 slds-p-bottom_medium">
+                                <p key={product.name}>{product.name}</p>
+                            </div>
+                            <div key={product.name} class="slds-col slds-size_1-of-3 slds-p-bottom_medium">
+                                <p key={product.name} class="slds-text-align_right slds-p-right_medium">
+                                    ${product.fee}
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_2-of-3">
+                            <p class="slds-text-color_success"><strong>
+                                <lightning-formatted-text
+                                    value={labels.ESTIMATED_FIRST_MONTH_TOTAL_TITLE}
+                                ></lightning-formatted-text>
+                            </strong></p>
+                        </div>
+                        <div class="slds-col slds-size_1-of-3">
+                            <p class="slds-text-align_right slds-p-right_medium slds-text-heading_small">
+                                <strong>${cartInfo.monthlyTotal}</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <template lwc:if={cartInfo.hasToday}>
+                    <div
+                        class="slds-col slds-p-horizontal_small slds-p-top_x-large slds-p-bottom_x-large slds-border_bottom slds-size_1-of-1"
+                    >
+                        <p class="slds-text-heading_small slds-p-bottom_x-large"><strong>
+                            <lightning-formatted-text
+                                value={labels.ONE_TIME_CHARGE_TITLE}
+                            ></lightning-formatted-text>
+                        </strong></p>
+                        <div class="slds-grid slds-wrap">
+                            <template for:each={cartInfo.todayCharges} for:item="activation">
+                                <div key={activation.name} class="slds-col slds-size_2-of-3 slds-p-bottom_medium">
+                                    <p key={activation.name}>{activation.name}</p>
+                                </div>
+                                <div key={activation.name} class="slds-col slds-size_1-of-3 slds-p-bottom_medium">
+                                    <p key={activation.name} class="slds-text-align_right slds-p-right_medium">
+                                        ${activation.fee}
+                                    </p>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_2-of-3">
+                                <p class="slds-text-color_success"><strong>
+                                    <lightning-formatted-text
+                                        value={labels.ONE_TIME_TOTAL_TITLE}
+                                    ></lightning-formatted-text>
+                                </strong></p>
+                            </div>
+                            <div class="slds-col slds-size_1-of-3">
+                                <p class="slds-text-align_right slds-p-right_medium slds-text-heading_small">
+                                    <strong>${cartInfo.todayTotal}</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template lwc:if={showInstallationDatetime}>
+                    <div
+                        class="slds-col slds-p-horizontal_small slds-p-top_x-large slds-p-bottom_x-large slds-border_bottom slds-size_1-of-1"
+                    >
+                        <p class="slds-text-heading_small">
+                            <strong>{labels.INSTALLATION_DATE_TIME_LABEL} </strong>{installationDatetime}
+                        </p>
+                    </div>
+                </template>
+                <div
+                    class="slds-col slds-p-horizontal_small slds-p-vertical_x-large slds-size_1-of-1"
+                >
+                    <p class="slds-text-heading_small slds-p-bottom_x-large"><strong>
+                        <lightning-formatted-text
+                            value={labels.LANGUAGE_PREFERENCE_TITLE}
+                        ></lightning-formatted-text>
+                    </strong></p>
+                    <lightning-radio-group
+                        name="languagePreference"
+                        label={labels.CUSTOMER_CARE_LANGUAGE_FIELD_LABEL}
+                        options={languagePrefOptions}
+                        value={languagePrefValue}
+                        onchange={handleLanguagePrefChange}
+                        type="radio"
+                    ></lightning-radio-group>
+                </div>
+            </div>
+            <div class="slds-grid slds-p-vertical_medium slds-p-horizontal_large">
+                <div class="slds-col slds-small-size_4-of-12 slds-medium-size_2-of-12 slds-size_6-of-12">
+                    <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                </div>
+            </div>
+
+            <c-poe_lwc-buyflow-tab-actions
+                show-cancel="true"
+                next-label={nextLabel}
+                show-previous={showNext}
+                show-next={showNext}
+                oncancel={handleCancel}
+                onprevious={handlePrevious}
+                onnext={handleClick}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </lightning-card>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.SELF_SERVICE_VALIDATE_LEAVING_MESSAGE}
+            modal-title={labels.SELF_SERVICE_VALIDATE_LEAVING_TITLE}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showVerizonFootPrintModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.VZ_FOOTPRINT_VERBIAGE}
+            modal-title={labels.NOTICE_MODAL_TITLE}
+            onconfirm={hideVerizonFootPrintModal}
+            onclose={hideVerizonFootPrintModal}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

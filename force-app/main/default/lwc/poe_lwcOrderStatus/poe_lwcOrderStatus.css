@@ -1,0 +1,5 @@
+.column-cont * {
+    border-bottom: 1px solid #c9c9c9;
+    margin-bottom: 6px;
+    padding-bottom: 3px;
+}

@@ -1,0 +1,380 @@
+<template>
+    <div class="pages-with-provider-style page pages-nav" provider={providerStyle}>
+        <div class="nav-bar">
+            <a onclick={handlePrevious} title="Back button" class="btn-back-rounded">
+                <img src={iconBtnBack} alt="Back button" />
+            </a>
+
+            <h2>{navBarText}</h2>
+        </div>
+        <template lwc:if={showBillingNotification}>
+            <div class="page-content no-padding-top">
+                <template lwc:if={isNotCallCenterOrigin}>
+                    <div class="slds-grid slds-gutters slds-wrap slds-p-around_medium">
+                        <div class="slds-col slds-size_1-of-1 slds-text-heading_large">
+                            {labels.BILLING_NOTIFICATION_TITLE}
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-text-heading_medium">
+                            {labels.BILLING_SECTION_AGENT_INSTRUCTIONS}
+                        </div>
+                    </div>
+                    <a onclick={handleNext} class={nextButtonClass}> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+                </template>
+            </div>
+        </template>
+        <template lwc:else>
+            <div class="page-content no-padding-top">
+                <form>
+                    <div class="form-header">
+                        <img align="left" src={iconFormCreditCard} />
+                        <h3>{labels.PAYMENT_INFORMATION_TITLE}</h3>
+                        <p>{headerText}</p>
+                    </div>
+                    <div class="form-content">
+                        <template lwc:if={showPaymentMethods}>
+                            <div class="slds-m-around_medium slds-m-top_none">
+                                <lightning-radio-group
+                                    name="methods"
+                                    label={labels.PAYMENT_INPUT_METHOD_FIELD_LABEL}
+                                    options={methods}
+                                    value={method}
+                                    onchange={handleMethod}
+                                    type="radio"
+                                ></lightning-radio-group>
+                            </div>
+                        </template>
+                        <template lwc:if={isPCI}>
+                            <div class="slds-m-around_medium slds-m-top_none">
+                                <lightning-radio-group
+                                    name="pci"
+                                    label={labels.PCI_OPTIONS_FIELD_LABEL}
+                                    options={pciOptions}
+                                    value={pciValue}
+                                    onchange={handlePCI}
+                                    type="radio"
+                                ></lightning-radio-group>
+                            </div>
+                            <template lwc:if={isEmail}>
+                                <div
+                                    class="slds-grid slds-wrap slds-grid_vertical slds-size_12-of-12 slds-m-around_small slds-align_absolute-center"
+                                >
+                                    <div class="slds-col slds-size_10-of-12">
+                                        <lightning-input
+                                            type="email"
+                                            value={email}
+                                            onchange={handleEmail}
+                                            name="email"
+                                            label={labels.EMAIL_ADDRESS_FIELD_LABEL}
+                                            required="true"
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_10-of-12 slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_6-of-12 slds-p-right_small">
+                                            <button
+                                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                                onclick={sendEmail}
+                                                disabled={noEmail}
+                                            >
+                                                {labels.EMAIL_PCI_LINK_BUTTON_LABEL}
+                                            </button>
+                                        </div>
+                                        <div class="slds-col slds-size_6-of-12 slds-p-left_small">
+                                            <button
+                                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                                onclick={handleRefresh}
+                                                disabled={noEmail}
+                                            >
+                                                {labels.REFRESH_FIELDS_BUTTON_LABEL}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div
+                                    class="slds-grid slds-wrap slds-grid_vertical slds-size_12-of-12 slds-m-around_small slds-align_absolute-center"
+                                >
+                                    <div class="slds-col slds-size_10-of-12">
+                                        <lightning-input
+                                            type="tel"
+                                            value={phone}
+                                            onchange={handlePhone}
+                                            name="phone"
+                                            label={labels.CONTACT_PHONE_NUMBER_FIELD_LABEL}
+                                            required="true"
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_10-of-12 slds-p-top_xx-small">
+                                        <lightning-formatted-text value={phoneDisclaimer}> </lightning-formatted-text>
+                                        <lightning-input
+                                            type="checkbox"
+                                            label={phoneDisclaimer2}
+                                            checked={hasOptedInSMS}
+                                            name="hasOptedInSMS"
+                                            onchange={handleChange}
+                                        >
+                                        </lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_10-of-12 slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_6-of-12 slds-p-right_small">
+                                            <button
+                                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                                onclick={sendSMS}
+                                                disabled={disableSendSMSButton}
+                                            >
+                                                {labels.SMS_PCI_LINK_BUTTON_LABEL}
+                                            </button>
+                                        </div>
+                                        <div class="slds-col slds-size_6-of-12 slds-p-left_small">
+                                            <button
+                                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                                onclick={handleRefresh}
+                                                disabled={disableSendSMSButton}
+                                            >
+                                                {labels.REFRESH_FIELDS_BUTTON_LABEL}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                        <div class="form-group">
+                            <lightning-input
+                                type="text"
+                                value={firstName}
+                                onchange={handleChange}
+                                required
+                                placeholder={labels.NAME_ON_CARD_PLACEHOLDER}
+                                label={labels.NAME_ON_CARD_FIELD_LABEL}
+                                disabled={isNotManual}
+                            ></lightning-input>
+                            <lightning-input
+                                type="text"
+                                required
+                                value={lastName}
+                                onchange={handleChange}
+                                placeholder={labels.LAST_NAME_ON_CARD_PLACEHOLDER}
+                                label={labels.LAST_NAME_ON_CARD_FIELD_LABEL}
+                                disabled={isNotManual}
+                            ></lightning-input>
+                        </div>
+                        <p class="input-description">{labels.NAME_MUST_MATCH_PERSON_CONTRACTING_SERVICE}</p>
+    
+                        <div class="form-group">
+                            <lightning-input
+                                type="password"
+                                max-length="19"
+                                min-length="13"
+                                message-when-pattern-mismatch={labels.INVALID_CREDIT_CARD_NUMBER_ERROR_MESSAGE}
+                                value={ccNumber}
+                                onchange={handleChange}
+                                name="ccNumber"
+                                label={labels.CARD_NUMBER_FIELD_LABEL}
+                                pattern="[0-9]{13,19}"
+                                required="true"
+                                placeholder={labels.CARD_NUMBER_PLACEHOLDER}
+                                disabled={isNotManual}
+                            ></lightning-input>
+                        </div>
+                        <div class="form-group">
+                            <lightning-select
+                                label={labels.CREDIT_CARD_TYPE_FIELD_LABEL}
+                                required="true"
+                                placeholder={labels.CREDIT_CARD_TYPE_PLACEHOLDER}
+                                value={type}
+                                onchange={handleChange}
+                                name="type"
+                                options={ccTypes}
+                                disabled={isNotManual}
+                            ></lightning-select>
+                        </div>
+    
+                        <div class="form-group">
+                            <lightning-select
+                                options={months}
+                                disabled={isNotManual}
+                                value={month}
+                                onchange={handleChange}
+                                name="month"
+                                label={labels.EXPIRATION_MONTH_FIELD_LABEL}
+                                required="true"
+                            ></lightning-select>
+                            <lightning-select
+                                options={years}
+                                disabled={isNotManual}
+                                value={year}
+                                onchange={handleChange}
+                                name="year"
+                                label={labels.EXPIRATION_YEAR_FIELD_LABEL}
+                                required="true"
+                            ></lightning-select>
+                        </div>
+    
+                        <div class="form-group">
+                            <lightning-input
+                                type="password"
+                                required
+                                placeholder={labels.CVV_PLACEHOLDER}
+                                label={labels.CVV_FIELD_LABEL}
+                                disabled={isNotManual}
+                                value={cvv}
+                                onchange={handleChange}
+                                name="cvv"
+                                max-length="4"
+                                message-when-pattern-mismatch={labels.INVALID_CVV_ERROR_MESSAGE}
+                                min-length="3"
+                                pattern="[0-9]{3,4}"
+                            ></lightning-input>
+                        </div>
+    
+                        <div class="form-group label-custom-for-input">
+                            <lightning-input
+                                name="accept-term-and-conditions-earthlink"
+                                type="checkbox"
+                                checked={termsAgreed}
+                                onchange={handleChange}
+                                required
+                                label={labels.HIDE_FIELD_LABEL}
+                            ></lightning-input>
+                            <label for="accept-term-and-conditions-earthlink">
+                                {termsText} <a onclick={handleShowGeneralDisclaimer}>{labels.TERMS_AGREEMENT_LABEL_2}</a>
+                            </label>
+                        </div>
+    
+                        <hr />
+    
+                        <h3>{labels.BILLING_ADDRESS_SECTION_TITLE}</h3>
+    
+                        <div class="form-group">
+                            <lightning-input
+                                type="checkbox"
+                                name="useSameAddressAsBillingAddress"
+                                checked={useSameAddressAsBillingAddress}
+                                onchange={handleChange}
+                                label={useSameAddressAsBillingAddressLabel}
+                            ></lightning-input>
+                        </div>
+                        <template lwc:if={showBillingAddress}>
+                            <template lwc:if={isGuestUser}>
+                                <div class="form-group slds-col slds-size_1-of-1">
+                                    <c-poe_lwc-address-field
+                                        options={addressOptions}
+                                        postal-code={billingZip}
+                                        onaddresschange={handleAddressChange}
+                                        onlogerror={handleChildLogError}
+                                    ></c-poe_lwc-address-field>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="text"
+                                        name="address"
+                                        value={billingStreet}
+                                        label={labels.STREET_ADDRESS_FIELD_LABEL}
+                                        required="true"
+                                        onchange={handleChange}
+                                        placeholder={labels.BILLING_STREET_ADDRESS_PLACEHOLDER}
+                                    ></lightning-input>
+                                </div>
+    
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="text"
+                                        name="apt"
+                                        value={billingApt}
+                                        label={labels.ADDRESS_LINE_2_FIELD_LABEL}
+                                        placeholder={labels.BILLING_ADDRESS_LINE_2_PLACEHOLDER}
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+    
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="text"
+                                        name="city"
+                                        value={billingCity}
+                                        label={labels.CITY_FIELD_LABEL}
+                                        required="true"
+                                        placeholder={labels.BILLING_CITY_PLACEHOLDER}
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div>
+    
+                                <div class="form-group">
+                                    <lightning-select
+                                        name="state"
+                                        label={labels.STATE_FIELD_LABEL}
+                                        value={billingState}
+                                        options={stateOptions}
+                                        onchange={handleChange}
+                                        required="true"
+                                        placeholder={labels.BILLING_STATE_PLACEHOLDER}
+                                    ></lightning-select>
+                                </div>
+                                <div class="form-group">
+                                    <lightning-input
+                                        type="text"
+                                        name="zip"
+                                        value={billingZip}
+                                        label={labels.ZIP_FIELD_LABEL}
+                                        placeholder={labels.BILLING_ZIP_PLACEHOLDER}
+                                        onchange={handleChange}
+                                    ></lightning-input>
+                                </div> 
+                            </template>
+                        </template>
+    
+                        <hr />
+                        <template lwc:if={autopayAvailable}>
+                            <p class="input-description-toggle">{labels.AUTOPAY_CONSENT_FIELD_LABEL}</p>
+                            <div class="form-group">
+                                <lightning-input
+                                    class="label-semi-bold"
+                                    name="autopay"
+                                    type="toggle"
+                                    label={labels.RECURRING_PAYMENTS_FIELD_LABEL}
+                                    value={autopayValue}
+                                    required="true"
+                                ></lightning-input>
+                            </div>
+                        </template>
+                        <template lwc:if={paperlessAvailable}>
+                            <p class="input-description-toggle">{labels.PAPERLESS_BILLING_CONSENT_FIELD_LABEL}</p>
+                            <div class="form-group">
+                                <lightning-input
+                                    class="label-semi-bold"
+                                    name="paperless"
+                                    type="toggle"
+                                    label={labels.PAPERLESS_BILLING_HEADER}
+                                    value={paperlessValue}
+                                    required="true"
+                                ></lightning-input>
+                            </div>
+                        </template>
+                    </div>
+                </form>
+                <a onclick={handleNext} class={nextButtonClass}> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+    
+                <div class="footer-mobile">
+                    <a onclick={handlePrevious} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+                    <a onclick={handleNext} class={nextButtonClassMobile}> {labels.NEXT_STEP_BUTTON_LABEL} </a>
+                </div>
+            </div>
+        </template>
+    </div>
+    <template lwc:if={Encrypt}>
+        <c-poe_lwc-buyflow-credi-card-encrypt
+            cvv={cvv}
+            cc-number={ccNumber}
+            program="earthlink"
+            onerror={handleEncryptionError}
+            onencryption={callCreditCheck}
+        ></c-poe_lwc-buyflow-credi-card-encrypt>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

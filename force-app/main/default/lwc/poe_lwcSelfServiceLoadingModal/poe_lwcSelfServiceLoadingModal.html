@@ -1,0 +1,21 @@
+<template>
+    <lightning-modal-header label={content.title}></lightning-modal-header>
+    <lightning-modal-body class="modal-verify-payment">
+        <div provider={content.provider}>
+            <template lwc:if={content.iconUrl}>
+                <img src={content.iconUrl} />
+            </template>
+            <h2>
+                <lightning-formatted-text value={content.title}> </lightning-formatted-text>
+            </h2>
+            <template lwc:if={content.description}>
+                <p>
+                    <lightning-formatted-text value={content.description}> </lightning-formatted-text>
+                </p>
+            </template>
+            <div class="container">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </lightning-modal-body>
+</template>

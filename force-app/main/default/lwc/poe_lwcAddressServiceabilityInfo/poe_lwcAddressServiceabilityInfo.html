@@ -1,0 +1,111 @@
+<template>
+    <lightning-card title="Address Information">
+        <div class="slds-clearfix slds-m-around_medium">
+            <div class="slds-grid slds-gutters slds-wrap slds-p-around_medium">
+                <div class="slds-col slds-size_12-of-12">
+                    <lightning-input
+                        type="text"
+                        name="address"
+                        value={address}
+                        label="Street Address"
+                        onchange={handleChange}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="text"
+                        max-length="8"
+                        label="Apt / Suite / Unit"
+                        onchange={handleChange}
+                        name="apt"
+                        value={apt}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="text"
+                        max-length="8"
+                        label="Number"
+                        onchange={handleChange}
+                        name="number"
+                        value={number}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="text"
+                        max-length="25"
+                        label="Building"
+                        onchange={handleChange}
+                        name="building"
+                        value={building}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="text"
+                        max-length="5"
+                        label="Floor"
+                        onchange={handleChange}
+                        name="floor"
+                        value={floor}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        type="text"
+                        max-length="25"
+                        label="City"
+                        onchange={handleChange}
+                        name="city"
+                        value={city}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_2-of-3 slds-medium-size_2-of-6">
+                    <lightning-combobox
+                        name="state"
+                        label="State"
+                        value={state}
+                        options={options}
+                        onchange={handleChange}
+                    ></lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-3 slds-medium-size_1-of-6">
+                    <lightning-input
+                        type="text"
+                        label="Zip"
+                        required
+                        max-length="5"
+                        name="zip"
+                        value={zip}
+                        message-when-value-missing="Error: Zip is required."
+                        onchange={handleChange}
+                    ></lightning-input>
+                </div>
+            </div>
+            <template lwc:if={showDisclaimer}>
+                <c-poe_lwc-address-serviceability-consent></c-poe_lwc-address-serviceability-consent>
+            </template>
+            <div class="slds-p-around_medium slds-grid slds-wrap slds-float_right">
+                <div class="slds-col">
+                    <lightning-button
+                        label="Cancel"
+                        onclick={handleCancel}
+                        class="slds-m-horizontal_medium"
+                    ></lightning-button>
+                </div>
+                <div class="slds-col">
+                    <lightning-button
+                        variant="brand"
+                        label="Check Serviceability"
+                        onclick={handleClick}
+                        disabled={noZip}
+                    ></lightning-button>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

@@ -1,0 +1,193 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="windstream"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default">
+            <template lwc:if={showSBS}>
+                <c-poe_lwc-buyflow-windstream-s-b-s-button
+                    ongoback={hideSBS}
+                    record-id={recordId}
+                    is-guest-user={isGuestUser}
+                    onlogerror={handleLogError}
+                ></c-poe_lwc-buyflow-windstream-s-b-s-button>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_medium">
+                    <div class="slds-col slds-box slds-size_1-of-1 slds-medium-size_2-of-3">
+                        <template lwc:if={showProducts}>
+                            <div
+                                class="slds-text-heading_medium slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_none slds-m-horizontal_none"
+                            >
+                                Product Selection
+                            </div>
+                            <div class="slds-form-element__control">
+                                <template for:each={products} for:item="product">
+                                    <span key={product.Id} class="slds-radio">
+                                        <input
+                                            type="radio"
+                                            id={product.Id}
+                                            value={product.Id}
+                                            name="products"
+                                            checked={product.isChecked}
+                                            onchange={handlePriceChange}
+                                        />
+                                        <label class="slds-radio__label" for={product.Id}>
+                                            <span class="slds-form-element__label">
+                                                <div class="slds-box slds-grid slds-wrap">
+                                                    <div
+                                                        class="slds-col slds-size_1-of-12 slds-align_absolute-center slds-order_1"
+                                                    >
+                                                        <span class="slds-radio_faux slds-m-right_none"></span>
+                                                    </div>
+
+                                                    <div
+                                                        class="slds-col slds-size_10-of-12 slds-small-size_8-of-12 slds-text-heading_small slds-order_2"
+                                                    >
+                                                        <strong>{product.Name}</strong>
+                                                    </div>
+                                                    <div
+                                                        class="slds-hide_small slds-size_1-of-1 slds-m-bottom_small slds-order_2"
+                                                    ></div>
+                                                    <div
+                                                        class="slds-col slds-size_5-of-12 slds-small-size_3-of-12 slds-text-align_right slds-text-heading_small slds-order_4 slds-small-order_3"
+                                                    >
+                                                        <strong>${product.Price}</strong>
+                                                    </div>
+                                                    <div
+                                                        class="slds-col slds-size_7-of-12 slds-var-p-top_xxx-small slds-text-heading_small slds-order_3 slds-small-order_4"
+                                                    >
+                                                        <template lwc:if={product.hasDisclaimer}>
+                                                            <a
+                                                                onclick={handleDescription}
+                                                                data-id={product.disclaimerNumber}
+                                                                data-tech={product.techNumber}
+                                                                data-name={product.Name}
+                                                                >See Details</a
+                                                            >
+                                                        </template>
+                                                    </div>
+
+                                                    <div
+                                                        class="slds-col slds-size_1-of-1 slds-small-size_5-of-12 slds-var-p-top_xxx-small slds-text-align_right slds-text-heading_small slds-order_5"
+                                                    >
+                                                        <template lwc:if={product.hasPromo}>
+                                                            <strong><s>${product.OldPrice}</s></strong>
+                                                        </template>
+                                                    </div>
+                                                    <div
+                                                        class="slds-col slds-var-p-top_medium slds-var-p-left_large slds-size_1-of-1 slds-medium-size_7-of-12 slds-large-size_8-of-12 slds-order_6"
+                                                    >
+                                                        Type:
+                                                        <b
+                                                            ><lightning-formatted-text
+                                                                class="slds-m-left_large"
+                                                                value={product.Description}
+                                                            ></lightning-formatted-text
+                                                        ></b>
+                                                    </div>
+                                                    <div
+                                                        class="slds-col slds-var-p-top_medium slds-text-align_right slds-size_1-of-1 slds-medium-size_5-of-12 slds-large-size_4-of-12 slds-order_7"
+                                                    >
+                                                        Bundle Term: {product.PriceType}
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </label>
+                                    </span>
+                                </template>
+                            </div>
+                        </template>
+                        <template lwc:if={showDirectoryListing}>
+                            <div
+                                class="slds-text-heading_medium slds-p-bottom_medium slds-p-top_x-small slds-p-horizontal_none slds-m-horizontal_none"
+                            >
+                                Directory Listing
+                                <lightning-radio-group
+                                    options={directoryListingOptions}
+                                    value={directoryListingValue}
+                                    type="radio"
+                                    onchange={handleDirectoryListing}
+                                ></lightning-radio-group>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-windstream-cart cart={cart}> </c-poe_lwc-buyflow-windstream-cart>
+                        <template lwc:if={isGuestUser}></template>
+                        <template lwc:else>
+                            <button
+                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                onclick={sbsHandler}
+                            >
+                                T-Chart
+                            </button></template
+                        >
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    disable-next={disableNext}
+                    show-previous="true"
+                    show-cancel="true"
+                    oncancel={handleCancel}
+                    onprevious={handlePrevious}
+                    onnext={handleClick}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showDisclaimer}>
+        <c-poe_lwc-buyflow-windstream-product-description-modal
+            onclosedescription={handleDescription}
+            description={disclaimer}
+            tech={techDisclaimer}
+            modal-label={modalLabel}
+            onaccept={saveProduct}
+        ></c-poe_lwc-buyflow-windstream-product-description-modal>
+    </template>
+    <template lwc:if={showExtendedCopper}>
+        <c-poe_lwc-buyflow-windstream-products-disclaimer-modal
+            onclosedisclaimer={handleDescription}
+            disclaimer={dropDisclaimer}
+            onagree={handleCopperReview}
+            oncancelorder={handleCancel}
+        ></c-poe_lwc-buyflow-windstream-products-disclaimer-modal>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showBroadbandModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.broadbandLabel}
+            modal-title="Consumer Broadband Labels"
+            onclose={handleBroadbandModal}
+            onconfirm={handleBroadbandModal}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

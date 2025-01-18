@@ -1,0 +1,120 @@
+<template>
+    <lightning-card class="container">
+
+        <template if:true={showSpinner}>
+            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+        </template>
+        
+        <lightning-button class="container--btn" variant="brand" label="Fulfill Order Parts Request"
+                            onclick={showModalBox}>                    
+        </lightning-button>
+        <!-- modal start -->
+        <template if:true={isShowModal}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_large">
+                <template if:true={isloading}>
+                    <lightning-spinner alternative-text="Loading" size="medium" variant="Brand"></lightning-spinner>
+                </template>
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+                            onclick={closePopUp}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small">
+                            </lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">ORDER DETAILS</h2>
+                    </header>
+                    <lightning-record-view-form style="background-color: white;"
+                            object-api-name={objectApiName}
+                            record-id={recordId}>
+                            <div class="slds-p-around_x-small">
+                                <div class="slds-grid slds-gutters">
+                                    <span class="slds-col slds-size_6-of-12">
+                                        <lightning-output-field field-name={numField}></lightning-output-field>
+                                    </span>
+                                    <span class="slds-col slds-size_6-of-12">
+                                        <lightning-output-field field-name={accField}></lightning-output-field>
+                                    </span>
+                                </div>
+                                <div class="slds-grid slds-gutters">
+                                    <span class="slds-col slds-size_6-of-12">
+                                        <lightning-output-field field-name={whField}></lightning-output-field>
+                                    </span>
+                                    <span class="slds-col slds-size_6-of-12">
+                                        <lightning-output-field field-name={createdDateField}></lightning-output-field>
+                                    </span>
+                                </div>
+                            </div>
+                        </lightning-record-view-form>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <template if:true={showSpinner}>
+                            <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                        </template>
+                        
+                        <!--div class="slds-page-header slds-p-bottom_xx-large">
+                            <div class="slds-page-header__row">
+                                <div class="slds-page-header__col-title">
+                                    <div class="slds-media">
+                                        <div class="slds-media__figure">
+                                            <lightning-record-view-form record-id={recordId} object-api-name="Order__c">
+
+                                                <div class="slds-col slds-size_6-of-12">
+                                                    <label class="slds-form-element__label" for="form-element-01">Order Number</label> 
+                                                    <lightning-output-field field-name="Name" variant="label-hidden"></lightning-output-field>
+                                                </div>
+                                                <div class="slds-col slds-size_6-of-12">
+                                                    <label class="slds-form-element__label" for="form-element-01">Created Date</label> 
+                                                    <lightning-output-field field-name="Createddate" variant="label-hidden"></lightning-output-field>
+                                                </div>
+
+                                                
+
+                                                
+                                            </lightning-record-view-form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div-->
+                        
+
+                        <lightning-datatable
+                            data={data}
+                            columns={columns}
+                            key-field="partId"
+                            onsave={handleSave}
+                            draft-values={draftValues}
+                            errors={errors}
+                            onkeyup={handleKeyUp}
+                            oncellchange={fulfilledOnChange}
+                            hide-checkbox-column
+                            suppress-bottom-bar="true">
+                        </lightning-datatable>
+                    </div>
+
+                    <div class="slds-modal__footer">
+                        <lightning-button
+                            variant="brand"
+                            label= "Save"
+                            icon-position="right"
+                            onclick={handleSave}
+                            disabled={disableSave}>
+
+                        </lightning-button>
+
+                        <lightning-button
+                            class="slds-p-horizontal_small"
+                            variant="brand"
+                            label= "Submit"
+                            icon-position="right"
+                            onclick={handleSubmit}
+                            disabled={disableSubmit}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </lightning-card>
+</template>

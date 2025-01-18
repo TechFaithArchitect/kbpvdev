@@ -1,0 +1,23 @@
+<template>
+    <lightning-modal-header label={content.label}></lightning-modal-header>
+    <lightning-modal-body class="modal-contact-us">
+        <img src={iconCallUser} />
+
+        <h2>{content.label}</h2>
+        <template lwc:if={content.isMobile}>
+            <p>
+                Call us now at <a href={content.tollNumberURL}>{content.tollNumber}</a> or schedule a call and we will
+                contact you.
+            </p>
+        </template>
+        <template lwc:else>
+            <p>Call us now at <span>{content.tollNumber}</span> or schedule a call and we will contact you.</p>
+        </template>
+
+        <div class="group-buttons">
+            <a class="btn-outline btn-only-rounded" onclick={handleButton} data-id="call"> Close </a>
+
+            <a class="btn-orange btn-only-rounded" onclick={handleButton} data-id="schedule"> Schedule a call </a>
+        </div>
+    </lightning-modal-body>
+</template>

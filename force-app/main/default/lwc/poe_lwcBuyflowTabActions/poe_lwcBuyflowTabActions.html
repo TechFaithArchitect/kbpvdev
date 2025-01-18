@@ -1,0 +1,72 @@
+<template>
+    <div class="slds-grid slds-grid_align-spread slds-p-around_medium slds-gutters slds-wrap">
+        <div class="slds-col slds-grid slds-max-small-size_1-of-1 slds-order_3 slds-small-order_1">
+            <template lwc:if={showCancel}>
+                <lightning-button
+                    class="slds-size_1-of-1"
+                    label={cancelBtnLabel}
+                    stretch
+                    tabindex="-1"
+                    onclick={handleCancel}
+                ></lightning-button>
+            </template>
+        </div>
+        <!-- This is a small margin left between buttons when vertically aligned -->
+        <div class="slds-hide_small slds-size_1-of-1 slds-m-bottom_small slds-order_2"></div>
+
+        <template lwc:if={showNextBtn}>
+            <template lwc:if={showPrevious}>
+                <div
+                    class="slds-col slds-col_bump-left slds-grid slds-grid_align-end slds-max-small-size_1-of-2 slds-small-order_2"
+                >
+                    <lightning-button
+                        class="slds-size_1-of-1"
+                        variant="brand"
+                        tabindex="-1"
+                        label={previousBtnLabel}
+                        stretch
+                        onclick={handlePrevious}
+                    ></lightning-button>
+                </div>
+                <div class="slds-col slds-grid slds-grid_align-end slds-max-small-size_1-of-2 slds-small-order_3">
+                    <lightning-button
+                        class="slds-size_1-of-1"
+                        variant="brand"
+                        tabindex="0"
+                        label={nextBtnLabel}
+                        stretch
+                        onclick={handleNext}
+                        disabled={disableNext}
+                    ></lightning-button>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-col slds-grid slds-grid_align-end slds-max-small-size_1-of-1 slds-small-order_3">
+                    <lightning-button
+                        class="slds-size_1-of-1"
+                        tabindex="0"
+                        variant="brand"
+                        label={nextBtnLabel}
+                        stretch
+                        onclick={handleNext}
+                        disabled={disableNext}
+                    ></lightning-button>
+                </div>
+            </template>
+        </template>
+        <template lwc:else>
+            <template lwc:if={showPrevious}>
+                <div class="slds-col slds-grid slds-grid_align-end slds-max-small-size_1-of-1 slds-small-order_2">
+                    <lightning-button
+                        class="slds-size_1-of-1"
+                        variant="brand"
+                        tabindex="-1"
+                        label={previousBtnLabel}
+                        stretch
+                        onclick={handlePrevious}
+                    ></lightning-button>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

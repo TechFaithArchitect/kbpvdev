@@ -1,0 +1,30 @@
+<template>
+    <lightning-card title={title} icon-name="custom:custom14">
+        <div class="slds-m-around_medium">
+            <lightning-file-upload
+                label="Image Attachment"
+                name="fileUploader"
+                accept={acceptedFormats}
+                onuploadfinished={handleUploadFinished}
+                multiple
+            >
+            </lightning-file-upload>
+        </div>
+
+        <template if:true={fileDataList.length}>
+            <ul class="slds-list_dotted slds-m-around_medium">
+                <template for:each={fileDataList} for:item="file">
+                    <li key={file.name} class="slds-grid slds-grid_align-spread slds-p-vertical_x-small">
+                        <span class="slds-truncate">{file.name}</span>
+                        <lightning-button-icon 
+                            icon-name="utility:delete" 
+                            alternative-text="Delete File" 
+                            onclick={handleDeleteFile} 
+                            data-filename={file.name}>
+                        </lightning-button-icon>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </lightning-card>
+</template>

@@ -1,0 +1,393 @@
+<template>
+    <template if:true={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template if:false={showCollateral}>
+        <div class="slds-grid slds-grid_align-end">
+            <div class="slds-col">
+                <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+            </div>
+        </div>
+        <div class="slds-box slds-theme_default">
+            <template if:false={showSBS}>
+                <div class="slds-grid slds-gutters slds-p-around--medium">
+                    <div class="slds-col slds-size_2-of-3">
+                        <div
+                            class="slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            {pageTitle}
+                        </div>
+                        <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_xx-small">
+                            <div
+                                class="slds-col slds-size_7-of-12 slds-var-m-horizontal_medium slds-grid slds-grid_align-left"
+                            >
+                                <lightning-combobox
+                                    label="Select number of TVs"
+                                    value={numberOfTVs}
+                                    options={numberOfTVsOptions}
+                                    onchange={handleChangeNumberOfTVs}
+                                    variant="label-inline"
+                                >
+                                </lightning-combobox>
+                            </div>
+                            <div class="slds-col" lwc:if={showMultipleGenieButton}>
+                                <lightning-button
+                                    variant="brand"
+                                    label="1 Genie and Multiple Genie Minis"
+                                    name="multipleGenieButton"
+                                    onclick={handleGenieMiniButton}
+                                ></lightning-button>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12">
+                                <p if:true={showAlert} class="slds-m-vertical_medium slds-text-color_error">
+                                    This order will not automate and will have to be processed manually by DIRECTV/AT&T
+                                </p>
+                                <p class="slds-m-vertical_xx-small">Hardware selection</p>
+                            </div>
+
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-grid_align-center"
+                            >
+                                <div
+                                    class="slds-form-element__control slds-col slds-size_12-of-12 slds-m-horizontal_none"
+                                >
+                                    <template for:each={beamHardwareOptions} for:item="product">
+                                        <span key={product.Id} class="slds-radio">
+                                            <input
+                                                type="radio"
+                                                id={product.Id}
+                                                value={product.Id}
+                                                checked={product.isChecked}
+                                                name="products"
+                                                onchange={handleHardwareSelection}
+                                            />
+                                            <label class="slds-radio__label" for={product.Id}>
+                                                <span class="slds-form-element__label">
+                                                    <div class="slds-box slds-grid slds-wrap">
+                                                        <div
+                                                            class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                        >
+                                                            <span class="slds-radio_faux slds-m-right_none"></span>
+                                                        </div>
+                                                        <div class="slds-col slds-size_7-of-12">
+                                                            <b>{product.quantity}</b>
+                                                        </div>
+                                                        <div class="slds-col slds-size_4-of-12 slds-text-align_right">
+                                                            {product.price}
+                                                        </div>
+                                                        <div
+                                                            class="slds-col slds-size_12-of-12 slds-p-top_medium slds-p-left_large"
+                                                        >
+                                                            {product.description}
+                                                        </div>
+                                                    </div>
+                                                </span>
+                                            </label>
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <div if:true={showAdditionalHardwareSelection} class="slds-size_12-of-12">
+                                <div class="slds-m-vertical_xx-small slds-grid slds-col">
+                                    <p>Select Additional Hardware Options</p>
+                                </div>
+                                <div
+                                    if:false={alternativeHardwareOptionsOpen}
+                                    class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-grid_align-center"
+                                >
+                                    <div class="slds-form-element__control slds-size_12-of-12">
+                                        <template for:each={additionalHardwareOptions} for:item="product">
+                                            <span key={product.Id} class="slds-radio">
+                                                <input
+                                                    type="radio"
+                                                    id={product.Id}
+                                                    value={product.Id}
+                                                    checked={product.isChecked}
+                                                    name="additional"
+                                                    onchange={handleAdditionalHardwareSelection}
+                                                />
+                                                <label class="slds-radio__label" for={product.Id}>
+                                                    <span class="slds-form-element__label">
+                                                        <div class="slds-box slds-grid slds-wrap">
+                                                            <div
+                                                                class="slds-col slds-size_1-of-12 slds-align_absolute-center"
+                                                            >
+                                                                <span class="slds-radio_faux slds-m-right_none"></span>
+                                                            </div>
+                                                            <div class="slds-col slds-size_7-of-12">
+                                                                <b>{product.name}</b>
+                                                            </div>
+                                                            <div
+                                                                class="slds-col slds-size_4-of-12 slds-text-align_right"
+                                                            >
+                                                                {product.formattedPrice}
+                                                            </div>
+                                                            <div
+                                                                class="slds-col slds-size_12-of-12 slds-p-left_large slds-p-top_medium"
+                                                            >
+                                                                {product.description}
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                                                </label>
+                                            </span>
+                                        </template>
+                                    </div>
+                                </div>
+                                <template if:true={alternativeHardwareOptionsOpen}>
+                                    <div
+                                        class="slds-grid slds-gutters slds-wrap slds-size_12-of-12 slds-m-bottom_medium slds-p-horizontal_medium"
+                                    >
+                                        <template for:each={additionalHardwareOptions} for:item="product">
+                                            <div key={product.Id} class="slds-col slds-size_3-of-12">
+                                                <lightning-combobox
+                                                    class="slds-m-right_small"
+                                                    key={product.Id}
+                                                    name="hardware"
+                                                    label={product.shortName}
+                                                    data-id={product.Id}
+                                                    disabled={product.disabled}
+                                                    options={product.options}
+                                                    onchange={handleChangeAdditionalHardware}
+                                                    value={product.value}
+                                                ></lightning-combobox>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                                <lightning-button
+                                    variant="base"
+                                    label={alternativeHardwareButtonText}
+                                    onclick={handleAlternativeHardwareOptions}
+                                    class="slds-col"
+                                ></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-card>
+                            <h2 slot="title">
+                                <lightning-icon
+                                    icon-name="utility:cart"
+                                    size="small"
+                                    class="slds-var-m-right_small"
+                                ></lightning-icon>
+                                Shopping Cart
+                            </h2>
+                            <div>
+                                <div class="slds-border_top slds-grid slds-wrap">
+                                    <div
+                                        class="slds-text-heading_small slds-col slds-text-align_center slds-size_12-of-12 slds-var-p-vertical_xx-small"
+                                        style="background-color: #ff8200; color: white"
+                                    >
+                                        <span>Order ID: {cart.orderNumber}</span>
+                                    </div>
+                                    <template if:true={cart.hasToday}>
+                                        <div
+                                            class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                            style="background-color: #ff8200; color: white"
+                                        >
+                                            <span>Today's Charges</span>
+                                        </div>
+                                        <template for:each={cart.todayCharges} for:item="charge">
+                                            <div
+                                                key={charge.id}
+                                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                            >
+                                                <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                    <b>{charge.name}</b>
+                                                </div>
+                                                <template if:true={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                        style="color: #00c6b7"
+                                                    >
+                                                        ${charge.fee}
+                                                    </div>
+                                                </template>
+                                                <template if:false={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    >
+                                                        ${charge.fee}
+                                                    </div>
+                                                </template>
+                                                <template if:true={charge.hasDescription}>
+                                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                        {charge.description}
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <div
+                                            class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small slds-p-right_medium"
+                                        >
+                                            <div class="slds-col slds-size_9-of-12">
+                                                <b>Today's Total*:</b>
+                                            </div>
+                                            <div
+                                                class="slds-col slds-size_3-of-12 slds-text-align_right slds-m-right_medium"
+                                            >
+                                                <b>${cart.todayTotal}</b>
+                                            </div>
+                                        </div>
+                                        <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                            <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                        </div>
+                                    </template>
+                                    <template if:true={cart.hasMonthly}>
+                                        <div
+                                            class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                            style="background-color: #ff8200; color: white"
+                                        >
+                                            <span>Monthly Charges</span>
+                                        </div>
+                                        <template for:each={cart.monthlyCharges} for:item="charge">
+                                            <div
+                                                key={charge.id}
+                                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                            >
+                                                <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                    <b>{charge.name}</b>
+                                                </div>
+                                                <template if:true={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                        style="color: #00c6b7"
+                                                    >
+                                                        ${charge.fee}
+                                                    </div>
+                                                </template>
+                                                <template if:false={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    >
+                                                        ${charge.fee}
+                                                    </div>
+                                                </template>
+                                                <template if:true={charge.hasDescription}>
+                                                    <div class="slds-col slds-size_12-of-12 slds-m-vertical_xxx-small">
+                                                        {charge.description}
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                        <div class="slds-col slds-grid slds-size_12-of-12 slds-m-vertical_xx-small">
+                                            <div class="slds-col slds-size_9-of-12">
+                                                <b>Monthly Total*:</b>
+                                            </div>
+                                            <div class="slds-col slds-size_3-of-12 slds-text-align_right">
+                                                <b>${cart.monthlyTotal}</b>
+                                            </div>
+                                        </div>
+                                        <div class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small">
+                                            <span>* Plus taxes and surcharges. Price higher after promo(s) end.</span>
+                                        </div>
+                                    </template>
+                                    <template if:true={cart.hasSavings}>
+                                        <div
+                                            class="slds-text-heading_small slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-text-align_center slds-p-vertical_xxx-small"
+                                            style="background-color: #ff8200; color: white"
+                                        >
+                                            <span>Savings & Promotions</span>
+                                        </div>
+                                        <template for:each={cart.savingCharges} for:item="charge">
+                                            <div
+                                                key={charge.id}
+                                                class="slds-col slds-size_12-of-12 slds-m-vertical_xx-small slds-grid slds-wrap"
+                                            >
+                                                <div class="slds-col slds-size_9-of-12 slds-m-vertical_xxx-small">
+                                                    <b>{charge.name}</b>
+                                                </div>
+                                                <template if:true={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                        style="color: #00c6b7"
+                                                    ></div>
+                                                </template>
+                                                <template if:false={charge.discount}>
+                                                    <div
+                                                        class="slds-col slds-size_3-of-12 slds-m-vertical_xxx-small slds-text-align_right"
+                                                    ></div>
+                                                </template>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
+                        </lightning-card>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-grid slds-grid_align-spread slds-p-around--medium">
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <div class="slds-grid slds-float_right">
+                            <div class="slds-col slds-p-right--medium">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Previous"
+                                    onclick={handlePrevious}
+                                    class="slds-float_right"
+                                ></lightning-button>
+                            </div>
+                            <div class="slds-col slds-p-right--medium">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Next"
+                                    disabled={noCompleteInfo}
+                                    onclick={handleClick}
+                                    class="slds-float_right"
+                                ></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+    <template if:true={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template if:true={showModal}>
+        <div class="custom-modal">
+            <section role="dialog" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 class="slds-text-heading_medium slds-hyphenate">{modalTitle}</h2>
+                    </header>
+                    <div class="slds-modal__content slds-var-p-around_medium">
+                        <h2
+                            if:false={phonesalesOrigin}
+                            class="slds-text-heading_medium slds-text-align_center slds-var-m-bottom_small"
+                        >
+                            The disclosures must be shown to the customer
+                        </h2>
+                        <lightning-formatted-rich-text value={modalBody}></lightning-formatted-rich-text>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button
+                            class="slds-button slds-button_neutral slds-var-m-right_small"
+                            onclick={hideModal}
+                            style="border-radius: 20px"
+                        >
+                            {modalButton}
+                        </button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </template>
+</template>

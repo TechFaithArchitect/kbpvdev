@@ -1,0 +1,51 @@
+.THIS .slds-form-element__control .slds-radio {
+    display: inline-block !important;
+    padding: 4px 7px 4px 7px !important;
+}
+
+.lighning-accordion-section {
+    color: #58595b;
+    --slds-c-accordion-heading-font-size: 1rem;
+}
+
+.chuzoListItemsStyle {
+    color: #58595b;
+}
+
+.chuzoListItemsStyle:hover {
+    cursor: pointer;
+    background-color: #f1ebeb;
+}
+
+.slds-form-element__control {
+    text-align: center !important;
+}
+
+.activeItem {
+    color: #ff8200;
+}
+.example-accordion {
+    --sds-c-accordion-color-border: #ff8200;
+}
+
+.lighning-accordion-section {
+    color: #58595b;
+    --slds-c-accordion-heading-font-size: 1rem;
+}
+
+.chuzoListItemsStyle {
+    color: #58595b;
+}
+
+.chuzoListItemsStyle:hover {
+    cursor: pointer;
+    background-color: #f1ebeb;
+}
+
+.slds-form-element__control {
+    text-align: center !important;
+}
+
+.activeItem {
+    color: #ff8200;
+}

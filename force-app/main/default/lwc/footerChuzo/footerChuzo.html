@@ -1,0 +1,12 @@
+<template>
+    <div class="slds-grid slds-wrap slds-grid_align-spread">
+        <div class="slds-col slds-text-heading_small slds-m-around_medium" style="color: rgb(255, 130, 0)">
+            {labels.tollFee}
+        </div>
+        <template lwc:if={hasUrl}>
+            <div class="slds-col slds-text-heading_small slds-m-around_medium">
+                <a onclick={handleClick} style="text-decoration: none">Need Help?</a>
+            </div>
+        </template>
+    </div>
+</template>

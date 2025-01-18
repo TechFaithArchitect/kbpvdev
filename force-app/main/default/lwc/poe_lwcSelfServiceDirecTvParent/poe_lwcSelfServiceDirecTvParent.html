@@ -1,0 +1,478 @@
+<template>
+    <header class={headerMode} provider={providerStyle}>
+        <div class="content-header">
+            <div class="content-logo">
+                <a onclick={handleCancel} title="Logo" class="logo">
+                    <img src={logoHeader} alt="Logo" />
+                </a>
+            </div>
+
+            <div class="content-menu">
+                <ul>
+                    <li>
+                        <button>Providers</button>
+                    </li>
+
+                    <li>
+                        <button>About</button>
+                    </li>
+
+                    <li>
+                        <button>FAQ’s</button>
+                    </li>
+
+                    <li>
+                        <button>Contact us</button>
+                    </li>
+                </ul>
+            </div>
+
+            <template lwc:if={stepInformation}>
+                <div class="content-steps-information">
+                    <ul>
+                        <template lwc:if={isNotGuestUser}>
+                            <li>
+                                <i style="width: 50%" data-id="service-item"></i>
+                                Service information
+                            </li>
+                            <li>
+                                <i style="width: 0%" data-id="customizations-item"></i>
+                                Plan customization
+                            </li>
+                        </template>
+                        <template lwc:else>
+                            <li>
+                                <i style="width: 16%" data-id="customizations-item"></i>
+                                Plan customization
+                            </li>
+                        </template>
+
+                        <li>
+                            <i style="width: 0%" data-id="personal-item"></i>
+                            Personal information
+                        </li>
+
+                        <li>
+                            <i style="width: 0%" data-id="payment-item"></i>
+                            Payment
+                        </li>
+
+                        <li>
+                            <i style="width: 0%" data-id="confirmation-item"></i>
+                            Confirmation
+                        </li>
+                        <template lwc:if={installationPresent}>
+                            <li>
+                                <i style="width: 0%" data-id="installation-item"></i>
+                                Installation
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+
+                <div class="content-steps-information-mobile">
+                    <template lwc:if={showCart}>
+                        <div class="cart-right-float" onclick={toggleCart}>
+                            <img src={iconCart} />
+                            <p class="float-label">{cartItemsCount}</p>
+                        </div>
+                    </template>
+
+                    <p class="current-step">
+                        <i style="width: 0%" data-id="mobile-stepper"></i>
+                        {currentTabName} <span>Step {displayStep}/{totalSteps}</span>
+                    </p>
+                </div>
+            </template>
+        </div>
+    </header>
+
+    <div class="page-container">
+        <template lwc:if={stepInformation}>
+            <div class="pages-with-provider-style" provider={providerStyle}>
+                <div class={pageClass}>
+                    <template lwc:if={showCollateral}>
+                        <c-collateral-files-component
+                            provider="directv"
+                            onshowcollateral={handleCollateral}
+                        ></c-collateral-files-component>
+                    </template>
+                    <template lwc:else>
+                        <template lwc:if={isNotGuestUser}>
+                            <div class="slds-grid slds-grid_align-end">
+                                <div class="slds-col">
+                                    <c-collateral-files-button
+                                        onshowcollateral={handleCollateral}
+                                    ></c-collateral-files-button>
+                                </div>
+                            </div>
+                        </template>
+
+                        <template lwc:if={isViewInfoTab}>
+                            <c-poe_lwc-self-service-direc-tv-info-tab
+                                record-id={recordId}
+                                logo={logo}
+                                origin={origin}
+                                code-n-f-f-l={codeNFFL}
+                                code-f-f-l={codeFFL}
+                                client-info={clientInfo}
+                                return-url={returnUrl}
+                                is-guest-user={isGuestUser}
+                                is-f-s-l={isFSL}
+                                fsl-dealer-code={fslDealerCode}
+                                referral-code-data={referralCodeData}
+                                oncheckserviceability={handleCheckServiceability}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-direc-tv-info-tab>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanOne}>
+                            <c-poe_lwc-self-service-direc-tv-customizations-one
+                                record-id={recordId}
+                                user-id={userId}
+                                origin={origin}
+                                client-info={clientInfo}
+                                provider-style={providerStyle}
+                                is-f-s-l={isFSL}
+                                return-url={returnUrl}
+                                non-fulfillment={NFFL}
+                                dealer-code={dealerCode}
+                                is-guest-user={isGuestUser}
+                                chuzo-order-info={serviceabilityInfo}
+                                selected={selectedProduct}
+                                referral-code-data={referralCodeData}
+                                onnext={changeViewToServiceDirecTVPlanTwo}
+                                oncheckserviceability={handleCheckServiceability}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-direc-tv-customizations-one>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanTwo}>
+                            <c-poe_lwc-self-service-direc-tv-customizations-two
+                                record-id={recordId}
+                                user-id={userId}
+                                origin={origin}
+                                return-url={returnUrl}
+                                products={productResponse}
+                                is-guest-user={isGuestUser}
+                                provider-style={providerStyle}
+                                stream={isStream}
+                                onnext={handleFiltersSelection}
+                                onback={handleBack}
+                            ></c-poe_lwc-self-service-direc-tv-customizations-two>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanThree}>
+                            <c-poe_lwc-self-service-direc-tv-customizations-three
+                                record-id={recordId}
+                                user-id={userId}
+                                origin={origin}
+                                client-info={clientInfo}
+                                return-url={returnUrl}
+                                provider-style={providerStyle}
+                                dealer-code={dealerCode}
+                                is-guest-user={isGuestUser}
+                                products={productResponse}
+                                filters={productFilters}
+                                stream={isStream}
+                                chuzo-order-info={orderInfo}
+                                selected={selectedProduct}
+                                onnext={handleProductSelection}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                                order-info={orderInfo}
+                            ></c-poe_lwc-self-service-direc-tv-customizations-three>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanFour}>
+                            <c-poe_lwc-self-service-direc-tv-offers-tab
+                                stream={isStream}
+                                international-required={internationalRequired}
+                                cart-info={cartInfo}
+                                provider-style={providerStyle}
+                                offers={offers}
+                                protections={protections}
+                                closing-offers={closingOffers}
+                                add-cart-data={addCartData}
+                                order-info={orderInfo}
+                                billing-info={billingInfo}
+                                cart-finished={cartFinished}
+                                logo={logo}
+                                return-url={returnUrl}
+                                origin={origin}
+                                record-id={recordId}
+                                client-info={clientInfo}
+                                treatment-code={treatmentCode}
+                                is-guest-user={isGuestUser}
+                                onnext={handleOffersNext}
+                                onback={handleBack}
+                                onlogerror={handleLogError}
+                                oncartupdate={handleCartUpdate}
+                            ></c-poe_lwc-self-service-direc-tv-offers-tab>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanFive}>
+                            <template lwc:if={isStream}>
+                                <c-poe_lwc-self-service-direc-tv-hardware-tab
+                                    record-id={recordId}
+                                    user-id={userId}
+                                    verbiages={verbiages}
+                                    account-id={accountId}
+                                    cart-info={cartOffers}
+                                    order={sfOrderId}
+                                    logo={logo}
+                                    add-cart-data={addCartDataOffers}
+                                    origin={origin}
+                                    order-info={orderInfo}
+                                    return-url={returnUrl}
+                                    client-info={clientInfo}
+                                    hardware-options-response={hardware}
+                                    is-guest-user={isGuestUser}
+                                    provider-style={providerStyle}
+                                    onnext={handleProductDetail}
+                                    onback={handleBack}
+                                    onlogerror={handleLogError}
+                                    onhome={handleHome}
+                                    oncartupdate={handleCartUpdate}
+                                ></c-poe_lwc-self-service-direc-tv-hardware-tab>
+                            </template>
+                            <template lwc:else>
+                                <c-poe_lwc-self-service-direc-tv-hardware-beam-tab
+                                    record-id={recordId}
+                                    user-id={userId}
+                                    cart-info={cartOffers}
+                                    cart-request={beamCartRequest}
+                                    logo={logo}
+                                    hardware-options-response={hardware}
+                                    return-url={returnUrl}
+                                    origin={origin}
+                                    order-info={orderInfo}
+                                    billing-info={billingInfoOffers}
+                                    treatment-code={treatmentCode}
+                                    provider-style={providerStyle}
+                                    is-guest-user={isGuestUser}
+                                    onnext={handleProductDetail}
+                                    onback={handleBack}
+                                    onlogerror={handleLogError}
+                                    onhome={handleHome}
+                                    oncartupdate={handleCartUpdate}
+                                ></c-poe_lwc-self-service-direc-tv-hardware-beam-tab>
+                            </template>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanSix}>
+                            <c-poe_lwc-self-service-direc-tv-credit-check-one
+                                is-stream={isStream}
+                                order-info={orderInfo}
+                                address-info={orderInfo.address}
+                                contact-info={clientInfo.contactInfo}
+                                cart-info={cartHardware}
+                                record-id={recordId}
+                                is-guest-user={isGuestUser}
+                                referral-code-data={referralCodeData}
+                                onback={handleBack}
+                                onnext={handleCreditCheckOneNext}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-direc-tv-credit-check-one>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanSeven}>
+                            <c-poe_lwc-self-service-direc-tv-credit-check-two
+                                order-info={orderInfo}
+                                contact-info={clientInfo.contactInfo}
+                                is-stream={isStream}
+                                cart-info={cartHardware}
+                                record-id={recordId}
+                                is-guest-user={isGuestUser}
+                                origin={origin}
+                                return-url={returnUrl}
+                                referral-code-data={referralCodeData}
+                                dealer-on-probation={probation}
+                                account-id={accountId}
+                                billing-info={billingInfoHardware}
+                                order={sfOrderId}
+                                verbiages={verbiages}
+                                ongotoproducts={handleGoToProducts}
+                                onback={handleBack}
+                                onnext={handleCreditCheckTwoNext}
+                                onlogerror={handleLogError}
+                            ></c-poe_lwc-self-service-direc-tv-credit-check-two>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanEight}>
+                            <template lwc:if={isStream}>
+                                <c-poe_lwc-self-service-direc-tv-options-tab
+                                    stream={isStream}
+                                    order-info={orderInfo}
+                                    cart-info={cartCreditCheck}
+                                    verbiages={streamVerbiages}
+                                    client-info={clientInfo}
+                                    logo={logo}
+                                    origin={origin}
+                                    record-id={recordId}
+                                    verified-email={verifiedEmail}
+                                    return-url={returnUrl}
+                                    is-guest-user={isGuestUser}
+                                    provider-style={providerStyle}
+                                    onnext={handleOptionsNext}
+                                    onback={handleBack}
+                                    onlogerror={handleLogError}
+                                ></c-poe_lwc-self-service-direc-tv-options-tab
+                            ></template>
+                            <template lwc:else>
+                                <c-poe_lwc-self-service-direc-tv-options-beam-tab
+                                    order-info={orderInfo}
+                                    client-info={clientInfo}
+                                    disclaimers={legalCustomizations}
+                                    call-information={orderInfo}
+                                    cart-info={cartCreditCheck}
+                                    logo={logo}
+                                    return-url={returnUrl}
+                                    origin={origin}
+                                    record-id={recordId}
+                                    is-guest-user={isGuestUser}
+                                    onnext={handleOptionsNext}
+                                    onback={handleBack}
+                                    onlogerror={handleLogError}
+                                ></c-poe_lwc-self-service-direc-tv-options-beam-tab>
+                            </template>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanNine}>
+                            <template lwc:if={isStream}>
+                                <c-poe_lwc-self-service-direc-tv-stream-payment-tab
+                                    stream={isStream}
+                                    order-info={orderInfo}
+                                    payment-attempts={paymentAttempts}
+                                    cart-info={cartCreditCheck}
+                                    client-info={clientInfo}
+                                    origin={origin}
+                                    record-id={recordId}
+                                    logo={logo}
+                                    return-url={returnUrl}
+                                    public-key={publicKey}
+                                    is-guest-user={isGuestUser}
+                                    onback={handleBack}
+                                    onpaymentinformationnext={handlePaymentInformationNext}
+                                    onlogerror={handleLogError}
+                                ></c-poe_lwc-self-service-direc-tv-stream-payment-tab>
+                            </template>
+                            <template lwc:else>
+                                <c-poe_lwc-self-service-direc-tv-beam-payment-tab
+                                    order-info={orderInfo}
+                                    payment-attempts={paymentAttempts}
+                                    cart-info={cartCreditCheck}
+                                    client-info={clientInfo}
+                                    verbiages={verbiages}
+                                    public-key={publicKey}
+                                    origin={origin}
+                                    record-id={recordId}
+                                    logo={logo}
+                                    return-url={returnUrl}
+                                    is-guest-user={isGuestUser}
+                                    oncartupdate={handleCartUpdate}
+                                    onback={handleBack}
+                                    onpaymentinformationnext={handlePaymentInformationNext}
+                                    onlogerror={handleLogError}
+                                ></c-poe_lwc-self-service-direc-tv-beam-payment-tab>
+                            </template>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanTen}>
+                            <template lwc:if={isStream}>
+                                <c-poe_lwc-self-service-direc-tv-stream-order-confirmation-tab
+                                    stream={isStream}
+                                    nffl={NFFL}
+                                    order-info={orderQualReq}
+                                    product-selected={productSelected}
+                                    hardware-selected={hardwareSelectedName}
+                                    cart-info={cartPayment}
+                                    hardware-id={hardwareId}
+                                    client-info={clientInfo}
+                                    dealer-inventory={dealerInventory}
+                                    serials={serials}
+                                    sf-order-id={sfOrderId}
+                                    order-item-id={orderItemId}
+                                    user-id={userId}
+                                    payment-info={paymentInfo}
+                                    installation-info={installationInfo}
+                                    origin={origin}
+                                    record-id={recordId}
+                                    logo={logo}
+                                    return-url={returnUrl}
+                                    is-guest-user={isGuestUser}
+                                    onconfirmationnext={handleOrderConfirmationNext}
+                                    onback={handleBack}
+                                    onlogerror={handleLogError}
+                                >
+                                </c-poe_lwc-self-service-direc-tv-stream-order-confirmation-tab>
+                            </template>
+                            <template lwc:else>
+                                <c-poe_lwc-self-service-direc-tv-beam-order-confirmation-tab
+                                    stream={isStream}
+                                    nffl={NFFL}
+                                    hardware-selected={hardwareSelectedName}
+                                    cart-info={cartPayment}
+                                    payment-info={paymentInfo}
+                                    order-info={orderInfo}
+                                    client-info={clientInfo}
+                                    sf-order-id={sfOrderId}
+                                    order-item-id={orderItemId}
+                                    user-id={userId}
+                                    origin={origin}
+                                    record-id={recordId}
+                                    logo={logo}
+                                    return-url={returnUrl}
+                                    is-guest-user={isGuestUser}
+                                    is-f-s-l={isFSL}
+                                    fsl-work-order-id={fslWorkOrderId}
+                                    fsl-service-appointment-id={fslServiceAppointmentId}
+                                    onconfirmationnext={handleOrderConfirmationNext}
+                                    onlogerror={handleLogError}
+                                >
+                                </c-poe_lwc-self-service-direc-tv-beam-order-confirmation-tab>
+                            </template>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanEleven}>
+                            <c-poe_lwc-self-service-direc-tv-installation-tab
+                                order-info={orderInfo}
+                                cart-info={cartPayment}
+                                order-id={orderId}
+                                client-info={clientInfo}
+                                sf-order-id={sfOrderId}
+                                origin={origin}
+                                verbiages={verbiages}
+                                record-id={recordId}
+                                logo={logo}
+                                return-url={returnUrl}
+                                is-guest-user={isGuestUser}
+                                onback={handleBack}
+                                onnext={handleTPVNext}
+                                onlogerror={handleLogError}
+                            >
+                            </c-poe_lwc-self-service-direc-tv-installation-tab>
+                        </template>
+                        <template lwc:if={isViewServiceProviderPlanTwelve}>
+                            <c-poe_lwc-self-service-order-success-tab
+                                program="directv"
+                                order-number={orderId}
+                                order-id={orderNumber}
+                                record-id={recordId}
+                                return-url={returnUrl}
+                                reference-number={referenceNumber}
+                                origin={origin}
+                                is-guest-user={isGuestUser}
+                                onlogerror={handleLogError}
+                            >
+                            </c-poe_lwc-self-service-order-success-tab>
+                        </template>
+
+                        <template lwc:if={showCart}>
+                            <div class="panel-right">
+                                <c-poe_lwc-self-service-direc-tv-cart
+                                    cart-info={currentCart}
+                                    cart-icon={iconProviderLogoDirectv}
+                                    cart-title="DIRECTV"
+                                    cart-subtitle="TV connection"
+                                >
+                                </c-poe_lwc-self-service-direc-tv-cart>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

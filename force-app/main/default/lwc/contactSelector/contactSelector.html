@@ -1,0 +1,85 @@
+<template>
+    <div class=" slds-card slds-var-p-around_medium">
+        <template lwc:if={contactsSelected}>
+            <div style="height: auto;" class="slds-var-m-bottom_large">
+                <lightning-datatable
+                    key-field="id"
+                    data={data}
+                    columns={columns}
+                    onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </div>
+        </template>
+        <lightning-input 
+            type="toggle" 
+            label="Is this agent currently using Chuzo?" 
+            checked
+            onchange={handleToggle}
+            class="slds-var-m-top_medium"
+        >
+        </lightning-input>
+        <template lwc:if={chuzoAgent}>
+            <c-poe_object-custom-lookup
+                s-object-api-name="Contact"
+                icon-name="standard:contact"
+                label="Search Contact"
+                onlookupupdate={handleLookup}
+                additional-fields="Email, Account.Name"
+                additional-filters={filters}
+                allow-multiple-selections=true
+            ></c-poe_object-custom-lookup>
+        </template>
+        <template lwc:else>
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size_6-of-12">
+                    <lightning-input 
+                        type="text"
+                        label="First Name"
+                        onchange={handleChange}
+                        name="firstName"
+                        value={firstName}
+                    ></lightning-input>
+                    <lightning-input 
+                        type="text"
+                        label="Last Name"
+                        onchange={handleChange}
+                        name="lastName"
+                        value={lastName}
+                    ></lightning-input>
+                </div>
+                <div class="slds-col slds-size_6-of-12">
+                    <lightning-input 
+                        type="text"
+                        label="Email"
+                        onchange={handleChange}
+                        name="email"
+                        value={email}
+                    ></lightning-input>
+                    <lightning-input 
+                        type="text"
+                        label="Phone number"
+                        onchange={handleChange}
+                        name="phone"
+                        value={phone}
+                    ></lightning-input>
+                </div>
+                <template lwc:if={hasError}>
+                    <div class="slds-col slds-size_12-of-12 slds-text-color_error">
+                        {errorMessage}
+                    </div>
+                </template>
+            </div>
+            <div class="slds-var-m-top_medium slds-clearfix">
+                <lightning-button
+                    label="Add Contact"
+                    onclick={handleAddContact}
+                    variant="brand"
+                    class="slds-float_right"
+                ></lightning-button>
+            </div>
+        </template>
+    </div>
+    <template lwc:if={showLoaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

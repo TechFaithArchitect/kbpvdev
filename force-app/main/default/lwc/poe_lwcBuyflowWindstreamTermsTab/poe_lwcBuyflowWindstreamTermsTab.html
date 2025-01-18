@@ -1,0 +1,77 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="windstream"
+            onshowcollateral={handleCollateral}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+
+        <div class="slds-grid slds-wrap slds-gutters">
+            <div class="slds-col slds-box slds-theme_default">
+                <div class="slds-text-heading_large slds-m-around_medium">{labels.termsLabel}</div>
+                <div class="slds-col slds-size_12-of-12 slds-p-top_medium slds-p-horizontal_medium">
+                    <p class="slds-p-bottom_x-small">
+                        <lightning-formatted-rich-text
+                            value={labels.verbiageTop}
+                            linkify
+                        ></lightning-formatted-rich-text>
+                    </p>
+                </div>
+                <template for:each={terms} for:item="term">
+                    <div class="slds-col slds-size_12-of-12 slds-p-around_medium slds-p-right_medium" key={term.id}>
+                        <div class="slds-box">
+                            <p class="slds-p-bottom_x-small">
+                                <strong
+                                    ><lightning-formatted-rich-text
+                                        value={term.name}
+                                        linkify
+                                    ></lightning-formatted-rich-text
+                                ></strong>
+                            </p>
+                            <lightning-formatted-rich-text
+                                value={term.description}
+                                linkify
+                            ></lightning-formatted-rich-text>
+                            <lightning-input
+                                type="checkbox"
+                                label={labels.checkboxLabel}
+                                id={term.id}
+                                value={term.checked}
+                                data-id={term.id}
+                                onchange={handleCheckbox}
+                                required
+                                class="slds-m-top_x-small"
+                            >
+                            </lightning-input>
+                        </div>
+                    </div>
+                </template>
+                <div class="slds-col slds-size_12-of-12 slds-p-top_medium slds-p-horizontal_medium">
+                    <p class="slds-p-bottom_x-small">
+                        <lightning-formatted-rich-text
+                            value={labels.verbiageBottom}
+                            linkify
+                        ></lightning-formatted-rich-text>
+                    </p>
+                </div>
+                <c-poe_lwc-buyflow-tab-actions
+                    disable-next={disableNext}
+                    show-previous="true"
+                    show-cancel="true"
+                    oncancel={handleCancel}
+                    onprevious={handlePrevious}
+                    onnext={handleClick}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </div>
+        </div>
+    </template>
+</template>

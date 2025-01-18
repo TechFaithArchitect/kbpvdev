@@ -1,0 +1,121 @@
+<template>
+    <div class="page-container">
+        <div class="pages-with-provider-style" provider={providerStyle}>
+            <div class="page pages-nav">
+                <div class="nav-bar">
+                    <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <h2>{title}</h2>
+                </div>
+
+                <div class="page-content no-padding-top">
+                    <div class="group-cards">
+                        <div class="card full-width card-min-form">
+                            <div class="card-header">
+                                <img align="left" src={iconDeviceWireless} />
+
+                                <h3>DIRECTV Gemini Air</h3>
+                                <p>Monthly payments of $7</p>
+                            </div>
+                            <div class="card-content">
+                                <p>HD whole home wireless DVR.</p>
+                                <div class="input-sum-min">
+                                    <template lwc:if={enableTvMinus}>
+                                        <lightning-button
+                                            data-id="valNumberDirectGeminiAirStep"
+                                            onclick={changeValInputToMin}
+                                            class="btn-min"
+                                        ></lightning-button>
+                                    </template>
+                                    <lightning-input
+                                        type="number"
+                                        value={valNumberDirectGeminiAirStep}
+                                        style="pointer-events: none"
+                                        min="1"
+                                        max="6"
+                                    ></lightning-input>
+                                    <template lwc:if={enableTvPlus}>
+                                        <lightning-button
+                                            data-id="valNumberDirectGeminiAirStep"
+                                            onclick={changeValInputToSum}
+                                            class="btn-sum"
+                                        ></lightning-button>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <lightning-accordion
+                                    class="btn-open-included view-features"
+                                    allow-multiple-sections-open
+                                >
+                                    <lightning-accordion-section name="view-features" label="View features">
+                                        <div class="list-with-check">{description}</div>
+                                    </lightning-accordion-section>
+                                </lightning-accordion>
+                            </div>
+                        </div>
+                    </div>
+
+                    <template lwc:if={inventoryAvailable}>
+                        <div class="slds-col slds-size_12-of-12 slds-var-m-bottom_x-small slds-var-m-left_small">
+                            <lightning-input
+                                type="checkbox"
+                                label="Will Dealer Inventory be used for this order?"
+                                checked={checkedDealerInventory}
+                                onchange={handleDealerInventory}
+                            ></lightning-input>
+                        </div>
+                        <template lwc:if={checkedDealerInventory}>
+                            <div
+                                class="slds-col slds-grid slds-wrap slds-gutters slds-size_12-of-12 slds-var-m-bottom_x-small slds-var-m-horizontal_small"
+                            >
+                                <template for:each={serials} for:item="serial">
+                                    <div class="slds-col slds-size_11-of-12 slds-small-size_6-of-12" key={serial.id}>
+                                        <lightning-input
+                                            type="text"
+                                            data-id={serial.id}
+                                            label={serial.label}
+                                            value={serial.value}
+                                            disabled={serialValidationComplete}
+                                            onchange={handleSerial}
+                                        ></lightning-input>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="slds-col slds-size_6-of-12 slds-m-vertical_x-small slds-m-left_small">
+                                <lightning-button
+                                    disabled={noValidate}
+                                    label="Validate"
+                                    variant="brand"
+                                    onclick={validateSerialNumber}
+                                ></lightning-button>
+                            </div>
+                        </template>
+                    </template>
+
+                    <p class="text-center">
+                        1. First device included for well-qualified customers. Leased devices are Subject to Equipment
+                        Lease Agreement and DIRECTV Residential Terms of Service. $7/mo. for each additional TV
+                        connection on your account. If service is cancelled you must return the included and leased
+                        device(s) to avoid a non-return fee of $120 per device.
+                    </p>
+
+                    <a onclick={handleNext} class="btn-rounded btn-center hide-mobile"> Next step </a>
+                </div>
+
+                <div class="footer-mobile">
+                    <a onclick={handleBack} title="Back button" class="btn-back-rounded">
+                        <img src={iconBtnBack} alt="Back button" />
+                    </a>
+
+                    <a onclick={handleNext} class="btn-rounded btn-center"> Next step </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

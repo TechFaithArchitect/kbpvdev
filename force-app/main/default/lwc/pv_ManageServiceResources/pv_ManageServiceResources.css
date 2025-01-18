@@ -1,0 +1,113 @@
+.stclass{
+
+    margin-top: -21px;
+}
+
+.pointer {cursor: pointer;}
+
+
+.spinshow {
+   
+    width: 2px;
+    height: 2px;
+    position:relative;
+  }
+
+  .slds-modal__container{
+	width: 80% !important;
+	max-width: 80% !important;
+    height: 80% !important;
+    max-height: 80% !important;
+}
+.body{
+
+    height: 95% !important;
+}
+
+
+.container {
+
+    height: 80%;
+}
+
+.piccontainer {
+    text-align: center;
+    margin: 20px;
+}
+.avatar-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.camera-icon {
+    position: absolute;
+    top: 80%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+}
+
+.file-input-hidden {
+    display: none;
+}
+
+.file-input-visible {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+.file-input-label {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4a90e2;
+    color: #ffffff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.file-input-label:hover {
+    background-color: #3673c1;
+}
+
+.file-name {
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.statustext{
+
+    font-size: 20px;
+
+}
+.centered-message {
+    text-align: center;
+    color: red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35vh;
+}

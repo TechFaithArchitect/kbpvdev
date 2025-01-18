@@ -1,0 +1,188 @@
+<template>
+    <div class="slds-box slds-theme_default slds-p-around_x-small">
+        <div class="slds-grid slds-wrap slds-gutters slds-p-around_x-small">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3 slds-m-bottom_small">
+                <div class="slds-box slds-p-around_small slds-p-horizontal_none">
+                    <div
+                        class="slds-text-heading_medium slds-text-align_center slds-m-bottom_x-small"
+                        style="background-color: #ff8200; color: white"
+                    >
+                        Security Information
+                    </div>
+                    <div class="slds-grid slds-wrap slds-p-around_xx-small">
+                        <div
+                            class="slds-col slds-p-vertical_xx-small slds-p-horizontal_medium slds-m-bottom_medium slds-size_12-of-12"
+                        >
+                            <p>
+                                For authentication purposes, customers are required to set up a 4-8 digit passcode (pin), a
+                                security question. This passcode will be used to verify you whenever you contact DIRECTV
+                                about your account. Please make a note of this information.
+                            </p>
+                        </div>
+                        <div
+                            class="slds-col slds-grid slds-gutters slds-wrap slds-gutters slds-align_absolute-center slds-m-bottom_medium slds-size_12-of-12"
+                        >
+                            <div
+                                class="slds-medium-size_5-of-12 slds-small-size_8-of-12 slds-size_12-of-12 slds-m-horizontal_medium"
+                            >
+                                <lightning-input
+                                    type="password"
+                                    name="passcode"
+                                    class="passcode"
+                                    value={data.passcode}
+                                    required
+                                    label="Passcode"
+                                    minlength="4"
+                                    maxlength="8"
+                                    message-when-too-short="Passcode must be between 4-8 digits."
+                                    onchange={handleDataChange}
+                                    onblur={checkInputValidity}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-medium-size_5-of-12 slds-small-size_8-of-12 slds-size_12-of-12">
+                                <lightning-input
+                                    type="password"
+                                    name="passcodeConfirmation"
+                                    class="passcodeConfirmation"
+                                    value={data.passcodeConfirmation}
+                                    required
+                                    label="Confirm Passcode"
+                                    minlength="4"
+                                    maxlength="8"
+                                    message-when-too-short="Passcode must be between 4-8 digits."
+                                    onchange={handleDataChange}
+                                    onblur={checkInputValidity}
+                                ></lightning-input>
+                            </div>
+                        </div>
+                        <template lwc:if={isEventOrD2D}>
+                            <div class="slds-grid slds-wrap slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                <div class="slds-col slds-m-top_medium slds-size_1-of-1">
+                                    You have the option to receive applicable documents and disclosures electronically or
+                                    receive a paper copy. If you would like to receive them electronically, please provide
+                                    your email address so that we can send you a 6-digit verification PIN that you will need
+                                    to read to me. You will be asked later in the order process to read and accept a Consent
+                                    to Electronic Delivery of Disclosures. If you do not want to consent to electronic
+                                    delivery, you can complete this type of order by visiting an authorized AT&T retail
+                                    store.
+                                </div>
+                                <div class="slds-col slds-m-top_x-small slds-size_1-of-1">
+                                    <lightning-radio-group
+                                        name="radioGroup"
+                                        options={radioOptions}
+                                        value={selectedValue}
+                                        onchange={handleDataChange}
+                                        type="radio"
+                                        class="slds-var-m-top_small"
+                                    >
+                                    </lightning-radio-group>
+                                </div>
+                                <template lwc:if={showEmailValidation}>
+                                    <div
+                                        class="slds-col slds-medium-size_4-of-12 slds-small-size_6-of-12 slds-size_12-of-12 slds-m-vertical_x-small slds-m-right_x-small"
+                                    >
+                                        <lightning-input
+                                            type="email"
+                                            name="email"
+                                            value={email}
+                                            required
+                                            label="Contact Email"
+                                            onchange={handleEmailChange}
+                                            disabled={pinValidated}
+                                        ></lightning-input>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-medium-size_4-of-12 slds-small-size_6-of-12 slds-size_12-of-12 slds-m-vertical_x-small slds-m-right_x-small"
+                                    >
+                                        <lightning-input
+                                            type="email"
+                                            name="confirmationEmail"
+                                            value={confirmationEmail}
+                                            required
+                                            label="Confirm Email"
+                                            onchange={handleEmailChange}
+                                            disabled={pinValidated}
+                                        ></lightning-input>
+                                    </div>
+                                    <template lwc:if={noEqualEmail}>
+                                        <div class="slds-col slds-size_12-of-12 slds-m-around_x-small">
+                                            <p style="color: #cc0000">Email must be identical</p>
+                                        </div>
+                                    </template>
+                                    <template lwc:if={notPinValidated}>
+                                        <template lwc:if={pinSent}>
+                                            <div class="slds-col slds-size_12-of-12 slds-m-vertical_x-small">
+                                                <lightning-button
+                                                    label="Re-Send PIN"
+                                                    variant="brand"
+                                                    disabled={noEmail}
+                                                    onclick={sendPin}
+                                                ></lightning-button>
+                                            </div>
+                                            <div class="slds-col slds-size_12-of-12 slds-m-vertical_x-small">
+                                                <lightning-button
+                                                    label="Validate PIN"
+                                                    variant="brand"
+                                                    onclick={validatePin}
+                                                    disabled={cantValidatePin}
+                                                ></lightning-button>
+                                            </div>
+                                            <div
+                                                class="slds-col slds-medium-size_4-of-12 slds-small-size_6-of-12 slds-size_12-of-12 slds-m-bottom_x-small"
+                                            >
+                                                <lightning-input
+                                                    type="text"
+                                                    placeholder="Enter PIN"
+                                                    max-length="6"
+                                                    onchange={handlePINInput}
+                                                ></lightning-input>
+                                            </div>
+                                        </template>
+                                        <template lwc:else>
+                                            <div class="slds-col slds-size_12-of-12 slds-m-vertical_x-small">
+                                                <lightning-button
+                                                    label="Send PIN"
+                                                    variant="brand"
+                                                    disabled={noEmail}
+                                                    onclick={sendPin}
+                                                ></lightning-button>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                <c-poe_lwc-buyflow-directv-enga-cart cart={cartInfo}> </c-poe_lwc-buyflow-directv-enga-cart>
+                <div class="slds-grid slds-p-around_medium">
+                    <div class="slds-col slds-size_12-of-12">
+                        <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <c-poe_lwc-buyflow-tab-actions
+            disable-next={noCompleteInfo}
+            show-previous="true"
+            show-cancel="true"
+            oncancel={handleCancel}
+            onprevious={handlePrevious}
+            onnext={handleClick}
+        >
+        </c-poe_lwc-buyflow-tab-actions>
+    </div>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>

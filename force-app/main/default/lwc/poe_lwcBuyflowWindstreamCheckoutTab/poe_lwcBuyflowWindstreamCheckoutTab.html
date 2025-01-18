@@ -1,0 +1,139 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="windstream"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_small">
+            <template lwc:if={showBillingNotification}>
+                <div class="slds-grid slds-gutters slds-wrap slds-p-around_medium">
+                    <div class="slds-col slds-size_1-of-1 slds-text-heading_large">Billing Notification</div>
+                    <template lwc:if={isCallCenterOrigin}>
+                        <div class="slds-text-heading_medium slds-p-around_medium">
+                            {labels.Windstream_checkout_message}
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <div class="slds-text-heading_medium slds-p-around_medium">
+                            {labels.Windstream_checkout_message_Billing_section}
+                        </div>
+                    </template>
+                    <div class="slds-col slds-size_1-of-1 slds-text-heading_medium"></div>
+                </div>
+                <div class="slds-grid slds-grid_align-spread slds-p-around_medium slds-gutters">
+                    <div class="slds-col">
+                        <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                    </div>
+                    <div class="slds-col slds-grid">
+                        <div class="slds-col">
+                            <lightning-button variant="brand" label="Previous" onclick={handleBack}></lightning-button>
+                        </div>
+                        <div class="slds-col">
+                            <lightning-button
+                                variant="brand"
+                                label="Next"
+                                onclick={handleNext}
+                                disabled={noCompleteInformation}
+                            >
+                            </lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="slds-grid slds-wrap slds-gutters slds-var-p-around_small slds-p-horizontal_none">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                        <div class="slds-box slds-p-around_small">
+                            <div class="slds-text-heading_medium slds-p-bottom_large">Checkout</div>
+                            <template lwc:if={showDisclaimer}>
+                                <div class="slds-p-top_small slds-p-horizontal_small slds-p-bottom_large">
+                                    <b
+                                        >{labels.Message_checkout_declien_enroll_autopay}</b
+                                    >
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="slds-text-heading_small">Disclaimer</div>
+                                <div class="slds-p-top_small slds-p-horizontal_small slds-p-bottom_large">
+                                    <p>{labels.autoPaySurcharge}</p>
+                                </div>
+                            </template>
+                            <div class="slds-text-heading_small slds-p-bottom_xx-small">{labels.Step_1_checkout_Windstream}</div>
+                            <div class="slds-align_absolute-center slds-p-around_medium">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Open Payment Gateway"
+                                    onclick={handlePaymentTab}
+                                ></lightning-button>
+                            </div>
+                            <div class="slds-text-heading_small slds-p-bottom_xx-small">{labels.Step_2_checkout_Windstream}</div>
+                            <div class="slds-align_absolute-center slds-p-around_medium">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Verify Payment"
+                                    onclick={handlePaymentVerification}
+                                ></lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <c-poe_lwc-buyflow-windstream-cart cart={cartInfo}> </c-poe_lwc-buyflow-windstream-cart>
+                        <div class="slds-grid slds-p-around_medium">
+                            <div class="slds-col slds-size_12-of-12">
+                                <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <c-poe_lwc-buyflow-tab-actions
+                    show-previous="true"
+                    show-cancel="true"
+                    disable-next={paymentNotApproved}
+                    oncancel={handleCancel}
+                    onprevious={handleBack}
+                    onnext={handleNext}
+                >
+                </c-poe_lwc-buyflow-tab-actions>
+            </template>
+        </div>
+    </template>
+    <template lwc:if={showAutoPayModal}>
+        <c-poe_lwc-buyflow-windstream-products-disclaimer-modal
+            onclosedisclaimer={handleModalClose}
+            disclaimer={autoPayDisclaimer}
+            onagree={handleAutopayRemoval}
+            oncancelorder={handleModalClose}
+        ></c-poe_lwc-buyflow-windstream-products-disclaimer-modal>
+    </template>
+    <template lwc:if={showDisclaimerModal}>
+        <c-poe_lwc-buyflow-windstream-product-description-modal
+            onclosedescription={handleCloseDisclaimer}
+            description={disclaimer}
+            modal-label={modalLabel}
+            onaccept={handleAcceptDisclaimer}
+        ></c-poe_lwc-buyflow-windstream-product-description-modal>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

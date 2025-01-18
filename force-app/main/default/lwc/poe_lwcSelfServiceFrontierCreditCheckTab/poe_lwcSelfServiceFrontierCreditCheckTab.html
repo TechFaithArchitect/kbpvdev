@@ -1,0 +1,311 @@
+<template>
+    <div class="pages-with-provider-style page pages-nav" provider="frontier">
+        <div class="nav-bar">
+            <h2>Tell us about you</h2>
+        </div>
+
+        <div class="page-content no-padding-top">
+            <form>
+                <div class="form-header">
+                    <img align="left" src={iconFormUser} />
+
+                    <h3>Personal information</h3>
+                    <p>Enter your name and contact details.</p>
+                </div>
+
+                <div class="form-content">
+                    <div class="form-group">
+                        <lightning-input
+                            type="text"
+                            name="firstName"
+                            required
+                            placeholder="Write your name"
+                            label="Name (*)"
+                            value={firstName}
+                            onchange={handleChange}
+                            pattern={onlyLettersRegExPattern}
+                            message-when-pattern-mismatch={onlyLettersRegExErrorMessage}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="text"
+                            name="lastName"
+                            required
+                            placeholder="Write your last name"
+                            label="Last Name (*)"
+                            value={lastName}
+                            onchange={handleChange}
+                            pattern={onlyLettersRegExPattern}
+                            message-when-pattern-mismatch={onlyLettersRegExErrorMessage}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="tel"
+                            pattern="[0-9]{10}"
+                            max-length="10"
+                            label="Phone (*)"
+                            name="phone"
+                            required
+                            value={phone}
+                            onchange={handleChange}
+                            message-when-pattern-mismatch="Please enter a valid phone number"
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="email"
+                            name="email"
+                            required
+                            placeholder="Write your email"
+                            label="Email (*)"
+                            value={email}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+
+                    <div class="form-group">
+                        <lightning-input
+                            required
+                            type="date"
+                            date-style="short"
+                            label="Date of Birth (*)"
+                            placeholder="Select your date of birth"
+                            name="DOB"
+                            min="1901-01-01"
+                            value={DOB}
+                            onchange={handleChange}
+                        ></lightning-input>
+                    </div>
+
+                    <template lwc:if={showSSNCheck}>
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="password"
+                                label="SSN/ITIN (*)"
+                                placeholder="Write the SSN/ITIN"
+                                max-length="9"
+                                pattern="[0-9]{9}"
+                                message-when-pattern-mismatch={labels.INVALID_SSN_ERROR_MESSAGE}
+                                name="ssn"
+                                value={ssn}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+
+                        <div class="form-group">
+                            <lightning-input
+                                required
+                                type="password"
+                                label="Repeat SSN/ITIN (*)"
+                                max-length="9"
+                                pattern="[0-9]{9}"
+                                message-when-pattern-mismatch={labels.INVALID_SSN_ERROR_MESSAGE}
+                                name="repeatSSN"
+                                value={repeatSSN}
+                                onchange={handleChange}
+                            ></lightning-input>
+                        </div>
+                    </template>
+
+                    <div class="form-group slds-text-body_small">
+                        <lightning-input
+                            type="checkbox"
+                            checked={contactConsent}
+                            label={contactConsentLabel}
+                            onchange={handleConsentChange}
+                        ></lightning-input>
+                    </div>
+
+                    <template lwc:if={showUpgradeOptions}>
+                        <hr />
+                        <h3>Service preferences</h3>
+
+                        <p>
+                            <lightning-formatted-text value={labels.SERVICE_UPGRADE_PREFERENCE_DESCRIPTION}>
+                            </lightning-formatted-text>
+                        </p>
+
+                        <div class="form-group">
+                            <lightning-radio-group
+                                class="radio-two-options"
+                                type="radio"
+                                name="serviceUpgradePreference"
+                                options={serviceUpgradePreferenceOptions}
+                                value={serviceUpgradePreference}
+                                onchange={handleServiceUpgradePreferenceChange}
+                            ></lightning-radio-group>
+                        </div>
+
+                        <template lwc:if={newCustomerError}>
+                            <p class="slds-text-color_error">
+                                <lightning-formatted-text value={labels.EXISTING_ACTIVE_SERVICE_MESSAGE}>
+                                </lightning-formatted-text>
+                            </p>
+                        </template>
+                    </template>
+
+                    <hr />
+                    <h3>Billing Address</h3>
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="checkbox"
+                            checked
+                            label={labels.BILLING_ADDRESS_SAME_AS_SERVICE_ADDRESS_FIELD}
+                            onchange={handleBillingAddress}
+                        ></lightning-input>
+                    </div>
+
+                    <template lwc:if={showBillingAddress}>
+                        <div class="form-group">
+                            <div class="slds-col slds-size_1-of-1">
+                                <c-poe_lwc-address-field
+                                    always-send-changes="true"
+                                    street={billingAddress}
+                                    address-line-2={billingApt}
+                                    city={billingCity}
+                                    province={billingState}
+                                    postal-code={billingZip}
+                                    country="United States"
+                                    onaddresschange={handlePredictiveShippingAddressChange}
+                                    onlogerror={handleLogError}
+                                ></c-poe_lwc-address-field>
+                            </div>
+                        </div>
+                    </template>
+
+                    <hr />
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="toggle"
+                            label="Recurring payments"
+                            checked={paymentProfile.autoPay}
+                            onchange={handlePaymentMethod}
+                        ></lightning-input>
+                    </div>
+                    <p class="input-description-toggle">Your payments in auto-pilot with AutoPay.</p>
+
+                    <hr />
+
+                    <div class="form-group">
+                        <lightning-input
+                            type="toggle"
+                            label="Paperless billing"
+                            checked={paymentProfile.eBill}
+                            onchange={handleBillMethod}
+                        ></lightning-input>
+                    </div>
+                    <p class="input-description-toggle">Earth-friendly bills delivered electronically.</p>
+
+                    <hr />
+
+                    <h3>Communication Preferences</h3>
+                    <p>
+                        Select the type of notification you would like to subscribe to, and the associated method of
+                        delivery (<strong>at least one delivery method must be selected</strong>).
+                    </p>
+
+                    <p class="slds-m-top_x-small slds-m-bottom_xxx-small">Bill Ready Email Notification</p>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                                type="checkbox"
+                                class="slds-m-bottom_xx-small"
+                                label="Email"
+                                name="BillReadyNotification_email"
+                                onchange={handleCommunicationPreferences}
+                            >
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <p class="slds-m-vertical_xxx-small">Account Information</p>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                                type="checkbox"
+                                class="slds-m-bottom_xx-small"
+                                label="Email"
+                                name="AccountInformation_email"
+                                onchange={handleCommunicationPreferences}
+                            >
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                                type="checkbox"
+                                class="slds-m-bottom_xx-small"
+                                label="Phone"
+                                name="AccountInformation_mobile"
+                                onchange={handleCommunicationPreferences}
+                            >
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <p class="slds-m-vertical_xxx-small">Service Updates</p>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                                type="checkbox"
+                                class="slds-m-bottom_xx-small"
+                                label="Email"
+                                name="ServiceUpdates_email"
+                                onchange={handleCommunicationPreferences}
+                            >
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                                type="checkbox"
+                                class="slds-m-bottom_xx-small"
+                                label="Phone"
+                                name="ServiceUpdates_mobile"
+                                onchange={handleCommunicationPreferences}
+                            >
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <p class="slds-m-vertical_xxx-small">Marketing Promotions</p>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                                type="checkbox"
+                                class="slds-m-bottom_xx-small"
+                                label="Email"
+                                name="MarketingPromotions_email"
+                                onchange={handleCommunicationPreferences}
+                            >
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input
+                                type="checkbox"
+                                class="slds-m-bottom_xx-small"
+                                label="Phone"
+                                name="MarketingPromotions_mobile"
+                                onchange={handleCommunicationPreferences}
+                            >
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <a onclick={handleNextClick} class={nextButtonClass}> Next step </a>
+        </div>
+
+        <div class="footer-mobile">
+            <a onclick={handleNextClick} class={nextButtonClassMobile}> Next step </a>
+        </div>
+    </div>
+
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+</template>

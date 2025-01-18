@@ -1,0 +1,50 @@
+<template>
+    <div class="custom-modal">
+        <section role="dialog" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <span class="slds-modal__close">
+                        <lightning-icon
+                            icon-name="utility:close"
+                            variant="inverse"
+                            style="cursor: pointer"
+                            alternative-text="close"
+                            onclick={hideModalBox}
+                        ></lightning-icon>
+                    </span>
+                    <h2 class="slds-text-heading_medium slds-hyphenate">Edit Agent</h2>
+                </header>
+                <div class="slds-modal__content slds-var-p-around_medium">
+                    <c-poe_lwc-rep-onboarding-contact-form
+                        contact-data={contact}
+                        account-id={accountId}
+                        is-update="true"
+                        onvalidation={handleValidation}
+                        onlogerror={handleLogError}
+                    ></c-poe_lwc-rep-onboarding-contact-form>
+                </div>
+
+                <footer class="slds-modal__footer slds-grid slds-wrap">
+                    <lightning-button
+                        label="Cancel"
+                        title="Cancel"
+                        class="slds-var-m-right_small"
+                        onclick={hideModalBox}
+                    ></lightning-button>
+                    <lightning-button
+                        variant="brand"
+                        label="Save"
+                        title="Save"
+                        onclick={saveRepresentative}
+                        disabled={incompleteInfo}
+                        class="slds-var-m-right_small"
+                    ></lightning-button>
+                </footer>
+            </div>
+            <template lwc:if={loaderSpinner}>
+                <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+            </template>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</template>

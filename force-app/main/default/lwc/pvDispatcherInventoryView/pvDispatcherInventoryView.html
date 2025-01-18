@@ -1,0 +1,76 @@
+<template>
+    <div class="slds-text-color_inverse slds-text-heading_medium slds-p-around_small slds-align_absolute-center"
+        style="padding:0.5rem;background:rgb(255, 130, 0);">
+        <p style="color:#545454;">Inventory Details</p>
+    </div>
+    <div class="slds-grid slds-wrap slds-p-around_medium">
+        <div class="slds-col slds-medium-size_1-of-3 ">
+            <lightning-input type="date"  label="Date" placeholder="Select A Date" value={startDate}
+                onchange={handleDateChange}>
+            </lightning-input>
+        </div>
+    </div>
+    <template if:true={showInventory}>
+    <lightning-accordion allow-multiple-sections-open active-section-name="Inventory"
+        onsectiontoggle={handleSectionToggle}>
+        <template for:each={inventoryData} for:item="inv" for:index="index">
+            <lightning-accordion-section key={inv.srId} name={inv.technicianName} label={inv.technicianName}>
+                <div class="slds-box slds-theme--default">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <a class="slds-cell-wrap " href="javascript:void(0);" role="button" tabindex="0"
+                                        name="Name">
+                                        <p style="font-weight: bolder;font-size: medium;"><b>Product Name</b></p>
+                                    </a>
+                                </th>
+                                <th class="" scope="col">
+                                    <a class="slds-cell-wrap slds-align_absolute-center" href="javascript:void(0);"
+                                        role="button" tabindex="0" name="quantityInhand">
+                                        <p style="font-weight: bolder;font-size: medium;">Quantity In hand</p>
+                                    </a>
+                                </th>
+                                <th class="" scope="col">
+                                    <a class="slds-cell-wrap slds-align_absolute-center" href="javascript:void(0);"
+                                        role="button" tabindex="0" name="quantityRequired">
+                                        <p style="font-weight: bolder;font-size: medium;">Quantity Required</p>
+                                    </a>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <template for:each={inv.product} for:item="productData" for:index="index">
+                                <tr class="slds-hint-parent" key={inv.srId}>
+                                    <td data-label="Account Name">
+                                        <div class="slds-cell-wrap">{productData.productName}</div>
+                                    </td>
+                                    <td data-label="Account Number">
+                                        <div class="slds-cell-wrap slds-align_absolute-center">
+                                            {productData.quantityOnHand}</div>
+                                    </td>
+                                    <td data-label="Industry">
+                                        <div class="slds-cell-wrap slds-align_absolute-center">
+                                            {productData.quantityRequired}</div>
+                                    </td>
+
+                                </tr>
+                            </template>
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </lightning-accordion-section>
+        </template>
+    </lightning-accordion>
+    </template>
+    <template if:false={showInventory}>
+        <div class="slds-grid slds-wrap slds-p-around_medium">
+        <p>No Service Appointments found </p>
+        </div>
+    </template>
+
+</template>

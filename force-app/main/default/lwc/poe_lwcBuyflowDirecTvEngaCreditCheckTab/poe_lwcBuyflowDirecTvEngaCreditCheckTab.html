@@ -1,0 +1,602 @@
+<template>
+    <template lwc:if={showCollateral}>
+        <c-collateral-files-component
+            provider="directv"
+            onshowcollateral={handleCollateral}
+            onlogerror={handleLogError}
+        ></c-collateral-files-component>
+    </template>
+    <template lwc:else>
+        <template lwc:if={isNotGuestUser}>
+            <div class="slds-grid slds-grid_align-end">
+                <div class="slds-col">
+                    <c-collateral-files-button onshowcollateral={handleCollateral}></c-collateral-files-button>
+                </div>
+            </div>
+        </template>
+        <div class="slds-box slds-theme_default slds-p-around_small slds-clearfix">
+            <div class="slds-grid slds-wrap slds-gutters slds-p-around_small">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                    <template lwc:if={isCallCenter}>
+                        <div
+                            class="slds-grid slds-wrap slds-grid_vertical slds-m-around_small slds-align_absolute-center"
+                        >
+                            <div class="slds-text-heading_small slds-p-bottom_x-small">Please call</div>
+                            <div class="slds-text-heading_small slds-p-bottom_x-small" style="color: #236fa1">
+                                855-698-5650
+                            </div>
+                            <div class="slds-text-heading_small slds-p-bottom_x-small">
+                                Provide this reference # to the CallCenter agent
+                            </div>
+                            <div class="slds-text-heading_small slds-p-bottom_x-small" style="color: #3598db">
+                                Reference #:
+                            </div>
+                            <div class="slds-text-heading_small" style="color: #3598db">{referenceNumber}</div>
+                        </div>
+                    </template>
+                    <div class="slds-grid slds-wrap slds-gutters slds-p-top_xxx-small">
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Customer Information
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small"
+                        >
+                            <lightning-input
+                                type="text"
+                                name="firstName"
+                                value={firstName}
+                                disabled="true"
+                                required
+                                onchange={handleChange}
+                                label="First Name"
+                            ></lightning-input>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small"
+                        >
+                            <lightning-input
+                                type="text"
+                                name="middleName"
+                                disabled="true"
+                                value={middleName}
+                                onchange={handleChange}
+                                label="Middle Name"
+                            ></lightning-input>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small"
+                        >
+                            <lightning-input
+                                type="text"
+                                name="lastName"
+                                disabled="true"
+                                value={lastName}
+                                onchange={handleChange}
+                                required
+                                label="Last Name"
+                            ></lightning-input>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small"
+                        >
+                            <lightning-input
+                                type="email"
+                                name="email"
+                                value={email}
+                                onchange={handleChange}
+                                required
+                                label="Email Address"
+                            ></lightning-input>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-p-around_xx-small slds-m-bottom_x-small"
+                        >
+                            <lightning-combobox
+                                name="preferredMethod"
+                                label="Preferred Contact Method"
+                                value={preferredMethod}
+                                onchange={handleChange}
+                                options={contactMethods}
+                                required
+                            ></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-m-bottom_x-small">
+                            <lightning-input
+                                type="tel"
+                                pattern="[0-9]{10}"
+                                max-length="10"
+                                message-when-pattern-mismatch="Please enter a valid phone number"
+                                required
+                                disabled="true"
+                                onchange={handleChange}
+                                name="phone"
+                                value={phone}
+                                label="Phone"
+                            ></lightning-input>
+                        </div>
+                        <template lwc:if={showPhoneVerbiage}>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-m-top_x-small slds-m-bottom_xxx-small"
+                            >
+                                <lightning-formatted-rich-text
+                                    value={verbiages.contactInformation}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-m-bottom_x-small">
+                                <lightning-input
+                                    type="checkbox"
+                                    name="phoneAgreement"
+                                    value={phoneAgreement}
+                                    required
+                                    label="I have read the above disclosures to the customer, and the customer agreed"
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                        </template>
+                        <template lwc:if={showSMSVerbiage}>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-m-top_x-small slds-m-bottom_xxx-small"
+                            >
+                                <lightning-formatted-rich-text
+                                    value={verbiages.smsPreference}
+                                ></lightning-formatted-rich-text>
+                            </div>
+                            <div class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-m-bottom_x-small">
+                                <lightning-input
+                                    type="checkbox"
+                                    name="smsAgreement"
+                                    value={smsAgreement}
+                                    required
+                                    label="I have read the above disclosures to the customer, and the customer agreed"
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                        </template>
+                        <div class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-m-bottom_x-small">
+                            <lightning-input
+                                type="checkbox"
+                                label="Use a different billing or previous address (uncommon)"
+                                name="differentAddress"
+                                onchange={handleBillingAddress}
+                                checked={showBillingAddress}
+                            ></lightning-input>
+                        </div>
+                        <template lwc:if={showBillingAddress}>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                <lightning-input
+                                    type="text"
+                                    name="billingAddress"
+                                    value={billingAddress}
+                                    required="true"
+                                    label="Address"
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                <lightning-input
+                                    type="text"
+                                    name="billingApt"
+                                    value={billingApt}
+                                    label="Apt"
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                <lightning-input
+                                    type="text"
+                                    name="billingCity"
+                                    value={billingCity}
+                                    label="City"
+                                    required="true"
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12">
+                                <lightning-combobox
+                                    name="billingState"
+                                    label="State"
+                                    value={billingState}
+                                    onchange={handleChange}
+                                    options={states}
+                                    required
+                                ></lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-m-bottom_small">
+                                <lightning-input
+                                    type="text"
+                                    name="billingZip"
+                                    value={billingZip}
+                                    label="Zip"
+                                    required="true"
+                                    max-length="5"
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                            <div class="slds-col slds-show_medium slds-size_6-of-12 slds-m-bottom_small"></div>
+                            <div class="slds-col slds-size_1-of-1 slds-small-size_6-of-12 slds-m-bottom_small">
+                                <lightning-input
+                                    type="checkbox"
+                                    name="isPreviousAddress"
+                                    value={isPreviousAddress}
+                                    label="Is this a Previous address?"
+                                    onchange={handleChange}
+                                ></lightning-input>
+                            </div>
+                        </template>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                            style="background-color: #ff8200; color: white"
+                        >
+                            Personal Information
+                        </div>
+                        <div class="slds-col slds-p-vertical_medium">
+                            <p class="slds-p-bottom_xx-small">
+                                You must read the statements below to the customer verbatim:
+                            </p>
+                            <lightning-radio-group
+                                name="agreementGroup"
+                                label={verbiages.creditCheck}
+                                onchange={handleApprove}
+                                options={radioOptions}
+                                value={radioOption}
+                                class="slds-m-top_xxx-small"
+                                disabled={noPersonalInformation}
+                                required="true"
+                                type="radio"
+                            ></lightning-radio-group>
+                        </div>
+                        <template lwc:if={disclosureAgreement}>
+                            <div
+                                class="slds-col slds-size_12-of-12 slds-p-around_xx-small slds-text-heading_small slds-text-align_center slds-m-bottom_x-small"
+                                style="background-color: #ff8200; color: white"
+                            >
+                                Identification Information
+                            </div>
+                            <div class="slds-col slds-grid slds-wrap">
+                                <template lwc:if={isGuestUser}></template>
+                                <template lwc:else>
+                                    <div class="slds-col slds-size_12-of-12 slds-grid">
+                                        <lightning-radio-group
+                                            name="radioGroup"
+                                            label="Select your client's preferred input method:"
+                                            options={methods}
+                                            value={method}
+                                            onchange={handleMethod}
+                                            type="radio"
+                                        ></lightning-radio-group>
+                                    </div>
+                                </template>
+                                <template lwc:if={isPCI}>
+                                    <div class="slds-col slds-size_12-of-12 slds-grid slds-wrap slds-m-top_small">
+                                        <lightning-formatted-rich-text
+                                            value={phoneDisclaimer}
+                                        ></lightning-formatted-rich-text>
+                                        <lightning-input
+                                            type="checkbox"
+                                            label={phoneDisclaimer2}
+                                            checked={hasOptedInSMS}
+                                            name="hasOptedInSMS"
+                                            onchange={handleChange}
+                                        >
+                                        </lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_12-of-12 slds-grid">
+                                        <div class="slds-col slds-size_4-of-12">
+                                            <button
+                                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                                onclick={sendPCIEmail}
+                                            >
+                                                Send Email
+                                            </button>
+                                        </div>
+                                        <div class="slds-col slds-size_4-of-12">
+                                            <button
+                                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                                onclick={handleSMS}
+                                                disabled={disableSendSMSButton}
+                                            >
+                                                Send SMS
+                                            </button>
+                                        </div>
+                                        <div class="slds-col slds-size_4-of-12">
+                                            <button
+                                                class="slds-button slds-m-vertical_small slds-button_brand slds-button_stretch"
+                                                onclick={handleRefresh}
+                                            >
+                                                Refresh Fields
+                                            </button>
+                                        </div>
+                                    </div>
+                                </template>
+                                <template lwc:else>
+                                    <div class="slds-col slds-grid slds-wrap slds-size_1-of-1">
+                                        <lightning-radio-group
+                                            name="radioGroup2"
+                                            options={SSNoptions}
+                                            value={SSNorDL}
+                                            onchange={handleSSNorDL}
+                                            label="Providing SSN or Driver's License:"
+                                            class="radio-combo-inline"
+                                            type="radio"
+                                        ></lightning-radio-group>
+                                    </div>
+                                </template>
+                            </div>
+                            <template lwc:if={ccShowSSN}>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1">
+                                    <div
+                                        class="slds-col slds-size_1-of-1 slds-small-size_5-of-12 slds-p-left_none slds-p-right_xxx-small"
+                                    >
+                                        <lightning-input
+                                            type="password"
+                                            min-length="9"
+                                            max-length="9"
+                                            label="SSN"
+                                            required
+                                            disabled={isPCI}
+                                            value={ccSSN}
+                                            name="SSN"
+                                            onchange={handleSSNChange}
+                                        ></lightning-input>
+                                    </div>
+                                    <template lwc:if={isNotPCI}>
+                                        <div
+                                            class="slds-col slds-size_1-of-1 slds-small-size_5-of-12 slds-p-left_none slds-p-right_xxx-small"
+                                        >
+                                            <lightning-input
+                                                type="password"
+                                                min-length="9"
+                                                max-length="9"
+                                                label="Confirm SSN"
+                                                required
+                                                disabled={isPCI}
+                                                value={repeatSSN}
+                                                name="repeatSSN"
+                                                onchange={handleSSNChange}
+                                                onblur={handleSSNRepeatValidation}
+                                            ></lightning-input>
+                                            <template lwc:if={sameSSN}>
+                                                <div>
+                                                    <p style="color: red">The SSNs entered don't match.</p>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </template>
+                                    <div
+                                        class="slds-col slds-size_1-of-1 slds-small-size_7-of-12 slds-p-horizontal_none"
+                                    >
+                                        <lightning-input
+                                            type="date"
+                                            date-style="short"
+                                            label="Date of Birth"
+                                            required
+                                            class="sensitive-input"
+                                            disabled={isPCI}
+                                            value={ccDOB}
+                                            name="DOB"
+                                            onchange={handleSSNChange}
+                                            data-id="ssnDOB"
+                                            min="1901-01-01"
+                                        ></lightning-input>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div class="slds-col slds-grid slds-wrap slds-size_1-of-1">
+                                    <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                        <lightning-input
+                                            type="date"
+                                            date-style="short"
+                                            label="Date of Birth"
+                                            required
+                                            class="sensitive-input"
+                                            disabled={isPCI}
+                                            value={ccDOB}
+                                            name="DOB"
+                                            onchange={handleSSNChange}
+                                            data-id="dlDOB"
+                                            min="1901-01-01"
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_12-of-12 slds-p-horizontal_none">
+                                        <lightning-input
+                                            type="text"
+                                            label="Driver's License Number"
+                                            required
+                                            disabled={isPCI}
+                                            value={ccDL}
+                                            name="DL"
+                                            onchange={handleSSNChange}
+                                        >
+                                        </lightning-input>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_1-of-1 slds-small-size_5-of-12 slds-p-left_none slds-p-right_xxx-small"
+                                    >
+                                        <lightning-combobox
+                                            name="DLstate"
+                                            label="DL State"
+                                            value={ccDLstate}
+                                            disabled={isPCI}
+                                            required
+                                            options={states}
+                                            onchange={handleSSNChange}
+                                        ></lightning-combobox>
+                                    </div>
+                                    <div
+                                        class="slds-col slds-size_1-of-1 slds-small-size_7-of-12 slds-p-horizontal_none"
+                                    >
+                                        <lightning-input
+                                            type="date"
+                                            date-style="short"
+                                            label="DL Expiration Date"
+                                            name="DLexpDate"
+                                            value={ccDLexpDate}
+                                            disabled={isPCI}
+                                            required
+                                            onchange={handleSSNChange}
+                                            data-id="expDate"
+                                        ></lightning-input>
+                                    </div>
+                                </div>
+                            </template>
+                            <template lwc:if={isNotPCI}>
+                                <template lwc:if={isNotCallCenterOrigin}>
+                                    <div class="slds-col slds-grid slds-wrap slds-m-top_small slds-m-bottom_xx-small">
+                                        <lightning-input
+                                            type="checkbox"
+                                            data-id="statementRead"
+                                            label="I have read the statement below"
+                                            onchange={handleStatementRead}
+                                        ></lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-grid slds-wrap">
+                                        <p>
+                                            This is private information and is only visible to you. We only use this
+                                            information to confirm your identity.
+                                        </p>
+                                    </div>
+                                </template>
+                            </template>
+
+                            <div class="slds-col slds-p-vertical_medium">
+                                <lightning-input
+                                    type="checkbox"
+                                    label={contactConsentLabel}
+                                    name="contactConsent"
+                                    checked={contactConsent}
+                                    onchange={handleConsentChange}
+                                ></lightning-input>
+                            </div>
+                            <template lwc:if={showConsentRadio}>
+                                <div class="slds-col slds-p-vertical_medium">
+                                    <lightning-input
+                                        type="checkbox"
+                                        label={dtvConsentLabel}
+                                        name="dtvConsent"
+                                        checked={dtvConsent}
+                                        onchange={handleConsentChange}
+                                    ></lightning-input>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                </div>
+                <!-- This is a small margin left between the products and the cart when vertically aligned -->
+                <div class="slds-hide_medium slds-size_1-of-1 slds-m-bottom_small"></div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <c-poe_lwc-buyflow-directv-enga-cart cart={cart}> </c-poe_lwc-buyflow-directv-enga-cart>
+                    <div class="slds-grid slds-p-around_medium slds-text-align_center">
+                        <div class="slds-col slds-size_12-of-12">
+                            <img src={logo} style="border: 1px solid rgb(159, 159, 159)" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <c-poe_lwc-buyflow-tab-actions
+                disable-next={noCompleteInfo}
+                show-previous="true"
+                show-cancel="true"
+                oncancel={handleCancel}
+                onprevious={handlePrevious}
+                onnext={handleNext}
+            >
+            </c-poe_lwc-buyflow-tab-actions>
+        </div>
+    </template>
+    <template lwc:if={showModal}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="modal-heading-01"
+            class="slds-modal slds-fade-in-open"
+        >
+            <div class="slds-modal__container">
+                <div class="slds-p-around_xx-small slds-float_right">
+                    <lightning-icon
+                        icon-name="utility:close"
+                        alternative-text="Close Modal"
+                        title="Close Modal"
+                        variant="inverse"
+                        onclick={hideModal}
+                        size="small"
+                        class="slds-float_right"
+                        style="cursor: pointer"
+                    ></lightning-icon>
+                </div>
+                <div class="slds-modal__header">
+                    <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Preliminary credit results</h1>
+                </div>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size_12-of-12 slds-text-heading_small slds-p-vertical_xx-small">
+                            Please review the results before proceeding:
+                        </div>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_small slds-p-horizontal_xx-small slds-p-vertical_xx-small"
+                        >
+                            Result: Success
+                        </div>
+                        <div
+                            class="slds-col slds-size_12-of-12 slds-text-heading_small slds-p-horizontal_xx-small slds-p-vertical_xx-small"
+                        >
+                            Risk: {creditScore}
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand" onclick={handleClick}>Continue</button>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </template>
+    <template lwc:if={showModalFee}>
+        <c-poe_lwc-buyflow-direc-tv-enga-credit-check-fee-modal
+            fee={fee}
+            onclosefeemodal={hideFeeModal}
+            onmodifyorder={handleFeeModalModifyOrder}
+        ></c-poe_lwc-buyflow-direc-tv-enga-credit-check-fee-modal>
+    </template>
+    <template lwc:if={showModalHighRiskCustomer}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={label.DTVHighRiskCustomer}
+            onclose={hideModalHighRisk}
+            modal-title="High Credit Score"
+            onconfirm={hideModalHighRisk}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showPredictiveAddress}>
+        <c-poe_lwc-buyflow-windstream-predictive-address-modal
+            onclose={hideAddressModal}
+            onconfirm={selectAddressHandler}
+            addresses={predictiveAddresses}
+        ></c-poe_lwc-buyflow-windstream-predictive-address-modal>
+    </template>
+    <template lwc:if={loaderSpinner}>
+        <lightning-spinner variant="brand" alternative-text="Loading..." size="medium"></lightning-spinner>
+    </template>
+    <template lwc:if={ssnLimit}>
+        <c-poe-credit-check-fraud-validation record-id={recordId}></c-poe-credit-check-fraud-validation>
+    </template>
+    <template lwc:if={showSelfServiceCancelModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.selfServiceValidateLeavingMessage}
+            modal-title={labels.selfServiceValidateLeavingTitle}
+            onclose={hideSelfServiceModal}
+            onconfirm={selfServiceReturnToHomePage}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+    <template lwc:if={showCapReachedModal}>
+        <c-poe_lwc-buyflow-spectrum-credit-check-modal
+            modal-body={labels.capReachedError}
+            modal-title="Limit Reached"
+            onconfirm={handleCancel}
+            onclose={handleCancel}
+        ></c-poe_lwc-buyflow-spectrum-credit-check-modal>
+    </template>
+</template>
