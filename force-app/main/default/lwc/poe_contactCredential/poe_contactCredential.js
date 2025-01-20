@@ -2,6 +2,7 @@ import { LightningElement, api, wire, track } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { updateRecord, createRecord } from "lightning/uiRecordApi";
 import { getObjectInfo, getPicklistValues } from "lightning/uiObjectInfoApi";
+
 import EXTERNAL_CONTACT_CREDENTIAL_OBJECT from "@salesforce/schema/POE_External_Contact_Credential__c";
 import ID_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.Id";
 import PROCESS_STATUS_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.POE_Process_Status__c";
@@ -59,16 +60,12 @@ export default class Poe_contactCredential extends LightningElement {
             : this.formCredentialInformation.program;
     }
 
-    get showCodeField() {
-        return !!LABELS_BY_PROGRAM[this.formCredentialInformation.program?.toLowerCase()];
-    }
-
-    get showTrainingSentDateField() {
+    get isXfinity() {
         return this.formCredentialInformation.program?.toLowerCase() === "xfinity";
     }
 
-    get showUserNameField() {
-        return this.formCredentialInformation.program !== "Windstream D2D";
+    get showCodeField() {
+        return !!LABELS_BY_PROGRAM[this.formCredentialInformation.program?.toLowerCase()];
     }
 
     @wire(getObjectInfo, { objectApiName: EXTERNAL_CONTACT_CREDENTIAL_OBJECT })
@@ -112,10 +109,6 @@ export default class Poe_contactCredential extends LightningElement {
             [N_NUMBER_FIELD.fieldApiName]: this.formCredentialInformation.nNumber,
             [ACTIVATION_DATE_FIELD.fieldApiName]: this.formCredentialInformation.activationDate
         };
-
-        if (this.formCredentialInformation.program?.toLowerCase() === "xfinity") {
-            fields.trainingSentDate = this.formCredentialInformation.trainingSentDate;
-        }
 
         let apiName = null;
         let upsertRecord = updateRecord;
