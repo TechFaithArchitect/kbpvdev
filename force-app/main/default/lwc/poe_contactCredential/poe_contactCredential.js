@@ -11,8 +11,8 @@ import PROGRAM_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c
 import CONTACT_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.POE_Contact__c";
 import N_NUMBER_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.POE_N_Number__c";
 import ACTIVATION_DATE_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.Activation_Date__c";
-import SAVE_SUCCESS_MESSAGE from "@salesforce/label/c.POE_Contact_Credentials_Save_Success";
 import VERIZON_MARKET_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.Verizon_Market__c";
+import SAVE_SUCCESS_MESSAGE from "@salesforce/label/c.POE_Contact_Credentials_Save_Success";
 import SAVE_ERROR_MESSAGE from "@salesforce/label/c.POE_Contact_Credentials_Save_Error";
 
 const LABELS_BY_PROGRAM = {
@@ -24,6 +24,11 @@ const LABELS_BY_PROGRAM = {
     spectrum: {
         usernameLabel: "Username",
         codeLabel: "Dealer ID",
+        activationDate: "Activation Date"
+    },
+    xfinity: {
+        usernameLabel: "Username",
+        codeLabel: "Partner ID",
         activationDate: "Activation Date"
     }
 };
@@ -37,11 +42,7 @@ export default class Poe_contactCredential extends LightningElement {
 
     get labelsByProgram() {
         const program = this.formCredentialInformation.program?.toLowerCase();
-        if (LABELS_BY_PROGRAM[program]) {
-            return LABELS_BY_PROGRAM[program];
-        }
-
-        return {
+        return LABELS_BY_PROGRAM[program] || {
             usernameLabel: "Username",
             codeLabel: "Code",
             activationDate: "Activation Date"
@@ -50,7 +51,7 @@ export default class Poe_contactCredential extends LightningElement {
 
     get programLabel() {
         return (
-            this.formCredentialInformation.isCommercial && 
+            this.formCredentialInformation.isCommercial &&
             this.formCredentialInformation.program !== "Windstream D2D" &&
             this.formCredentialInformation.program !== "Verizon Residential"
         )
@@ -62,15 +63,12 @@ export default class Poe_contactCredential extends LightningElement {
         return !!LABELS_BY_PROGRAM[this.formCredentialInformation.program?.toLowerCase()];
     }
 
-    get showNNumberField() {
-        return this.formCredentialInformation.program === "Windstream D2D";
+    get showTrainingSentDateField() {
+        return this.formCredentialInformation.program?.toLowerCase() === "xfinity";
     }
 
     get showUserNameField() {
         return this.formCredentialInformation.program !== "Windstream D2D";
-    }
-    get showVerizonMarkerField() {
-        return this.formCredentialInformation.program?.toLowerCase().includes('verizon');
     }
 
     @wire(getObjectInfo, { objectApiName: EXTERNAL_CONTACT_CREDENTIAL_OBJECT })
@@ -89,11 +87,9 @@ export default class Poe_contactCredential extends LightningElement {
     }
 
     connectedCallback() {
-        console.log("this.credentialInformation: ", this.credentialInformation);
         if (this.credentialInformation) {
             this.formCredentialInformation = { ...this.credentialInformation };
         }
-        console.log("formCredentialInformation: ", this.formCredentialInformation);
     }
 
     handleFieldChange(event) {
@@ -114,9 +110,12 @@ export default class Poe_contactCredential extends LightningElement {
             [CODE_FIELD.fieldApiName]: this.formCredentialInformation.code,
             [PROGRAM_FIELD.fieldApiName]: this.formCredentialInformation.program,
             [N_NUMBER_FIELD.fieldApiName]: this.formCredentialInformation.nNumber,
-            [ACTIVATION_DATE_FIELD.fieldApiName]: this.formCredentialInformation.activationDate,
-            [VERIZON_MARKET_FIELD.fieldApiName]: this.formCredentialInformation.verizonMarket
+            [ACTIVATION_DATE_FIELD.fieldApiName]: this.formCredentialInformation.activationDate
         };
+
+        if (this.formCredentialInformation.program?.toLowerCase() === "xfinity") {
+            fields.trainingSentDate = this.formCredentialInformation.trainingSentDate;
+        }
 
         let apiName = null;
         let upsertRecord = updateRecord;
