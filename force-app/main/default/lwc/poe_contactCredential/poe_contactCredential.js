@@ -1,99 +1,48 @@
-import { LightningElement, api, wire, track } from "lwc";
+import { LightningElement, api, track } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import { updateRecord, createRecord } from "lightning/uiRecordApi";
-import { getObjectInfo, getPicklistValues } from "lightning/uiObjectInfoApi";
+import getProgramMetadata from "@salesforce/apex/POEContactCredentialController.getProgramMetadata";
 
-import EXTERNAL_CONTACT_CREDENTIAL_OBJECT from "@salesforce/schema/POE_External_Contact_Credential__c";
-import ID_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.Id";
-import PROCESS_STATUS_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.POE_Process_Status__c";
-import USERNAME_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.POE_Username__c";
-import CODE_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.POE_Code__c";
-import PROGRAM_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.POE_Program__c";
-import CONTACT_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.POE_Contact__c";
-import N_NUMBER_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.POE_N_Number__c";
-import ACTIVATION_DATE_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.Activation_Date__c";
-import VERIZON_MARKET_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.Verizon_Market__c";
-import SAVE_SUCCESS_MESSAGE from "@salesforce/label/c.POE_Contact_Credentials_Save_Success";
-import SAVE_ERROR_MESSAGE from "@salesforce/label/c.POE_Contact_Credentials_Save_Error";
 
-const LABELS_BY_PROGRAM = {
-    directv: {
-        usernameLabel: "Partner Id",
-        codeLabel: "Dealer Code",
-        activationDate: "Activation Date"
-    },
-    spectrum: {
-        usernameLabel: "Username",
-        codeLabel: "Dealer ID",
-        activationDate: "Activation Date"
-    },
-    xfinity: {
-        usernameLabel: "Username",
-        codeLabel: "Partner ID",
-        activationDate: "Activation Date"
-    }
-};
-
-export default class Poe_contactCredential extends LightningElement {
+export default class PoeContactCredential extends LightningElement {
     @api credentialInformation;
     @track formCredentialInformation = {};
-    processStatusOptions = [];
-    isLoading = false;
-    disableSave = true;
-
-    get labelsByProgram() {
-        const program = this.formCredentialInformation.program?.toLowerCase();
-        return LABELS_BY_PROGRAM[program] || {
-            usernameLabel: "Username",
-            codeLabel: "Code",
-            activationDate: "Activation Date"
-        };
-    }
-
-    get programLabel() {
-        return (
-            this.formCredentialInformation.isCommercial &&
-            this.formCredentialInformation.program !== "Windstream D2D" &&
-            this.formCredentialInformation.program !== "Verizon Residential"
-        )
-            ? `${this.formCredentialInformation.program} Commercial`
-            : this.formCredentialInformation.program;
-    }
-
-    get isXfinity() {
-        return this.formCredentialInformation.program?.toLowerCase() === "xfinity";
-    }
-
-    get showCodeField() {
-        return !!LABELS_BY_PROGRAM[this.formCredentialInformation.program?.toLowerCase()];
-    }
-
-    @wire(getObjectInfo, { objectApiName: EXTERNAL_CONTACT_CREDENTIAL_OBJECT })
-    externalContactCredentialObjInfo;
-
-    @wire(getPicklistValues, {
-        recordTypeId: "$externalContactCredentialObjInfo.data.defaultRecordTypeId",
-        fieldApiName: PROCESS_STATUS_FIELD
-    })
-    getProcessStatusOptions({ data, error }) {
-        if (data) {
-            this.processStatusOptions = data.values;
-        } else if (error) {
-            console.error(error);
-        }
-    }
+    @track labels = {};
+    @track processStatusOptions = [];
+    @track isLoading = false;
+    @track disableSave = true;
 
     connectedCallback() {
         if (this.credentialInformation) {
             this.formCredentialInformation = { ...this.credentialInformation };
+            this.fetchProgramMetadata();
         }
+    }
+
+    fetchProgramMetadata() {
+        const program = this.formCredentialInformation.program?.toLowerCase();
+        if (!program) return;
+
+        this.isLoading = true;
+
+        getProgramMetadata({ program })
+            .then((result) => {
+                this.labels = result.labels || {};
+                this.processStatusOptions = result.processStatusOptions || [];
+            })
+            .catch((error) => {
+                console.error("Error fetching program metadata: ", error);
+                this.showToast("error", "Error", "Failed to fetch program metadata.");
+            })
+            .finally(() => {
+                this.isLoading = false;
+            });
     }
 
     handleFieldChange(event) {
         this.disableSave = false;
         const fieldName = event.currentTarget.name;
         const value = event.detail.value;
-
         this.formCredentialInformation[fieldName] = value;
     }
 
@@ -105,30 +54,26 @@ export default class Poe_contactCredential extends LightningElement {
             [USERNAME_FIELD.fieldApiName]: this.formCredentialInformation.username,
             [PROCESS_STATUS_FIELD.fieldApiName]: this.formCredentialInformation.processStatus,
             [CODE_FIELD.fieldApiName]: this.formCredentialInformation.code,
-            [PROGRAM_FIELD.fieldApiName]: this.formCredentialInformation.program,
-            [N_NUMBER_FIELD.fieldApiName]: this.formCredentialInformation.nNumber,
             [ACTIVATION_DATE_FIELD.fieldApiName]: this.formCredentialInformation.activationDate
         };
 
-        let apiName = null;
-        let upsertRecord = updateRecord;
         if (this.formCredentialInformation.id) {
             fields[ID_FIELD.fieldApiName] = this.formCredentialInformation.id;
         } else {
-            fields[CONTACT_FIELD.fieldApiName] = this.formCredentialInformation.contactId;
-            apiName = EXTERNAL_CONTACT_CREDENTIAL_OBJECT.objectApiName;
-            upsertRecord = createRecord;
+            fields["ContactId"] = this.formCredentialInformation.contactId;
         }
 
-        upsertRecord({ fields, apiName })
-            .then((result) => {
-                this.formCredentialInformation.id = result.id;
+        const recordInput = { fields };
+        const upsert = this.formCredentialInformation.id ? updateRecord : createRecord;
+
+        upsert(recordInput)
+            .then(() => {
                 this.disableSave = true;
-                this.showToast("success", "Success", SAVE_SUCCESS_MESSAGE);
+                this.showToast("success", "Success", "Record saved successfully.");
             })
             .catch((error) => {
-                console.error(error);
-                this.showToast("error", "Error", SAVE_ERROR_MESSAGE);
+                console.error("Error saving record: ", error);
+                this.showToast("error", "Error", "Failed to save record.");
             })
             .finally(() => {
                 this.isLoading = false;
@@ -136,13 +81,6 @@ export default class Poe_contactCredential extends LightningElement {
     }
 
     showToast(variant, title, message) {
-        this.dispatchEvent(
-            new ShowToastEvent({
-                mode: "sticky",
-                title,
-                variant,
-                message
-            })
-        );
+        this.dispatchEvent(new ShowToastEvent({ variant, title, message }));
     }
 }
