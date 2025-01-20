@@ -51,13 +51,18 @@ export default class Poe_contactCredential extends LightningElement {
     }
 
     get programLabel() {
-        return (
+        const program = this.formCredentialInformation.program;
+        if (program?.toLowerCase() === "xfinity") {
+            return "Xfinity"; // Remove "Commercial" from label
+        }
+        if (
             this.formCredentialInformation.isCommercial &&
-            this.formCredentialInformation.program !== "Windstream D2D" &&
-            this.formCredentialInformation.program !== "Verizon Residential"
-        )
-            ? `${this.formCredentialInformation.program} Commercial`
-            : this.formCredentialInformation.program;
+            program !== "Windstream D2D" &&
+            program !== "Verizon Residential"
+        ) {
+            return `${program} Commercial`; // Append "Commercial" for other programs
+        }
+        return program;
     }
 
     get isXfinity() {
