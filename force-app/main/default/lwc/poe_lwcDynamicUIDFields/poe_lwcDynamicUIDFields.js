@@ -53,17 +53,6 @@ export default class Poe_lwcDynamicUIDFields extends LightningElement {
     showModal = false;
     credentialData;
 
-    // Options for Xfinity Status picklist
-    get xfinityStatusOptions() {
-        return [
-            { label: "Cancelled", value: "Cancelled" },
-            { label: "In progress", value: "In progress" },
-            { label: "New", value: "New" },
-            { label: "Complete", value: "Complete" },
-            { label: "Training Sent", value: "Training Sent" }
-        ];
-    }
-
     get noPrograms() {
         return this.chuzoPrograms.size === 0 && this.commercialPrograms.length === 0;
     }
@@ -78,7 +67,7 @@ export default class Poe_lwcDynamicUIDFields extends LightningElement {
     }
 
     connectedCallback() {
-        if (this.objectApiName === "Contact") {
+        if (this.objectApiName == "Contact") {
             this.contactId = this.recordId;
         }
     }
@@ -100,8 +89,7 @@ export default class Poe_lwcDynamicUIDFields extends LightningElement {
                 }
             });
 
-            this.commercialPrograms =
-                getFieldValue(data, COMMERCIAL_PROGRAMS_FIELD)?.split(";") || [];
+            this.commercialPrograms = getFieldValue(data, COMMERCIAL_PROGRAMS_FIELD)?.split(";") || [];
             if (this.credentialData) this.handleProgramCredentials();
         }
     }
@@ -145,8 +133,6 @@ export default class Poe_lwcDynamicUIDFields extends LightningElement {
 
             const isCommercial = this.commercialPrograms.includes(program);
             const record = recordsByProgram.get(program.toLowerCase());
-            const isXfinity = program.toLowerCase() === "xfinity";
-
             if (!record) {
                 return this.programsWithCredentials.push({
                     id: "",
@@ -158,7 +144,6 @@ export default class Poe_lwcDynamicUIDFields extends LightningElement {
                     verizonMarket: "",
                     contactId: this.contactId,
                     isCommercial,
-                    isXfinity,
                     key: program
                 });
             }
@@ -174,19 +159,8 @@ export default class Poe_lwcDynamicUIDFields extends LightningElement {
                 verizonMarket: getFieldValue(record, VERIZON_MARKET_FIELD),
                 contactId: this.contactId,
                 isCommercial,
-                isXfinity,
                 key: record.id
             });
         });
-    }
-
-    handleFieldChange(event) {
-        const fieldName = event.target.name;
-        const programId = event.target.dataset.id; // Assuming `data-id` for program record ID
-        const program = this.programsWithCredentials.find((item) => item.id === programId);
-
-        if (program) {
-            program[fieldName] = event.target.value;
-        }
     }
 }

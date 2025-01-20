@@ -1,81 +1,28 @@
 <template>
     <lightning-card title="On Boarding">
-        <!-- Email Owner Button -->
         <div class="slds-grid slds-wrap slds-grid_reverse slds-m-around_medium">
             <lightning-helptext
-                content="Click here to send an email to the Owner with any additional information requests">
-            </lightning-helptext>
+                content="Click here to send an email to the Owner with any additional information requests"
+            ></lightning-helptext>
             <lightning-button
                 label="Email Owner"
                 variant="brand"
                 title="Email action"
-                onclick={handleEmail}>
-            </lightning-button>
+                onclick={handleEmail}
+            ></lightning-button>
         </div>
-
-        <!-- Existing Programs and Credentials -->
         <template for:each={programsWithCredentials} for:item="programWithCreds">
-            <div key={programWithCreds.id}>
-                <c-poe_contact-credential
-                    credential-information={programWithCreds}>
-                </c-poe_contact-credential>
-
-                <!-- Additional Fields for Xfinity -->
-                <template if:true={programWithCreds.isXfinity}>
-                    <div class="slds-p-around_medium">
-                        <!-- Xfinity Status -->
-                        <lightning-combobox
-                            name="processStatus"
-                            label="Status"
-                            value={programWithCreds.processStatus}
-                            placeholder="Select Status"
-                            options={xfinityStatusOptions}
-                            onchange={handleFieldChange}>
-                        </lightning-combobox>
-
-                        <!-- Partner ID -->
-                        <lightning-input
-                            name="partnerId"
-                            label="Partner ID"
-                            value={programWithCreds.partnerId}
-                            onchange={handleFieldChange}>
-                        </lightning-input>
-
-                        <!-- Training Sent Date -->
-                        <lightning-input
-                            name="trainingSentDate"
-                            label="Training Sent Date"
-                            type="date"
-                            value={programWithCreds.trainingSentDate}
-                            onchange={handleFieldChange}>
-                        </lightning-input>
-
-                        <!-- Activation Date -->
-                        <lightning-input
-                            name="activationDate"
-                            label="Activation Date"
-                            type="date"
-                            value={programWithCreds.activationDate}
-                            onchange={handleFieldChange}>
-                        </lightning-input>
-                    </div>
-                </template>
-            </div>
+            <c-poe_contact-credential key={programWithCreds.key} credential-information={programWithCreds}>
+            </c-poe_contact-credential>
         </template>
-
-        <!-- No Programs Available Message -->
-        <template if:true={noPrograms}>
-            <div class="slds-text-heading_small slds-p-around_medium">
-                Agent has no Programs Available
-            </div>
-        </template>
-
-        <!-- Modal -->
-        <template if:true={showModal}>
-            <c-poe_lwc-dynamic-u-i-d-fields-modal
-                onclose={handleCloseModal}
-                record-id={recordId}>
-            </c-poe_lwc-dynamic-u-i-d-fields-modal>
+        <template lwc:if={noPrograms}>
+            <div class="slds-text-heading_small slds-p-around_medium">Agent has no Programs Available</div>
         </template>
     </lightning-card>
+    <template lwc:if={showModal}>
+        <c-poe_lwc-dynamic-u-i-d-fields-modal
+            onclose={handleCloseModal}
+            record-id={recordId}
+        ></c-poe_lwc-dynamic-u-i-d-fields-modal>
+    </template>
 </template>
