@@ -13,6 +13,7 @@ import CONTACT_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c
 import N_NUMBER_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.POE_N_Number__c";
 import ACTIVATION_DATE_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.Activation_Date__c";
 import VERIZON_MARKET_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.Verizon_Market__c";
+import TRAINING_SENT_DATE_FIELD from "@salesforce/schema/POE_External_Contact_Credential__c.Training_Sent_Date__c"; // New Import
 import SAVE_SUCCESS_MESSAGE from "@salesforce/label/c.POE_Contact_Credentials_Save_Success";
 import SAVE_ERROR_MESSAGE from "@salesforce/label/c.POE_Contact_Credentials_Save_Error";
 
@@ -112,7 +113,8 @@ export default class Poe_contactCredential extends LightningElement {
             [CODE_FIELD.fieldApiName]: this.formCredentialInformation.code,
             [PROGRAM_FIELD.fieldApiName]: this.formCredentialInformation.program,
             [N_NUMBER_FIELD.fieldApiName]: this.formCredentialInformation.nNumber,
-            [ACTIVATION_DATE_FIELD.fieldApiName]: this.formCredentialInformation.activationDate
+            [ACTIVATION_DATE_FIELD.fieldApiName]: this.formCredentialInformation.activationDate,
+            [TRAINING_SENT_DATE_FIELD.fieldApiName]: this.formCredentialInformation.trainingSentDate // New Field
         };
 
         let apiName = null;
